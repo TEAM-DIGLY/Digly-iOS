@@ -1,13 +1,13 @@
 //
-//  diglyUITestsLaunchTests.swift
-//  diglyUITests
+//  watchDigly_Watch_AppUITestsLaunchTests.swift
+//  watchDigly Watch AppUITests
 //
 //  Created by 김 형석 on 10/9/24.
 //
 
 import XCTest
 
-final class diglyUITestsLaunchTests: XCTestCase {
+final class watchDigly_Watch_AppUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

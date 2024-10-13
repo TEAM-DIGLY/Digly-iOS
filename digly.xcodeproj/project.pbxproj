@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		AB9148A12CB6832200454750 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A02CB6832200454750 /* GoogleSignIn */; };
+		AB9148A42CB6834B00454750 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A32CB6834B00454750 /* Alamofire */; };
+		ABBFA5872CB6886D001BA1E2 /* watchDigly Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		AB9148812CB681DF00454750 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -21,28 +27,84 @@
 			remoteGlobalIDString = AB91486F2CB681DE00454750;
 			remoteInfo = digly;
 		};
+		ABBFA5742CB6886D001BA1E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB9148682CB681DE00454750 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ABBFA5632CB6886C001BA1E2;
+			remoteInfo = "watchDigly Watch App";
+		};
+		ABBFA57E2CB6886D001BA1E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB9148682CB681DE00454750 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ABBFA5632CB6886C001BA1E2;
+			remoteInfo = "watchDigly Watch App";
+		};
+		ABBFA5852CB6886D001BA1E2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AB9148682CB681DE00454750 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ABBFA5632CB6886C001BA1E2;
+			remoteInfo = "watchDigly Watch App";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		ABBFA5882CB6886D001BA1E2 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				ABBFA5872CB6886D001BA1E2 /* watchDigly Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		AB9148702CB681DE00454750 /* digly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = digly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB9148802CB681DF00454750 /* diglyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = diglyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB91488A2CB681DF00454750 /* diglyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = diglyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "watchDigly Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AB91486F2CB681DE00454750 /* digly */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AB9148722CB681DE00454750 /* digly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */,
+			);
 			path = digly;
 			sourceTree = "<group>";
 		};
-		AB9148832CB681DF00454750 /* diglyTests */ = {
+		ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = diglyTests;
+			path = "watchDigly Watch App";
 			sourceTree = "<group>";
 		};
-		AB91488D2CB681DF00454750 /* diglyUITests */ = {
+		ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = diglyUITests;
+			path = "watchDigly Watch AppTests";
+			sourceTree = "<group>";
+		};
+		ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "watchDigly Watch AppUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +114,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB9148A12CB6832200454750 /* GoogleSignIn in Frameworks */,
+				AB9148A42CB6834B00454750 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +133,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ABBFA5612CB6886C001BA1E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA5702CB6886D001BA1E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA57A2CB6886D001BA1E2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -76,8 +161,9 @@
 			isa = PBXGroup;
 			children = (
 				AB9148722CB681DE00454750 /* digly */,
-				AB9148832CB681DF00454750 /* diglyTests */,
-				AB91488D2CB681DF00454750 /* diglyUITests */,
+				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
+				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
+				ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
 				AB9148712CB681DE00454750 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -88,6 +174,9 @@
 				AB9148702CB681DE00454750 /* digly.app */,
 				AB9148802CB681DF00454750 /* diglyTests.xctest */,
 				AB91488A2CB681DF00454750 /* diglyUITests.xctest */,
+				ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */,
+				ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */,
+				ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,16 +191,20 @@
 				AB91486C2CB681DE00454750 /* Sources */,
 				AB91486D2CB681DE00454750 /* Frameworks */,
 				AB91486E2CB681DE00454750 /* Resources */,
+				ABBFA5882CB6886D001BA1E2 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				ABBFA5862CB6886D001BA1E2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				AB9148722CB681DE00454750 /* digly */,
 			);
 			name = digly;
 			packageProductDependencies = (
+				AB9148A02CB6832200454750 /* GoogleSignIn */,
+				AB9148A32CB6834B00454750 /* Alamofire */,
 			);
 			productName = digly;
 			productReference = AB9148702CB681DE00454750 /* digly.app */;
@@ -129,9 +222,6 @@
 			);
 			dependencies = (
 				AB9148822CB681DF00454750 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				AB9148832CB681DF00454750 /* diglyTests */,
 			);
 			name = diglyTests;
 			packageProductDependencies = (
@@ -153,14 +243,79 @@
 			dependencies = (
 				AB91488C2CB681DF00454750 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				AB91488D2CB681DF00454750 /* diglyUITests */,
-			);
 			name = diglyUITests;
 			packageProductDependencies = (
 			);
 			productName = diglyUITests;
 			productReference = AB91488A2CB681DF00454750 /* diglyUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABBFA58F2CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch App" */;
+			buildPhases = (
+				ABBFA5602CB6886C001BA1E2 /* Sources */,
+				ABBFA5612CB6886C001BA1E2 /* Frameworks */,
+				ABBFA5622CB6886C001BA1E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
+			);
+			name = "watchDigly Watch App";
+			packageProductDependencies = (
+			);
+			productName = "watchDigly Watch App";
+			productReference = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		ABBFA5722CB6886D001BA1E2 /* watchDigly Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABBFA5902CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppTests" */;
+			buildPhases = (
+				ABBFA56F2CB6886D001BA1E2 /* Sources */,
+				ABBFA5702CB6886D001BA1E2 /* Frameworks */,
+				ABBFA5712CB6886D001BA1E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABBFA5752CB6886D001BA1E2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
+			);
+			name = "watchDigly Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "watchDigly Watch AppTests";
+			productReference = ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		ABBFA57C2CB6886D001BA1E2 /* watchDigly Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABBFA5912CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppUITests" */;
+			buildPhases = (
+				ABBFA5792CB6886D001BA1E2 /* Sources */,
+				ABBFA57A2CB6886D001BA1E2 /* Frameworks */,
+				ABBFA57B2CB6886D001BA1E2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABBFA57F2CB6886D001BA1E2 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
+			);
+			name = "watchDigly Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "watchDigly Watch AppUITests";
+			productReference = ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -184,6 +339,17 @@
 						CreatedOnToolsVersion = 16.0;
 						TestTargetID = AB91486F2CB681DE00454750;
 					};
+					ABBFA5632CB6886C001BA1E2 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					ABBFA5722CB6886D001BA1E2 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = ABBFA5632CB6886C001BA1E2;
+					};
+					ABBFA57C2CB6886D001BA1E2 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = ABBFA5632CB6886C001BA1E2;
+					};
 				};
 			};
 			buildConfigurationList = AB91486B2CB681DE00454750 /* Build configuration list for PBXProject "digly" */;
@@ -195,6 +361,10 @@
 			);
 			mainGroup = AB9148672CB681DE00454750;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				AB91489F2CB6832200454750 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = AB9148712CB681DE00454750 /* Products */;
 			projectDirPath = "";
@@ -203,6 +373,9 @@
 				AB91486F2CB681DE00454750 /* digly */,
 				AB91487F2CB681DF00454750 /* diglyTests */,
 				AB9148892CB681DF00454750 /* diglyUITests */,
+				ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */,
+				ABBFA5722CB6886D001BA1E2 /* watchDigly Watch AppTests */,
+				ABBFA57C2CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -223,6 +396,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AB9148882CB681DF00454750 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA5622CB6886C001BA1E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA5712CB6886D001BA1E2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA57B2CB6886D001BA1E2 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -253,6 +447,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		ABBFA5602CB6886C001BA1E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA56F2CB6886D001BA1E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ABBFA5792CB6886D001BA1E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -265,6 +480,21 @@
 			isa = PBXTargetDependency;
 			target = AB91486F2CB681DE00454750 /* digly */;
 			targetProxy = AB91488B2CB681DF00454750 /* PBXContainerItemProxy */;
+		};
+		ABBFA5752CB6886D001BA1E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
+			targetProxy = ABBFA5742CB6886D001BA1E2 /* PBXContainerItemProxy */;
+		};
+		ABBFA57F2CB6886D001BA1E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
+			targetProxy = ABBFA57E2CB6886D001BA1E2 /* PBXContainerItemProxy */;
+		};
+		ABBFA5862CB6886D001BA1E2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
+			targetProxy = ABBFA5852CB6886D001BA1E2 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -321,6 +551,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -378,6 +609,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -399,9 +631,11 @@
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = digly/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -428,9 +662,11 @@
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = digly/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -518,6 +754,152 @@
 			};
 			name = Release;
 		};
+		ABBFA5892CB6886D001BA1E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "watchDigly Watch App/watchDigly Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"watchDigly Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = H856SYKNM8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = watchDigly;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 사용하고자 해요.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 공유하고자 해요.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.neoself.digly;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.digly.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		ABBFA58A2CB6886D001BA1E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "watchDigly Watch App/watchDigly Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"watchDigly Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = H856SYKNM8;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = watchDigly;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 사용하고자 해요.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 공유하고자 해요.";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.neoself.digly;
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.digly.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		ABBFA58B2CB6886D001BA1E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H856SYKNM8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchDigly Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchDigly Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		ABBFA58C2CB6886D001BA1E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H856SYKNM8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchDigly Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchDigly Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		ABBFA58D2CB6886D001BA1E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H856SYKNM8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "watchDigly Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		ABBFA58E2CB6886D001BA1E2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = H856SYKNM8;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "watchDigly Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -557,7 +939,66 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		ABBFA58F2CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABBFA5892CB6886D001BA1E2 /* Debug */,
+				ABBFA58A2CB6886D001BA1E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABBFA5902CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABBFA58B2CB6886D001BA1E2 /* Debug */,
+				ABBFA58C2CB6886D001BA1E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABBFA5912CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABBFA58D2CB6886D001BA1E2 /* Debug */,
+				ABBFA58E2CB6886D001BA1E2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AB91489F2CB6832200454750 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AB9148A02CB6832200454750 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB91489F2CB6832200454750 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		AB9148A32CB6834B00454750 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AB9148682CB681DE00454750 /* Project object */;
 }
