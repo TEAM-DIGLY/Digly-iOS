@@ -4,7 +4,7 @@
 //
 //  Created by 김 형석 on 10/9/24.
 //
-
+import Foundation
 import SwiftUI
 
 struct ContentView: View {
@@ -19,20 +19,9 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-        Text("MeasurementStatus")
-            Text("\(viewModel.measurementStatus)")
-                .fontWeight(.bold).padding(.bottom,4)
-            
             Text("ConnectionStatus")
             Text("\(viewModel.connectionStatus)")
                 .fontWeight(.bold).padding(.bottom,4)
-            Text("isWCSessionSupported")
-            Text("\(String(viewModel.isWCSessionSupported))")
-                .fontWeight(.bold)
         }
     }
-}
-
-#Preview {
-    ContentView()
 }

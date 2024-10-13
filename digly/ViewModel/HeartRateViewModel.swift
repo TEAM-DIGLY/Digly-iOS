@@ -53,7 +53,6 @@ class HeartRateViewModel: NSObject, ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             //TODO: self?.sendMaxHeartRateToServer()
             print("sendMaxHeartRateToServer")
-            self?.maxHeartRate = 0 // Reset max heart rate for the next minute
         }
     }
 }
@@ -87,13 +86,14 @@ extension HeartRateViewModel: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
             self.message = message.values.debugDescription
+            
             if let heartRate = message["heartRate"] as? Double {
                 self.currentHeartRate = heartRate
                 self.maxHeartRate = max(self.maxHeartRate, heartRate)
             }
             
-            if let connectionStatus = message["connectionStatus"] as? String {
-                self.connectionStatus = connectionStatus
+            if let maxHeartRate = message["maxHeartRate"] as? Double {
+                self.maxHeartRate = maxHeartRate
             }
             
             if let measurementStatus = message["measurementStatus"] as? String {
