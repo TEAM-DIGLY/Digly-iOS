@@ -71,12 +71,24 @@
 		ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "watchDigly Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABBFA59C2CB6A2C7001BA1E2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AB91486F2CB681DE00454750 /* digly */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AB9148722CB681DE00454750 /* digly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */,
+			);
 			path = digly;
 			sourceTree = "<group>";
 		};
@@ -148,7 +160,6 @@
 		AB9148672CB681DE00454750 = {
 			isa = PBXGroup;
 			children = (
-				ABBFA59C2CB6A2C7001BA1E2 /* Info.plist */,
 				AB9148722CB681DE00454750 /* digly */,
 				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
 				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
@@ -620,9 +631,11 @@
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = digly/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -649,9 +662,11 @@
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = digly/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (

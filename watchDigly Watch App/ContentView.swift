@@ -14,12 +14,21 @@ struct ContentView: View {
         VStack {
             Text("Current Heart Rate")
                 .font(.headline)
+            
             Text("\(Int(viewModel.currentHeartRate)) BPM")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-        }
-        .onAppear {
-            viewModel.startMonitoring()
+            
+        Text("MeasurementStatus")
+            Text("\(viewModel.measurementStatus)")
+                .fontWeight(.bold).padding(.bottom,4)
+            
+            Text("ConnectionStatus")
+            Text("\(viewModel.connectionStatus)")
+                .fontWeight(.bold).padding(.bottom,4)
+            Text("isWCSessionSupported")
+            Text("\(String(viewModel.isWCSessionSupported))")
+                .fontWeight(.bold)
         }
     }
 }

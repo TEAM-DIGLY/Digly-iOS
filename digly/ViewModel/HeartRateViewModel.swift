@@ -7,13 +7,14 @@
 
 import Foundation
 import WatchConnectivity
-import Combine
 
 class HeartRateViewModel: NSObject, ObservableObject {
     @Published var currentHeartRate: Double = 0
+    @Published var message: String = ""
     @Published var connectionStatus: String = "Disconnected"
-    
-    private var maxHeartRate: Double = 0
+    @Published var measurementStatus: String = "Not Started"
+
+    @Published var maxHeartRate: Double = 0 //TODO: private var로 변경하기(지금은 디버깅 위해 ui 띄우려고 임시 @Published 속성 부여)
     private var timer: Timer?
     private var wcSession: WCSession?
     
@@ -38,12 +39,8 @@ class HeartRateViewModel: NSObject, ObservableObject {
         
         if session.isPaired {
             if session.isWatchAppInstalled {
-                if session.isReachable{
-                    startMaxHeartRateTimer()
-                    connectionStatus = "Connected"
-                } else {
-                    connectionStatus = "Watch App Installed but Not Reachable"
-                }
+                connectionStatus = session.isReachable ? "Connected" : "Watch App Installed but Not Reachable"
+                
             } else {
                 connectionStatus = "Watch Paired but App Not Installed"
             }
@@ -55,6 +52,7 @@ class HeartRateViewModel: NSObject, ObservableObject {
     private func startMaxHeartRateTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             //TODO: self?.sendMaxHeartRateToServer()
+            print("sendMaxHeartRateToServer")
             self?.maxHeartRate = 0 // Reset max heart rate for the next minute
         }
     }
@@ -62,6 +60,7 @@ class HeartRateViewModel: NSObject, ObservableObject {
 
 extension HeartRateViewModel: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        print("activiationDidComplete session")
         DispatchQueue.main.async {
             if let error = error {
                 print("WCSession activation failed with error: \(error.localizedDescription)")
@@ -69,6 +68,7 @@ extension HeartRateViewModel: WCSessionDelegate {
             } else {
                 print("WCSession activated with state: \(activationState.rawValue)")
                 self.updateConnectionStatus()
+                self.startMaxHeartRateTimer()
             }
         }
     }
@@ -86,9 +86,18 @@ extension HeartRateViewModel: WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
+            self.message = message.values.debugDescription
             if let heartRate = message["heartRate"] as? Double {
                 self.currentHeartRate = heartRate
                 self.maxHeartRate = max(self.maxHeartRate, heartRate)
+            }
+            
+            if let connectionStatus = message["connectionStatus"] as? String {
+                self.connectionStatus = connectionStatus
+            }
+            
+            if let measurementStatus = message["measurementStatus"] as? String {
+                self.measurementStatus = measurementStatus
             }
         }
     }
