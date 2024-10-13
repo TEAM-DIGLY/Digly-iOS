@@ -12,9 +12,11 @@ class HeartRateViewModel: NSObject, ObservableObject {
     @Published var currentHeartRate: Double = 0
     @Published var message: String = ""
     @Published var connectionStatus: String = "Disconnected"
-    @Published var measurementStatus: String = "Not Started"
+    @Published var dataType: String = ""
+    @Published var lastUpdated: String = ""
 
     @Published var maxHeartRate: Double = 0 //TODO: private var로 변경하기(지금은 디버깅 위해 ui 띄우려고 임시 @Published 속성 부여)
+    
     private var timer: Timer?
     private var wcSession: WCSession?
     
@@ -50,8 +52,9 @@ class HeartRateViewModel: NSObject, ObservableObject {
     }
     
     private func startMaxHeartRateTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
             //TODO: self?.sendMaxHeartRateToServer()
+            self?.maxHeartRate = 0
             print("sendMaxHeartRateToServer")
         }
     }
@@ -59,7 +62,6 @@ class HeartRateViewModel: NSObject, ObservableObject {
 
 extension HeartRateViewModel: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        print("activiationDidComplete session")
         DispatchQueue.main.async {
             if let error = error {
                 print("WCSession activation failed with error: \(error.localizedDescription)")
@@ -71,6 +73,7 @@ extension HeartRateViewModel: WCSessionDelegate {
             }
         }
     }
+    
     
     func sessionDidBecomeInactive(_ session: WCSession) {
         DispatchQueue.main.async {
@@ -85,19 +88,9 @@ extension HeartRateViewModel: WCSessionDelegate {
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async {
-            self.message = message.values.debugDescription
-            
             if let heartRate = message["heartRate"] as? Double {
                 self.currentHeartRate = heartRate
                 self.maxHeartRate = max(self.maxHeartRate, heartRate)
-            }
-            
-            if let maxHeartRate = message["maxHeartRate"] as? Double {
-                self.maxHeartRate = maxHeartRate
-            }
-            
-            if let measurementStatus = message["measurementStatus"] as? String {
-                self.measurementStatus = measurementStatus
             }
         }
     }

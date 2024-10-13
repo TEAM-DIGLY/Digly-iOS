@@ -19,9 +19,9 @@ struct ContentView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             
-            Text("ConnectionStatus")
-            Text("\(viewModel.connectionStatus)")
-                .fontWeight(.bold).padding(.bottom,4)
+        }
+        .onAppear{
+            viewModel.startMonitoring()
         }
     }
 }

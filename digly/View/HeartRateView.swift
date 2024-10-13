@@ -15,19 +15,6 @@ struct HeartRateView: View {
             Text("Max: \(Int(viewModel.maxHeartRate)) BPM")
                 .font(.system(size: 60, weight: .bold, design: .rounded))
                 .foregroundColor(.red)
-            
-            
-            Text("Measurement Status:")
-                .font(.headline)
-            Text(viewModel.measurementStatus)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-            
-            Text("Connection Status:")
-                .font(.headline)
-            Text(viewModel.connectionStatus)
-                .font(.subheadline)
-                .foregroundColor(.secondary)
         }
         .padding()
         .onAppear {

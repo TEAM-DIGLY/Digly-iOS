@@ -1,176 +1,178 @@
 import Foundation
 import HealthKit
+import Combine
 import WatchConnectivity
 
 class HeartRateMonitorViewModel: NSObject, ObservableObject {
-    private let healthStore = HKHealthStore()
-    private var observerQuery: HKObserverQuery?
-    private var anchoredObjectQuery: HKAnchoredObjectQuery?
-    private var anchor: HKQueryAnchor?
-    private var timer: Timer?
-    private var session: WCSession?
-    
-    @Published var connectionStatus: ConnectionStatus = .checking
     @Published var currentHeartRate: Double = 0
-    @Published var maxHeartRateLastMinute: Double = 0
+    @Published var isMonitoring: Bool = false
     
-    private var heartRatesThisMinute: [Double] = []
-    private var lastSyncTime: Date = Date()
+    private let healthStore = HKHealthStore()
+    private var workoutSession: HKWorkoutSession?
+    private var anchoredObjectQuery: HKAnchoredObjectQuery?
+    private var timer: Timer?
     
-    enum ConnectionStatus: String {
-        case checking = "연결 확인 중"
-        case connected = "연결됨"
-        case disconnected = "연결 끊김"
-        case error = "연결 오류"
-        case unreachable = "unreachable"
-    }
+    private let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
     
     override init() {
         super.init()
-        setupWCSession()
-        requestAuthorization()
+        setupWatchConnectivity()
     }
     
-    private func setupWCSession() {
-        if WCSession.isSupported() {
-            session = WCSession.default
-            session?.delegate = self
-            session?.activate()
+    func startMonitoring() {
+        requestAuthorization { success in
+            guard success else { return }
+            self.startWorkoutSession()
+            self.setupAnchoredObjectQuery()
+            self.startTimer()
+            self.enableBackgroundDelivery()
+            DispatchQueue.main.async {
+                self.isMonitoring = true
+            }
         }
     }
     
-    private func requestAuthorization() {
-        let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
-        healthStore.requestAuthorization(toShare: [], read: [heartRateType]) { [weak self] success, error in
-            if success {
-                self?.setupQueries()
-                self?.startMinuteTimer()
-            } else if let error = error {
+    func stopMonitoring() {
+        stopWorkoutSession()
+        stopAnchoredObjectQuery()
+        stopTimer()
+        DispatchQueue.main.async {
+            self.isMonitoring = false
+        }
+    }
+    
+    private func requestAuthorization(completion: @escaping (Bool) -> Void) {
+        let typesToShare: Set = [HKObjectType.workoutType()]
+        let typesToRead: Set = [heartRateType]
+        
+        healthStore.requestAuthorization(toShare: typesToShare, read: typesToRead) { success, error in
+            if let error = error {
                 print("HealthKit authorization failed: \(error.localizedDescription)")
             }
+            completion(success)
+        }
+    }
+    // 백그라운드에서 장시간 실행될 수 있게끔 운동세션을 시작.
+    private func startWorkoutSession() {
+        let configuration = HKWorkoutConfiguration()
+        configuration.activityType = .other
+        configuration.locationType = .outdoor
+        
+        do {
+            workoutSession = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
+            healthStore.start(workoutSession!)
+        } catch {
+            print("Failed to start workout session: \(error)")
         }
     }
     
-    private func setupQueries() {
-        let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
-        
-        // ObserverQuery 설정
-        observerQuery = HKObserverQuery(sampleType: heartRateType, predicate: nil) { [weak self] query, completionHandler, error in
-            if let error = error {
-                print("Observer Query error: \(error.localizedDescription)")
-            } else {
-                // 초기 데이터 설정
-                self?.fetchLatestHeartRate()
-            }
-            completionHandler()
-        }
-        
-        // AnchoredObjectQuery 설정
-        anchoredObjectQuery = HKAnchoredObjectQuery(type: heartRateType, predicate: nil, anchor: anchor, limit: HKObjectQueryNoLimit) { [weak self] (query, samples, deletedObjects, newAnchor, error) in
-            self?.processHeartRateSamples(samples)
-            self?.anchor = newAnchor
-        }
-        
-        anchoredObjectQuery?.updateHandler = { [weak self] (query, samples, deletedObjects, newAnchor, error) in
-            self?.processHeartRateSamples(samples)
-            self?.anchor = newAnchor
-        }
-        
-        if let observerQuery = observerQuery, let anchoredObjectQuery = anchoredObjectQuery {
-            healthStore.execute(observerQuery)
-            healthStore.execute(anchoredObjectQuery)
-            
-            // 백그라운드 업데이트 활성화
-            healthStore.enableBackgroundDelivery(for: heartRateType, frequency: .immediate) { (success, error) in
-                if let error = error {
-                    print("Failed to enable background delivery: \(error.localizedDescription)")
-                }
-            }
-        }
+    private func stopWorkoutSession() {
+        guard let workoutSession = workoutSession else { return }
+        healthStore.end(workoutSession)
+        self.workoutSession = nil
     }
     
-    private func fetchLatestHeartRate() {
-        let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
-        let predicate = HKQuery.predicateForSamples(withStart: Date().addingTimeInterval(-10), end: nil, options: .strictEndDate)
-        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
-        
-        let query = HKSampleQuery(sampleType: heartRateType, predicate: predicate, limit: 1, sortDescriptors: [sortDescriptor]) { [weak self] (query, samples, error) in
-            guard let sample = samples?.first as? HKQuantitySample else { return }
-            
-            DispatchQueue.main.async {
-                let heartRate = sample.quantity.doubleValue(for: HKUnit.count().unitDivided(by: .minute()))
-                self?.processNewHeartRate(heartRate)
-            }
+    private func setupAnchoredObjectQuery() {
+        // 실시간으로 새로운 데이터 바로 받기 위해 하기 유형 사용
+        let query = HKAnchoredObjectQuery(type: heartRateType, predicate: nil, anchor: nil, limit: HKObjectQueryNoLimit) { [weak self] query, samples, deletedObjects, anchor, error in
+            self?.processHeartRateSamples(samples)
         }
         
+        query.updateHandler = { [weak self] query, samples, deletedObjects, anchor, error in
+            self?.processHeartRateSamples(samples)
+        }
+        
+        anchoredObjectQuery = query
         healthStore.execute(query)
     }
     
+    private func stopAnchoredObjectQuery() {
+        if let query = anchoredObjectQuery {
+            healthStore.stop(query)
+            anchoredObjectQuery = nil
+        }
+    }
+    
+    // MARK: HKAnchoredObjectQuery 초기화 및 새로운 샘플이 HealthStore로부터 전송올때, 실행됨.
+    // 심박수 정보 currentHeartRate에 저장하고, iOS에 전달
     private func processHeartRateSamples(_ samples: [HKSample]?) {
         guard let samples = samples as? [HKQuantitySample] else { return }
         
-        DispatchQueue.main.async {
-            for sample in samples {
-                let heartRate = sample.quantity.doubleValue(for: HKUnit.count().unitDivided(by: .minute()))
-                self.processNewHeartRate(heartRate)
+        for sample in samples {
+            let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
+            DispatchQueue.main.async {
+                self.currentHeartRate = heartRate
             }
+            sendMessageToIOS(["heartRate":heartRate,
+                              "dataType":"HKAnchoredObjectQuery",
+                              "lastUpdated":Date().description
+                             ])
         }
     }
     
-    private func processNewHeartRate(_ heartRate: Double) {
-        self.currentHeartRate = heartRate
-        self.heartRatesThisMinute.append(heartRate)
-        self.maxHeartRateLastMinute = max(self.maxHeartRateLastMinute, heartRate) // TODO: 로직 개선
-        sendMessageToiOSApp(message: ["heartRate": heartRate])
+    // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            self?.fetchLatestHeartRate()
+        }
     }
     
-    private func startMinuteTimer() {
-            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
-                guard let self = self else { return }
-                sendMessageToiOSApp(message: ["maxHeartRate": heartRatesThisMinute.max() ?? maxHeartRateLastMinute]) // TODO: 로직 개선
-                
-                maxHeartRateLastMinute = 0
-                heartRatesThisMinute.removeAll()
-                lastSyncTime = Date()
-            }
-        }
-        
-        private func sendMessageToiOSApp(message: [String: Any]) {
-            guard let session = session, session.isReachable else {
-                self.connectionStatus = .unreachable
-                return
-            }
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
+    private func fetchLatestHeartRate() {
+        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
+        let query = HKSampleQuery(sampleType: heartRateType, predicate: nil, limit: 1, sortDescriptors: [sortDescriptor]) { [weak self] query, samples, error in
+            guard let sample = samples?.first as? HKQuantitySample else { return }
             
-            session.sendMessage(message, replyHandler: nil) { error in
-                self.connectionStatus = .error
-                print("Error sending message to iOS app: \(error.localizedDescription)")
+            let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
+            DispatchQueue.main.async {
+                self?.currentHeartRate = heartRate
             }
+            self?.sendMessageToIOS(["heartRate":heartRate,
+                                    "dataType":"HKSampleQuery",
+                                    "lastUpdated":Date().description
+                                   ])
         }
-        
-        deinit {
-            timer?.invalidate()
-            if let query = observerQuery {
-                healthStore.stop(query)
-            }
-            if let query = anchoredObjectQuery {
-                healthStore.stop(query)
+        healthStore.execute(query)
+    }
+    
+    // 백그라운드에도 새로운 데이터 받을 수 있게 함.
+    private func enableBackgroundDelivery() {
+        healthStore.enableBackgroundDelivery(for: heartRateType, frequency: .immediate) { success, error in
+            if let error = error {
+                print("Failed to enable background delivery: \(error)")
             }
         }
     }
+    
+    private func sendMessageToIOS(_ message: [String:Any]) {
+        guard WCSession.default.isReachable else { return }
+        
+        WCSession.default.sendMessage(message, replyHandler: nil) { error in
+            print("Failed to send heart rate: \(error.localizedDescription)")
+        }
+    }
+    
+    private func setupWatchConnectivity() {
+        if WCSession.isSupported() {
+            let session = WCSession.default
+            session.delegate = self
+            session.activate()
+        }
+    }
+}
 
 extension HeartRateMonitorViewModel: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if let error = error {
-            self.connectionStatus = .error
             print("WCSession activation failed: \(error.localizedDescription)")
-        } else {
-            self.connectionStatus = .connected
-            print("WCSession activated successfully")
         }
     }
     
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        // iOS 앱으로부터 메시지를 받았을 때의 처리
         print("Received message from iOS app: \(message)")
     }
 }
