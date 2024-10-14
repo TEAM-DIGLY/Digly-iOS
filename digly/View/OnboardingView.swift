@@ -16,7 +16,7 @@ struct OnboardingView: View {
                 .frame(width: 160)
                 .padding(.bottom,8)
             Text("문화생활의 여운")
-                .font(._title)
+                .fontStyle(.title1)
                 .foregroundStyle(.gray60)
         }
     }
