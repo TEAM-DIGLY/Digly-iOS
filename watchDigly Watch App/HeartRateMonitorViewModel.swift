@@ -19,6 +19,14 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         setupWatchConnectivity()
     }
     
+    private func setupWatchConnectivity() {
+        if WCSession.isSupported() {
+            let session = WCSession.default
+            session.delegate = self
+            session.activate()
+        }
+    }
+    
     func startMonitoring() {
         requestAuthorization { success in
             guard success else { return }
@@ -41,6 +49,15 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         }
     }
     
+    // 백그라운드에도 새로운 데이터 받을 수 있게 함.
+    private func enableBackgroundDelivery() {
+        healthStore.enableBackgroundDelivery(for: heartRateType, frequency: .immediate) { success, error in
+            if let error = error {
+                print("Failed to enable background delivery: \(error)")
+            }
+        }
+    }
+    
     private func requestAuthorization(completion: @escaping (Bool) -> Void) {
         let typesToShare: Set = [HKObjectType.workoutType()]
         let typesToRead: Set = [heartRateType]
@@ -52,6 +69,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             completion(success)
         }
     }
+    
     // 백그라운드에서 장시간 실행될 수 있게끔 운동세션을 시작.
     private func startWorkoutSession() {
         let configuration = HKWorkoutConfiguration()
@@ -93,6 +111,18 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         }
     }
     
+    // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
+    private func startTimer() {
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            self?.fetchLatestHeartRate()
+        }
+    }
+    
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+    }
+    
     // MARK: HKAnchoredObjectQuery 초기화 및 새로운 샘플이 HealthStore로부터 전송올때, 실행됨.
     // 심박수 정보 currentHeartRate에 저장하고, iOS에 전달
     private func processHeartRateSamples(_ samples: [HKSample]?) {
@@ -108,18 +138,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
                               "lastUpdated":Date().description
                              ])
         }
-    }
-    
-    // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
-            self?.fetchLatestHeartRate()
-        }
-    }
-    
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
     }
     
     private func fetchLatestHeartRate() {
@@ -139,28 +157,13 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         healthStore.execute(query)
     }
     
-    // 백그라운드에도 새로운 데이터 받을 수 있게 함.
-    private func enableBackgroundDelivery() {
-        healthStore.enableBackgroundDelivery(for: heartRateType, frequency: .immediate) { success, error in
-            if let error = error {
-                print("Failed to enable background delivery: \(error)")
-            }
-        }
-    }
+    
     
     private func sendMessageToIOS(_ message: [String:Any]) {
         guard WCSession.default.isReachable else { return }
         
         WCSession.default.sendMessage(message, replyHandler: nil) { error in
             print("Failed to send heart rate: \(error.localizedDescription)")
-        }
-    }
-    
-    private func setupWatchConnectivity() {
-        if WCSession.isSupported() {
-            let session = WCSession.default
-            session.delegate = self
-            session.activate()
         }
     }
 }
@@ -170,9 +173,5 @@ extension HeartRateMonitorViewModel: WCSessionDelegate {
         if let error = error {
             print("WCSession activation failed: \(error.localizedDescription)")
         }
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        print("Received message from iOS app: \(message)")
     }
 }

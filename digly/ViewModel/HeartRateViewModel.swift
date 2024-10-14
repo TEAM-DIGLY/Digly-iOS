@@ -14,8 +14,8 @@ class HeartRateViewModel: NSObject, ObservableObject {
     @Published var connectionStatus: String = "Disconnected"
     @Published var dataType: String = ""
     @Published var lastUpdated: String = ""
-
-    @Published var maxHeartRate: Double = 0 //TODO: private var로 변경하기(지금은 디버깅 위해 ui 띄우려고 임시 @Published 속성 부여)
+    //TODO: private var로 변경하기(지금은 디버깅 위해 ui 띄우려고 임시 @Published 속성 부여)
+    @Published var maxHeartRate: Double = 0
     
     private var timer: Timer?
     private var wcSession: WCSession?

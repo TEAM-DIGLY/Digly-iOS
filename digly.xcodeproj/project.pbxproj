@@ -74,6 +74,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E5D4DD252CBCEB56004C816B /* Exceptions for "digly" folder in "watchDigly Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Font/Pretendard-SemiBold.otf",
+			);
+			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
+		};
+		E5D4DD272CBCEB66004C816B /* Exceptions for "watchDigly Watch App" folder in "watchDigly Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"watchDigly-Watch-App-Info.plist",
+			);
+			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
+		};
 		E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -88,12 +102,16 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */,
+				E5D4DD252CBCEB56004C816B /* Exceptions for "digly" folder in "watchDigly Watch App" target */,
 			);
 			path = digly;
 			sourceTree = "<group>";
 		};
 		ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E5D4DD272CBCEB66004C816B /* Exceptions for "watchDigly Watch App" folder in "watchDigly Watch App" target */,
+			);
 			path = "watchDigly Watch App";
 			sourceTree = "<group>";
 		};
@@ -766,6 +784,7 @@
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "watchDigly-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = watchDigly;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 사용하고자 해요.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 공유하고자 해요.";
@@ -800,6 +819,7 @@
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "watchDigly-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = watchDigly;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 사용하고자 해요.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 공유하고자 해요.";
