@@ -18,12 +18,21 @@ struct ContentView: View {
             Text("\(Int(viewModel.currentHeartRate)) BPM")
                 .font(.largeTitle)
                 .fontWeight(.bold)
-                .padding(.bottom,24)
+                .padding(.bottom,12)
             
-            Text("isPermissionGranted:")
+            Text("Current Max Rate")
+                .font(.headline)
+            
+            Text("\(Int(viewModel.maxHeartRate)) BPM")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.bottom,12)
+            
+            Text("isMonitoring:")
                 .font(.caption2)
                 .fontWeight(.bold)
-            Text("\(viewModel.isPermissionGranted)")
+            
+            Text("\(viewModel.isMonitoring)")
         }
         .onAppear{
             viewModel.startMonitoring()

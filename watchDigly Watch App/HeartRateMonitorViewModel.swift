@@ -6,14 +6,13 @@ import Alamofire
 
 class HeartRateMonitorViewModel: NSObject, ObservableObject {
     @Published var currentHeartRate: Double = 0
-    private var maxHeartRate: Double = 0
+    @Published var maxHeartRate: Int = 0
     @Published var isMonitoring: Bool = false
     
     private let healthStore = HKHealthStore()
     private var workoutSession: HKWorkoutSession?
     private var anchoredObjectQuery: HKAnchoredObjectQuery?
     private var timer: Timer?
-    @Published var isPermissionGranted: Bool = false
     
     private let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
     
@@ -33,12 +32,11 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     func startMonitoring() {
         requestAuthorization { success in
             guard success else { return }
-            self.isPermissionGranted = true
-            self.startWorkoutSession()
-            self.setupAnchoredObjectQuery()
-            self.startTimer()
-            self.enableBackgroundDelivery()
             DispatchQueue.main.async {
+                self.startWorkoutSession()
+                self.setupAnchoredObjectQuery()
+                self.startTimer()
+                self.enableBackgroundDelivery()
                 self.isMonitoring = true
             }
         }
@@ -119,10 +117,9 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
             self?.fetchLatestHeartRate()
-            self?.sendMaxHeartRateToServer(self?.maxHeartRate ?? -10.0)
-            self?.maxHeartRate = 0
+            self?.sendMaxHeartRateToServer()
         }
     }
     
@@ -140,12 +137,9 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
             DispatchQueue.main.async {
                 self.currentHeartRate = heartRate
-                self.maxHeartRate = max(self.maxHeartRate, heartRate)
+                self.maxHeartRate = max(self.maxHeartRate, Int(heartRate))
+                self.sendMessageToIOS(["heartRate":heartRate])
             }
-            sendMessageToIOS(["heartRate":heartRate,
-                              "dataType":"HKAnchoredObjectQuery",
-                              "lastUpdated":Date().description
-                             ])
         }
     }
     
@@ -157,30 +151,28 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
             DispatchQueue.main.async {
                 self?.currentHeartRate = heartRate
-                self?.maxHeartRate = max(self?.maxHeartRate ?? -10.0 , heartRate)
+                self?.maxHeartRate = max(self?.maxHeartRate ?? -10, Int(heartRate))
+                self?.sendMessageToIOS(["heartRate":heartRate])
             }
-            self?.sendMessageToIOS(["heartRate":heartRate,
-                                    "dataType":"HKSampleQuery",
-                                    "lastUpdated":Date().description
-                                   ])
         }
         healthStore.execute(query)
     }
     
-    private func sendMaxHeartRateToServer(_ maxHeartRate : Double) {
+    private func sendMaxHeartRateToServer() {
         print("sendMaxHeartRateToServer")
         let baseURL = "http://43.201.140.227:8080/api"
         let endpoint = "/heartRate"
         
         AF.request(baseURL+endpoint,
                    method: .post,
-                   parameters: ["heartRate": maxHeartRate],
+                   parameters: ["heartRate": self.maxHeartRate],
                    encoding: JSONEncoding.default)
         .validate()
         .responseDecodable(of: String.self) { response in
             switch response.result {
             case .success(let sentHeartRateId):
                 print("success\(sentHeartRateId)")
+                self.maxHeartRate = 0
             case .failure(let error):
                 print("Error sending HeartRate: \(error.localizedDescription)")
             }

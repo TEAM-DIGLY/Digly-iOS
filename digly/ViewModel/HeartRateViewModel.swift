@@ -8,7 +8,7 @@ class HeartRateViewModel: NSObject, ObservableObject {
     @Published var connectionStatus: String = "Disconnected"
     @Published var dataType: String = ""
     @Published var lastUpdated: String = ""
-    @Published var isMonitoring: Bool = false
+    @Published var isMonitoring: Bool = true
     
     private var timer: Timer?
     private var wcSession: WCSession?

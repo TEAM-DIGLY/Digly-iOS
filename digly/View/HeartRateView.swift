@@ -20,9 +20,6 @@ struct HeartRateView: View {
             
             Text(viewModel.message)
                 .padding()
-            
-            Text("Connection Status: \(viewModel.connectionStatus)")
-                .padding()
         }
         .onAppear {
             viewModel.startHeartRateMonitoring()

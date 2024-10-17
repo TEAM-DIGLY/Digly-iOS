@@ -11,6 +11,7 @@
 		AB9148A42CB6834B00454750 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A32CB6834B00454750 /* Alamofire */; };
 		ABBFA5872CB6886D001BA1E2 /* watchDigly Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E5B7BE1C2CC0B19800CBFE0B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E5B7BE1B2CC0B19800CBFE0B /* Alamofire */; };
+		E5D29F302CC0E1E100427849 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E5D29F2F2CC0E1DC00427849 /* .gitignore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,9 +73,17 @@
 		ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "watchDigly Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5D29F2F2CC0E1DC00427849 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E5B7BE202CC0DD0700CBFE0B /* Exceptions for "digly" folder in "digly" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AB91486F2CB681DE00454750 /* digly */;
+		};
 		E5D4DD252CBCEB56004C816B /* Exceptions for "digly" folder in "watchDigly Watch App" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -82,20 +91,13 @@
 			);
 			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
 		};
-		E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = AB91486F2CB681DE00454750 /* digly */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		AB9148722CB681DE00454750 /* digly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */,
+				E5B7BE202CC0DD0700CBFE0B /* Exceptions for "digly" folder in "digly" target */,
 				E5D4DD252CBCEB56004C816B /* Exceptions for "digly" folder in "watchDigly Watch App" target */,
 			);
 			path = digly;
@@ -170,6 +172,7 @@
 		AB9148672CB681DE00454750 = {
 			isa = PBXGroup;
 			children = (
+				E5D29F2F2CC0E1DC00427849 /* .gitignore */,
 				AB9148722CB681DE00454750 /* digly */,
 				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
 				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
@@ -404,6 +407,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5D29F302CC0E1E100427849 /* .gitignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,6 +574,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -628,6 +633,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
