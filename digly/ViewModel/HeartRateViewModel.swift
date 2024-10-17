@@ -15,8 +15,6 @@ class HeartRateViewModel: NSObject, ObservableObject {
     @Published var connectionStatus: String = "Disconnected"
     @Published var dataType: String = ""
     @Published var lastUpdated: String = ""
-    //TODO: private var로 변경하기(지금은 디버깅 위해 ui 띄우려고 임시 @Published 속성 부여)
-    @Published var maxHeartRate: Double = 0
     
     private var timer: Timer?
     private var wcSession: WCSession?
@@ -51,32 +49,6 @@ class HeartRateViewModel: NSObject, ObservableObject {
             connectionStatus = "Watch Not Paired"
         }
     }
-    
-    private func startMaxHeartRateTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
-            self?.sendMaxHeartRateToServer(self?.maxHeartRate ?? -10.0)
-            self?.maxHeartRate = 0
-        }
-    }
-    
-    private func sendMaxHeartRateToServer(_ maxHeartRate : Double) {
-        let baseURL = "http://43.201.140.227:8080/api"
-        let endpoint = "/heartRate"
-        
-        AF.request(baseURL+endpoint,
-                   method: .post,
-                   parameters: ["heartRate": maxHeartRate],
-                   encoding: JSONEncoding.default)
-        .validate()
-        .responseDecodable(of: String.self) { response in
-            switch response.result {
-            case .success(let sentHeartRateId):
-                print("success\(sentHeartRateId)")
-            case .failure(let error):
-                print("Error sending HeartRate: \(error.localizedDescription)")
-            }
-        }
-    }
 }
 
 extension HeartRateViewModel: WCSessionDelegate {
@@ -88,7 +60,6 @@ extension HeartRateViewModel: WCSessionDelegate {
             } else {
                 print("WCSession activated with state: \(activationState.rawValue)")
                 self.updateConnectionStatus()
-                self.startMaxHeartRateTimer()
             }
         }
     }
@@ -109,7 +80,6 @@ extension HeartRateViewModel: WCSessionDelegate {
         DispatchQueue.main.async {
             if let heartRate = message["heartRate"] as? Double {
                 self.currentHeartRate = heartRate
-                self.maxHeartRate = max(self.maxHeartRate, heartRate)
             }
         }
     }

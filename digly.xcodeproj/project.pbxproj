@@ -10,6 +10,7 @@
 		AB9148A12CB6832200454750 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A02CB6832200454750 /* GoogleSignIn */; };
 		AB9148A42CB6834B00454750 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A32CB6834B00454750 /* Alamofire */; };
 		ABBFA5872CB6886D001BA1E2 /* watchDigly Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E5B7BE1C2CC0B19800CBFE0B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E5B7BE1B2CC0B19800CBFE0B /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,13 +82,6 @@
 			);
 			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
 		};
-		E5D4DD272CBCEB66004C816B /* Exceptions for "watchDigly Watch App" folder in "watchDigly Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"watchDigly-Watch-App-Info.plist",
-			);
-			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
-		};
 		E5F1CC272CBB763B005FAC13 /* Exceptions for "digly" folder in "digly" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -109,9 +103,6 @@
 		};
 		ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				E5D4DD272CBCEB66004C816B /* Exceptions for "watchDigly Watch App" folder in "watchDigly Watch App" target */,
-			);
 			path = "watchDigly Watch App";
 			sourceTree = "<group>";
 		};
@@ -155,6 +146,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B7BE1C2CC0B19800CBFE0B /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,6 +174,7 @@
 				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
 				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
 				ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
+				E5B7BE1A2CC0B19800CBFE0B /* Frameworks */,
 				AB9148712CB681DE00454750 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -197,6 +190,13 @@
 				ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E5B7BE1A2CC0B19800CBFE0B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,6 +285,7 @@
 			);
 			name = "watchDigly Watch App";
 			packageProductDependencies = (
+				E5B7BE1B2CC0B19800CBFE0B /* Alamofire */,
 			);
 			productName = "watchDigly Watch App";
 			productReference = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */;
@@ -1014,6 +1015,11 @@
 			productName = GoogleSignIn;
 		};
 		AB9148A32CB6834B00454750 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+		E5B7BE1B2CC0B19800CBFE0B /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;

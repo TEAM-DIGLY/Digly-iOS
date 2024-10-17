@@ -2,9 +2,11 @@ import Foundation
 import HealthKit
 import Combine
 import WatchConnectivity
+import Alamofire
 
 class HeartRateMonitorViewModel: NSObject, ObservableObject {
     @Published var currentHeartRate: Double = 0
+    private var maxHeartRate: Double = 0
     @Published var isMonitoring: Bool = false
     
     private let healthStore = HKHealthStore()
@@ -92,6 +94,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     private func setupAnchoredObjectQuery() {
         // 실시간으로 새로운 데이터 바로 받기 위해 하기 유형 사용
+        // TODO: Anchor 설정하여, 오랜시간 미사용 후, 다시 켰을때 이전 데이터들 한번에 처리하지 않게끔.
         let query = HKAnchoredObjectQuery(type: heartRateType, predicate: nil, anchor: nil, limit: HKObjectQueryNoLimit) { [weak self] query, samples, deletedObjects, anchor, error in
             self?.processHeartRateSamples(samples)
         }
@@ -115,6 +118,8 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             self?.fetchLatestHeartRate()
+            self?.sendMaxHeartRateToServer(self?.maxHeartRate ?? -10.0)
+            self?.maxHeartRate = 0
         }
     }
     
@@ -125,6 +130,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery 초기화 및 새로운 샘플이 HealthStore로부터 전송올때, 실행됨.
     // 심박수 정보 currentHeartRate에 저장하고, iOS에 전달
+    // TODO: maxHeartRate 계산 및 전송 로직 여기에다가 해야할듯. 핸드폰 화면이 꺼져있을 경우에는 전송이 불가
     private func processHeartRateSamples(_ samples: [HKSample]?) {
         guard let samples = samples as? [HKQuantitySample] else { return }
         
@@ -132,6 +138,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
             DispatchQueue.main.async {
                 self.currentHeartRate = heartRate
+                self.maxHeartRate = max(self.maxHeartRate, heartRate)
             }
             sendMessageToIOS(["heartRate":heartRate,
                               "dataType":"HKAnchoredObjectQuery",
@@ -148,6 +155,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
             DispatchQueue.main.async {
                 self?.currentHeartRate = heartRate
+                self?.maxHeartRate = max(self?.maxHeartRate ?? -10.0 , heartRate)
             }
             self?.sendMessageToIOS(["heartRate":heartRate,
                                     "dataType":"HKSampleQuery",
@@ -157,7 +165,24 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         healthStore.execute(query)
     }
     
-    
+    private func sendMaxHeartRateToServer(_ maxHeartRate : Double) {
+        let baseURL = "http://43.201.140.227:8080/api"
+        let endpoint = "/heartRate"
+        
+        AF.request(baseURL+endpoint,
+                   method: .post,
+                   parameters: ["heartRate": maxHeartRate],
+                   encoding: JSONEncoding.default)
+        .validate()
+        .responseDecodable(of: String.self) { response in
+            switch response.result {
+            case .success(let sentHeartRateId):
+                print("success\(sentHeartRateId)")
+            case .failure(let error):
+                print("Error sending HeartRate: \(error.localizedDescription)")
+            }
+        }
+    }
     
     private func sendMessageToIOS(_ message: [String:Any]) {
         guard WCSession.default.isReachable else { return }
