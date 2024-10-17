@@ -119,7 +119,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { [weak self] _ in
             self?.fetchLatestHeartRate()
             self?.sendMaxHeartRateToServer(self?.maxHeartRate ?? -10.0)
             self?.maxHeartRate = 0
