@@ -13,6 +13,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     private var workoutSession: HKWorkoutSession?
     private var anchoredObjectQuery: HKAnchoredObjectQuery?
     private var timer: Timer?
+    @Published var isPermissionGranted: Bool = false
     
     private let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
     
@@ -32,6 +33,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     func startMonitoring() {
         requestAuthorization { success in
             guard success else { return }
+            self.isPermissionGranted = true
             self.startWorkoutSession()
             self.setupAnchoredObjectQuery()
             self.startTimer()
@@ -48,6 +50,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         stopTimer()
         DispatchQueue.main.async {
             self.isMonitoring = false
+            self.currentHeartRate = 0
         }
     }
     
@@ -116,7 +119,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.fetchLatestHeartRate()
             self?.sendMaxHeartRateToServer(self?.maxHeartRate ?? -10.0)
             self?.maxHeartRate = 0
@@ -130,7 +133,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery 초기화 및 새로운 샘플이 HealthStore로부터 전송올때, 실행됨.
     // 심박수 정보 currentHeartRate에 저장하고, iOS에 전달
-    // TODO: maxHeartRate 계산 및 전송 로직 여기에다가 해야할듯. 핸드폰 화면이 꺼져있을 경우에는 전송이 불가
     private func processHeartRateSamples(_ samples: [HKSample]?) {
         guard let samples = samples as? [HKQuantitySample] else { return }
         
@@ -166,6 +168,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     }
     
     private func sendMaxHeartRateToServer(_ maxHeartRate : Double) {
+        print("sendMaxHeartRateToServer")
         let baseURL = "http://43.201.140.227:8080/api"
         let endpoint = "/heartRate"
         
@@ -197,6 +200,25 @@ extension HeartRateMonitorViewModel: WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if let error = error {
             print("WCSession activation failed: \(error.localizedDescription)")
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        if let command = message["command"] as? String {
+            DispatchQueue.main.async {
+                switch command {
+                case "startMonitoring":
+                    if !self.isMonitoring {
+                        self.startMonitoring()
+                    }
+                case "stopMonitoring":
+                    if self.isMonitoring {
+                        self.stopMonitoring()
+                    }
+                default:
+                    print("Unknown command received: \(command)")
+                }
+            }
         }
     }
 }

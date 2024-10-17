@@ -1,10 +1,3 @@
-//
-//  HeartRateViewModel.swift
-//  digly
-//
-//  Created by 김 형석 on 10/9/24.
-//
-
 import Foundation
 import WatchConnectivity
 import Alamofire
@@ -15,6 +8,7 @@ class HeartRateViewModel: NSObject, ObservableObject {
     @Published var connectionStatus: String = "Disconnected"
     @Published var dataType: String = ""
     @Published var lastUpdated: String = ""
+    @Published var isMonitoring: Bool = false
     
     private var timer: Timer?
     private var wcSession: WCSession?
@@ -41,12 +35,45 @@ class HeartRateViewModel: NSObject, ObservableObject {
         if session.isPaired {
             if session.isWatchAppInstalled {
                 connectionStatus = session.isReachable ? "Connected" : "Watch App Installed but Not Reachable"
-                
             } else {
                 connectionStatus = "Watch Paired but App Not Installed"
             }
         } else {
             connectionStatus = "Watch Not Paired"
+        }
+    }
+    
+    func toggleHeartRateMonitoring() {
+        isMonitoring.toggle()
+        
+        if isMonitoring {
+            startHeartRateMonitoring()
+        } else {
+            stopHeartRateMonitoring()
+        }
+    }
+    
+    func startHeartRateMonitoring() {
+        sendMessageToWatch(["command": "startMonitoring"])
+        message = "Starting heart rate monitoring..."
+    }
+    
+    private func stopHeartRateMonitoring() {
+        sendMessageToWatch(["command": "stopMonitoring"])
+        message = "Stopping heart rate monitoring..."
+        currentHeartRate = 0
+    }
+    
+    private func sendMessageToWatch(_ message: [String: Any]) {
+        guard let session = wcSession, session.isReachable else {
+            self.message = "Watch is not reachable"
+            return
+        }
+        
+        session.sendMessage(message, replyHandler: nil) { error in
+            DispatchQueue.main.async {
+                self.message = "Failed to send message to watch: \(error.localizedDescription)"
+            }
         }
     }
 }
@@ -64,7 +91,6 @@ extension HeartRateViewModel: WCSessionDelegate {
         }
     }
     
-    
     func sessionDidBecomeInactive(_ session: WCSession) {
         DispatchQueue.main.async {
             self.connectionStatus = "Session Inactive"
@@ -72,7 +98,6 @@ extension HeartRateViewModel: WCSessionDelegate {
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        // Activate the new session after having switched to a new watch.
         WCSession.default.activate()
     }
     
