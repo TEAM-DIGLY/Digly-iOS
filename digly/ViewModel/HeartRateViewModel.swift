@@ -7,6 +7,7 @@
 
 import Foundation
 import WatchConnectivity
+import Alamofire
 
 class HeartRateViewModel: NSObject, ObservableObject {
     @Published var currentHeartRate: Double = 0
@@ -52,10 +53,28 @@ class HeartRateViewModel: NSObject, ObservableObject {
     }
     
     private func startMaxHeartRateTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
-            //TODO: self?.sendMaxHeartRateToServer()
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            self?.sendMaxHeartRateToServer(self?.maxHeartRate ?? -10.0)
             self?.maxHeartRate = 0
-            print("sendMaxHeartRateToServer")
+        }
+    }
+    
+    private func sendMaxHeartRateToServer(_ maxHeartRate : Double) {
+        let baseURL = "http://43.201.140.227:8080/api"
+        let endpoint = "/heartRate"
+        
+        AF.request(baseURL+endpoint,
+                   method: .post,
+                   parameters: ["heartRate": maxHeartRate],
+                   encoding: JSONEncoding.default)
+        .validate()
+        .responseDecodable(of: String.self) { response in
+            switch response.result {
+            case .success(let sentHeartRateId):
+                print("success\(sentHeartRateId)")
+            case .failure(let error):
+                print("Error sending HeartRate: \(error.localizedDescription)")
+            }
         }
     }
 }
