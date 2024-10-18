@@ -23,7 +23,6 @@ struct HeartRateView: View {
         }
         .onAppear {
             viewModel.startHeartRateMonitoring()
-            viewModel.updateConnectionStatus()
         }
     }
 }

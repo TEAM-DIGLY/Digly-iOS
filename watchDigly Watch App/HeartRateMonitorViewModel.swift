@@ -5,6 +5,8 @@ import WatchConnectivity
 import Alamofire
 
 class HeartRateMonitorViewModel: NSObject, ObservableObject {
+    let manager = WatchConnectivityManager.shared
+    
     @Published var currentHeartRate: Double = 0
     @Published var maxHeartRate: Int = 0
     @Published var isMonitoring: Bool = false
@@ -13,20 +15,37 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     private var workoutSession: HKWorkoutSession?
     private var anchoredObjectQuery: HKAnchoredObjectQuery?
     private var timer: Timer?
-    
     private let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
+    
+    private var cancellables = Set<AnyCancellable>()
     
     override init() {
         super.init()
-        setupWatchConnectivity()
+        setupMessageReceiver()
     }
     
-    private func setupWatchConnectivity() {
-        if WCSession.isSupported() {
-            let session = WCSession.default
-            session.delegate = self
-            session.activate()
-        }
+    private func setupMessageReceiver() {
+        manager.messagePublisher
+            .sink { [weak self] message in
+                guard let self = self else { return }
+                if let command = message["command"] as? String {
+                    DispatchQueue.main.async {
+                        switch command {
+                        case "startMonitoring":
+                            if !self.isMonitoring {
+                                self.startMonitoring()
+                            }
+                        case "stopMonitoring":
+                            if self.isMonitoring {
+                                self.stopMonitoring()
+                            }
+                        default:
+                            print("Unknown command received: \(command)")
+                        }
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func startMonitoring() {
@@ -43,10 +62,10 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     }
     
     func stopMonitoring() {
-        stopWorkoutSession()
-        stopAnchoredObjectQuery()
-        stopTimer()
         DispatchQueue.main.async {
+            self.stopWorkoutSession()
+            self.stopAnchoredObjectQuery()
+            self.stopTimer()
             self.isMonitoring = false
             self.currentHeartRate = 0
         }
@@ -72,12 +91,11 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             completion(success)
         }
     }
-    
+
     // 백그라운드에서 장시간 실행될 수 있게끔 운동세션을 시작.
     private func startWorkoutSession() {
         let configuration = HKWorkoutConfiguration()
         configuration.activityType = .other
-        configuration.locationType = .outdoor
         
         do {
             workoutSession = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
@@ -159,7 +177,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     }
     
     private func sendMaxHeartRateToServer() {
-        print("sendMaxHeartRateToServer")
         let baseURL = "http://43.201.140.227:8080/api"
         let endpoint = "/heartRate"
         
@@ -180,36 +197,18 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     }
     
     private func sendMessageToIOS(_ message: [String:Any]) {
-        guard WCSession.default.isReachable else { return }
-        
-        WCSession.default.sendMessage(message, replyHandler: nil) { error in
-            print("Failed to send heart rate: \(error.localizedDescription)")
-        }
-    }
-}
-
-extension HeartRateMonitorViewModel: WCSessionDelegate {
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        if let error = error {
-            print("WCSession activation failed: \(error.localizedDescription)")
-        }
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        if let command = message["command"] as? String {
-            DispatchQueue.main.async {
-                switch command {
-                case "startMonitoring":
-                    if !self.isMonitoring {
-                        self.startMonitoring()
-                    }
-                case "stopMonitoring":
-                    if self.isMonitoring {
-                        self.stopMonitoring()
-                    }
-                default:
-                    print("Unknown command received: \(command)")
+        manager.sendMessage(message) { reply in
+            print("Received reply: \(reply)")
+        } errorHandler: { error in
+            if let wcError = error as? WatchConnectivityError {
+                switch wcError {
+                case .sessionNotActivated:
+                    print("Session is not activated")
+                case .watchNotReachable:
+                    print("Watch is not reachable")
                 }
+            } else {
+                print("Error sending message: \(error.localizedDescription)")
             }
         }
     }
