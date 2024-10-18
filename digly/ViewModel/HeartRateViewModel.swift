@@ -20,6 +20,21 @@ class HeartRateViewModel: NSObject, ObservableObject {
         setupMessageReceiver()
     }
     
+    func toggleHeartRateMonitoring() {
+        isMonitoring.toggle()
+        if isMonitoring {
+            startHeartRateMonitoring()
+        } else {
+            sendMessageToWatch(["command": "stopMonitoring"])
+            message = "Stopping heart rate monitoring..."
+        }
+    }
+    
+    func startHeartRateMonitoring (){
+        sendMessageToWatch(["command": "startMonitoring"])
+        message = "Starting heart rate monitoring..."
+    }
+    
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(forName: .watchUnreachable, object: nil, queue: .main) { _ in
             self.message = "Watch became unreachable"
@@ -39,17 +54,6 @@ class HeartRateViewModel: NSObject, ObservableObject {
                 }
             }
             .store(in: &cancellables)
-    }
-    
-    func toggleHeartRateMonitoring() {
-        isMonitoring.toggle()
-        if isMonitoring {
-            sendMessageToWatch(["command": "startMonitoring"])
-            message = "Starting heart rate monitoring..."
-        } else {
-            sendMessageToWatch(["command": "stopMonitoring"])
-            message = "Stopping heart rate monitoring..."
-        }
     }
     
     private func sendMessageToWatch(_ message: [String: Any]) {
