@@ -14,16 +14,11 @@ extension Notification.Name {
 }
 
 class WatchConnectivityManager: NSObject {
-    
-    static let shared = WatchConnectivityManager() // 싱글톤 패턴
-    
-    private let messageSubject = PassthroughSubject<[String: Any], Never>()
-    var messagePublisher: AnyPublisher<[String: Any], Never> {
-        return messageSubject.eraseToAnyPublisher()
-    }
+    static let shared = WatchConnectivityManager()
     
     private var session: WCSession?
     private var timer: Timer?
+    var messageReceiver: (([String: Any]) -> Void)?
     
     private override init() {
         super.init()
@@ -55,39 +50,31 @@ class WatchConnectivityManager: NSObject {
         guard let session = session else { return }
         
         if session.activationState == .activated {
-            if session.isReachable {
+            if session.isReachable  == true {
                 print("Watch is reachable")
             } else {
-                print("Watch is not reachable")
-                handleUnreachableWatch()
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .watchUnreachable, object: nil)
+                }
             }
         } else {
-            print("Session is not activated")
-            handleInactiveSession()
+            self.session?.activate()
         }
-    }
-    
-    // 애플워치 연결이 끊길 때 실행되는 함수
-    private func handleUnreachableWatch() {
-        DispatchQueue.main.async {
-            NotificationCenter.default.post(name: .watchUnreachable, object: nil)
-        }
-    }
-    
-    private func handleInactiveSession() {
-        // 세션이 비활성화 상태일 때 세션 재활성화 시도
-        session?.activate()
     }
     
     // 메시지 전송 메서드
-    func sendMessage(_ message: [String: Any], replyHandler: (([String: Any]) -> Void)? = nil, errorHandler: ((Error) -> Void)? = nil) {
-        guard session?.isReachable != nil else {
-            errorHandler?(WatchConnectivityError.watchNotReachable)
+    func sendMessage(_ message: [String: Any], errorHandler: ((Error) -> Void)? = nil) {
+        guard let session = session, session.isReachable else {
+            DispatchQueue.main.async {
+                errorHandler?(WatchConnectivityError.watchNotReachable)
+            }
             return
         }
         
-        session?.sendMessage(message, replyHandler: replyHandler) { error in
-            errorHandler?(error)
+        session.sendMessage(message, replyHandler: nil) { error in
+            DispatchQueue.main.async {
+                errorHandler?(error)
+            }
         }
     }
 }
@@ -95,7 +82,9 @@ class WatchConnectivityManager: NSObject {
 // WCSessionDelegate 메서드들
 extension WatchConnectivityManager: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        messageSubject.send(message)
+        DispatchQueue.main.async { [weak self] in
+            self?.messageReceiver?(message)
+        }
     }
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
@@ -117,7 +106,7 @@ extension WatchConnectivityManager: WCSessionDelegate {
 #if os(iOS)
     public func sessionDidBecomeInactive(_ session: WCSession) { }
     public func sessionDidDeactivate(_ session: WCSession) {
-        handleInactiveSession()
+        self.session?.activate()
     }
 #endif
 }

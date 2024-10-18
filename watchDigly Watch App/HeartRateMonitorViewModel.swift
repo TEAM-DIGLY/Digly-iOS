@@ -17,35 +17,50 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     private var timer: Timer?
     private let heartRateType = HKObjectType.quantityType(forIdentifier: .heartRate)!
     
-    private var cancellables = Set<AnyCancellable>()
-    
     override init() {
         super.init()
         setupMessageReceiver()
     }
     
     private func setupMessageReceiver() {
-        manager.messagePublisher
-            .sink { [weak self] message in
-                guard let self = self else { return }
-                if let command = message["command"] as? String {
-                    DispatchQueue.main.async {
-                        switch command {
-                        case "startMonitoring":
-                            if !self.isMonitoring {
-                                self.startMonitoring()
-                            }
-                        case "stopMonitoring":
-                            if self.isMonitoring {
-                                self.stopMonitoring()
-                            }
-                        default:
-                            print("Unknown command received: \(command)")
+        manager.messageReceiver = { [weak self] message in
+            guard let self = self else { return }
+            if let command = message["command"] as? String {
+                DispatchQueue.main.async {
+                    switch command {
+                    case "startMonitoring":
+                        if !self.isMonitoring {
+                            self.startMonitoring()
                         }
+                    case "stopMonitoring":
+                        if self.isMonitoring {
+                            self.stopMonitoring()
+                        }
+                    default:
+                        print("Unknown command received: \(command)")
                     }
                 }
             }
-            .store(in: &cancellables)
+        }
+    }
+    
+    private func handleReceivedMessage(_ message: [String: Any]) {
+        if let command = message["command"] as? String {
+            DispatchQueue.main.async {
+                switch command {
+                case "startMonitoring":
+                    if !self.isMonitoring {
+                        self.startMonitoring()
+                    }
+                case "stopMonitoring":
+                    if self.isMonitoring {
+                        self.stopMonitoring()
+                    }
+                default:
+                    print("Unknown command received: \(command)")
+                }
+            }
+        }
     }
     
     func startMonitoring() {
@@ -57,6 +72,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
                 self.startTimer()
                 self.enableBackgroundDelivery()
                 self.isMonitoring = true
+//                self.sendMessageToIOS(["command": "Monitoring started"])
             }
         }
     }
@@ -68,6 +84,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             self.stopTimer()
             self.isMonitoring = false
             self.currentHeartRate = 0
+//            self.sendMessageToIOS(["msg": "Monitoring stopped"])
         }
     }
     
@@ -156,7 +173,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             DispatchQueue.main.async {
                 self.currentHeartRate = heartRate
                 self.maxHeartRate = max(self.maxHeartRate, Int(heartRate))
-                self.sendMessageToIOS(["heartRate":heartRate])
+                self.sendMessageToIOS(["heartRate": heartRate])
             }
         }
     }
@@ -197,9 +214,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     }
     
     private func sendMessageToIOS(_ message: [String:Any]) {
-        manager.sendMessage(message) { reply in
-            print("Received reply: \(reply)")
-        } errorHandler: { error in
+        manager.sendMessage(message) { error in
             if let wcError = error as? WatchConnectivityError {
                 switch wcError {
                 case .sessionNotActivated:

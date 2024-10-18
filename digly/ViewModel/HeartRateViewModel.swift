@@ -11,7 +11,6 @@ class HeartRateViewModel: NSObject, ObservableObject {
     @Published var isMonitoring: Bool = true
     
     private var timer: Timer?
-    private var cancellables = Set<AnyCancellable>()
     
     override init() {
         super.init()
@@ -26,48 +25,36 @@ class HeartRateViewModel: NSObject, ObservableObject {
             startHeartRateMonitoring()
         } else {
             sendMessageToWatch(["command": "stopMonitoring"])
-            message = "Stopping heart rate monitoring..."
         }
     }
     
     func startHeartRateMonitoring (){
         sendMessageToWatch(["command": "startMonitoring"])
-        message = "Starting heart rate monitoring..."
+    }
+    
+    private func setupMessageReceiver() {
+        manager.messageReceiver = { [weak self] message in
+            if let heartRate = message["heartRate"] as? Double {
+                DispatchQueue.main.async {
+                    self?.currentHeartRate = heartRate
+                }
+            }
+        }
     }
     
     private func setupNotificationObservers() {
         NotificationCenter.default.addObserver(forName: .watchUnreachable, object: nil, queue: .main) { _ in
             self.message = "Watch became unreachable"
         }
+        
         NotificationCenter.default.addObserver(forName: .watchReachabilityChanged, object: nil, queue: .main) { _ in
             self.message = "Watch reachability changed"
         }
     }
     
-    private func setupMessageReceiver() {
-        manager.messagePublisher
-            .sink { [weak self] message in
-                if let heartRate = message["heartRate"] as? Double {
-                    DispatchQueue.main.async {
-                        self?.currentHeartRate = heartRate
-                    }
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
     private func sendMessageToWatch(_ message: [String: Any]) {
-        manager.sendMessage(message) { reply in
-            print("Received reply: \(reply)")
-        } errorHandler: { error in
-            if let wcError = error as? WatchConnectivityError {
-                switch wcError {
-                case .sessionNotActivated:
-                    self.message = "Session is not activated"
-                case .watchNotReachable:
-                    self.message = "Watch became unreachable"
-                }
-            } else {
+        manager.sendMessage(message) { error in
+            DispatchQueue.main.async {
                 self.message = "Error sending message: \(error.localizedDescription)"
             }
         }
