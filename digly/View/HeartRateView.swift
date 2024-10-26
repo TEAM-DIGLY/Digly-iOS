@@ -20,6 +20,10 @@ struct HeartRateView: View {
             
             Text(viewModel.message)
                 .padding()
+            
+            ForEach(viewModel.debugMessage, id: \.self){ message in
+                Text(message)
+            }
         }
         .onAppear {
             viewModel.startHeartRateMonitoring()

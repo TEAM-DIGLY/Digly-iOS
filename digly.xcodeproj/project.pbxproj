@@ -80,6 +80,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E56270DF2CCB3DC100C631C0 /* Exceptions for "watchDigly Watch App" folder in "digly" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				HeartRateEntity.xcdatamodeld,
+			);
+			target = AB91486F2CB681DE00454750 /* digly */;
+		};
 		E5B7BE202CC0DD0700CBFE0B /* Exceptions for "digly" folder in "digly" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -108,6 +115,9 @@
 		};
 		ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E56270DF2CCB3DC100C631C0 /* Exceptions for "watchDigly Watch App" folder in "digly" target */,
+			);
 			path = "watchDigly Watch App";
 			sourceTree = "<group>";
 		};

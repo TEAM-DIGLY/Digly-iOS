@@ -8,6 +8,8 @@ class HeartRateViewModel: NSObject, ObservableObject {
     
     @Published var currentHeartRate: Double = 0
     @Published var message: String = ""
+    
+    @Published var debugMessage: [String] = ["message1"]
     @Published var isMonitoring: Bool = true
     
     private var timer: Timer?
@@ -37,6 +39,12 @@ class HeartRateViewModel: NSObject, ObservableObject {
             if let heartRate = message["heartRate"] as? Double {
                 DispatchQueue.main.async {
                     self?.currentHeartRate = heartRate
+                }
+            }
+            
+            if let debugMessage = message["debug"] as? String {
+                DispatchQueue.main.async {
+                    self?.debugMessage.append(debugMessage)
                 }
             }
         }

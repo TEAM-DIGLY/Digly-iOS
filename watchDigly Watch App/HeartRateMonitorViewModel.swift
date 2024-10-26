@@ -44,25 +44,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         }
     }
     
-    private func handleReceivedMessage(_ message: [String: Any]) {
-        if let command = message["command"] as? String {
-            DispatchQueue.main.async {
-                switch command {
-                case "startMonitoring":
-                    if !self.isMonitoring {
-                        self.startMonitoring()
-                    }
-                case "stopMonitoring":
-                    if self.isMonitoring {
-                        self.stopMonitoring()
-                    }
-                default:
-                    print("Unknown command received: \(command)")
-                }
-            }
-        }
-    }
-    
     func startMonitoring() {
         requestAuthorization { success in
             guard success else { return }
@@ -72,7 +53,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
                 self.startTimer()
                 self.enableBackgroundDelivery()
                 self.isMonitoring = true
-//                self.sendMessageToIOS(["command": "Monitoring started"])
             }
         }
     }
@@ -84,7 +64,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             self.stopTimer()
             self.isMonitoring = false
             self.currentHeartRate = 0
-//            self.sendMessageToIOS(["msg": "Monitoring stopped"])
         }
     }
     
@@ -152,9 +131,11 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
-            self?.fetchLatestHeartRate()
-            self?.sendMaxHeartRateToServer()
+        timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in
+            guard let self = self else {return}
+            self.fetchLatestHeartRate()
+            HeartRateSyncManager.shared.saveHeartRate(self.maxHeartRate)
+            self.maxHeartRate = 0
         }
     }
     
@@ -191,26 +172,6 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             }
         }
         healthStore.execute(query)
-    }
-    
-    private func sendMaxHeartRateToServer() {
-        let baseURL = "http://43.201.140.227:8080/api"
-        let endpoint = "/heartRate"
-        
-        AF.request(baseURL+endpoint,
-                   method: .post,
-                   parameters: ["heartRate": self.maxHeartRate],
-                   encoding: JSONEncoding.default)
-        .validate()
-        .responseDecodable(of: String.self) { response in
-            switch response.result {
-            case .success(let sentHeartRateId):
-                print("success\(sentHeartRateId)")
-                self.maxHeartRate = 0
-            case .failure(let error):
-                print("Error sending HeartRate: \(error.localizedDescription)")
-            }
-        }
     }
     
     private func sendMessageToIOS(_ message: [String:Any]) {
