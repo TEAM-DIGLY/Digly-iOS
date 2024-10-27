@@ -1,96 +1,69 @@
-//
-//  HeartRateViewModel.swift
-//  digly
-//
-//  Created by 김 형석 on 10/9/24.
-//
-
 import Foundation
 import WatchConnectivity
+import Alamofire
+import Combine
 
 class HeartRateViewModel: NSObject, ObservableObject {
+    let manager = WatchConnectivityManager.shared
+    
     @Published var currentHeartRate: Double = 0
     @Published var message: String = ""
-    @Published var connectionStatus: String = "Disconnected"
-    @Published var dataType: String = ""
-    @Published var lastUpdated: String = ""
-    //TODO: private var로 변경하기(지금은 디버깅 위해 ui 띄우려고 임시 @Published 속성 부여)
-    @Published var maxHeartRate: Double = 0
+    
+    @Published var debugMessage: [String] = ["message1"]
+    @Published var isMonitoring: Bool = true
     
     private var timer: Timer?
-    private var wcSession: WCSession?
     
     override init() {
         super.init()
-        setupWatchConnectivity()
+        manager.startMonitoringConnectionStatus()
+        setupNotificationObservers()
+        setupMessageReceiver()
     }
     
-    private func setupWatchConnectivity() {
-        if WCSession.isSupported() {
-            wcSession = WCSession.default
-            wcSession?.delegate = self
-            wcSession?.activate()
+    func toggleHeartRateMonitoring() {
+        isMonitoring.toggle()
+        if isMonitoring {
+            startHeartRateMonitoring()
+        } else {
+            sendMessageToWatch(["command": "stopMonitoring"])
         }
     }
     
-    func updateConnectionStatus() {
-        guard let session = wcSession else {
-            connectionStatus = "Watch Connectivity Not Supported"
-            return
+    func startHeartRateMonitoring (){
+        sendMessageToWatch(["command": "startMonitoring"])
+    }
+    
+    private func setupMessageReceiver() {
+        manager.iOSMessageReceiver = { [weak self] message in
+            if let heartRate = message["heartRate"] as? Double {
+                DispatchQueue.main.async {
+                    self?.currentHeartRate = heartRate
+                }
+            }
+            
+            if let debugMessage = message["debug"] as? String {
+                DispatchQueue.main.async {
+                    self?.debugMessage.append(debugMessage)
+                }
+            }
+        }
+    }
+    
+    private func setupNotificationObservers() {
+        NotificationCenter.default.addObserver(forName: .watchUnreachable, object: nil, queue: .main) { _ in
+            self.message = "Watch became unreachable"
         }
         
-        if session.isPaired {
-            if session.isWatchAppInstalled {
-                connectionStatus = session.isReachable ? "Connected" : "Watch App Installed but Not Reachable"
-                
-            } else {
-                connectionStatus = "Watch Paired but App Not Installed"
-            }
-        } else {
-            connectionStatus = "Watch Not Paired"
+        NotificationCenter.default.addObserver(forName: .watchReachabilityChanged, object: nil, queue: .main) { _ in
+            self.message = "Watch reachability changed"
         }
     }
     
-    private func startMaxHeartRateTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 30, repeats: true) { [weak self] _ in
-            //TODO: self?.sendMaxHeartRateToServer()
-            self?.maxHeartRate = 0
-            print("sendMaxHeartRateToServer")
-        }
-    }
-}
-
-extension HeartRateViewModel: WCSessionDelegate {
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        DispatchQueue.main.async {
-            if let error = error {
-                print("WCSession activation failed with error: \(error.localizedDescription)")
-                self.connectionStatus = "Activation Failed"
-            } else {
-                print("WCSession activated with state: \(activationState.rawValue)")
-                self.updateConnectionStatus()
-                self.startMaxHeartRateTimer()
-            }
-        }
-    }
-    
-    
-    func sessionDidBecomeInactive(_ session: WCSession) {
-        DispatchQueue.main.async {
-            self.connectionStatus = "Session Inactive"
-        }
-    }
-    
-    func sessionDidDeactivate(_ session: WCSession) {
-        // Activate the new session after having switched to a new watch.
-        WCSession.default.activate()
-    }
-    
-    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
-        DispatchQueue.main.async {
-            if let heartRate = message["heartRate"] as? Double {
-                self.currentHeartRate = heartRate
-                self.maxHeartRate = max(self.maxHeartRate, heartRate)
+    private func sendMessageToWatch(_ message: [String: Any]) {
+        manager.sendMessage(message) { error in
+            DispatchQueue.main.async {
+                self.message = "Error sending message: \(error.localizedDescription)"
             }
         }
     }

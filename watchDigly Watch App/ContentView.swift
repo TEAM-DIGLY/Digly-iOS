@@ -18,10 +18,29 @@ struct ContentView: View {
             Text("\(Int(viewModel.currentHeartRate)) BPM")
                 .font(.largeTitle)
                 .fontWeight(.bold)
+                .padding(.bottom,12)
             
+            Text("Current Max Rate")
+                .font(.headline)
+            
+            Text("\(Int(viewModel.maxHeartRate)) BPM")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding(.bottom,12)
+            
+            Text("isMonitoring:")
+                .font(.caption2)
+                .fontWeight(.bold)
+            
+            Text("\(viewModel.isMonitoring)")
         }
         .onAppear{
             viewModel.startMonitoring()
         }
     }
+}
+
+
+#Preview {
+    ContentView()
 }

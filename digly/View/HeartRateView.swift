@@ -4,21 +4,29 @@ struct HeartRateView: View {
     @StateObject private var viewModel = HeartRateViewModel()
     
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Heart Rate Monitor")
-                .font(.largeTitle)
+        VStack {
+            Text("Heart Rate: \(viewModel.currentHeartRate, specifier: "%.0f") bpm")
+                .font(.title)
             
-            Text("\(Int(viewModel.currentHeartRate)) BPM")
-                .font(.system(size: 60, weight: .bold, design: .rounded))
-                .foregroundColor(.red)
+            Button(action: {
+                viewModel.toggleHeartRateMonitoring()
+            }) {
+                Text(viewModel.isMonitoring ? "Stop Monitoring" : "Start Monitoring")
+                    .padding()
+                    .background(viewModel.isMonitoring ? Color.red : Color.green)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
             
-            Text("Max: \(Int(viewModel.maxHeartRate)) BPM")
-                .font(.system(size: 60, weight: .bold, design: .rounded))
-                .foregroundColor(.red)
+            Text(viewModel.message)
+                .padding()
+            
+            ForEach(viewModel.debugMessage, id: \.self){ message in
+                Text(message)
+            }
         }
-        .padding()
         .onAppear {
-            viewModel.updateConnectionStatus()
+            viewModel.startHeartRateMonitoring()
         }
     }
 }
