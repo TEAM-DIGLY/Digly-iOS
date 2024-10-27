@@ -18,7 +18,10 @@ class WatchConnectivityManager: NSObject {
     
     private var session: WCSession?
     private var timer: Timer?
-    var messageReceiver: (([String: Any]) -> Void)?
+    
+    var iOSMessageReceiver: (([String: Any]) -> Void)?
+    var watchMessageReceiver: (([String: Any]) -> Void)?
+    
     
     private override init() {
         super.init()
@@ -83,7 +86,11 @@ class WatchConnectivityManager: NSObject {
 extension WatchConnectivityManager: WCSessionDelegate {
     func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
         DispatchQueue.main.async { [weak self] in
-            self?.messageReceiver?(message)
+#if os(iOS)
+            self?.iOSMessageReceiver?(message)
+#else
+            self?.watchMessageReceiver?(message)
+#endif
         }
     }
     

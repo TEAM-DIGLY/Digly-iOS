@@ -21,8 +21,8 @@ class NetworkManager {
             self?.status = path.status
             if path.status == .satisfied {
                 // 네트워크 연결되면 pending 데이터 전송 시도
-                WatchConnectivityManager.shared.sendMessage(["debug":"syncPendingData through Network Manager"])
-                HeartRateSyncManager.shared.syncPendingData(forced: true)
+                print("watchOS: syncPendingData through Network Manager")
+                HeartRateSyncManager.shared.syncPendingData()
             }
         }
         monitor.start(queue: DispatchQueue.global())

@@ -23,7 +23,7 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     }
     
     private func setupMessageReceiver() {
-        manager.messageReceiver = { [weak self] message in
+        manager.watchMessageReceiver = { [weak self] message in
             guard let self = self else { return }
             if let command = message["command"] as? String {
                 DispatchQueue.main.async {
@@ -131,10 +131,10 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
     
     // MARK: HKAnchoredObjectQuery와는 별개로, 타이머 그리고, HKSampleQuery를 사용해 정기적으로 최신 심박수 데이터를 가져옴. 예비 데이터 추출기.
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             guard let self = self else {return}
             self.fetchLatestHeartRate()
-            HeartRateSyncManager.shared.saveHeartRate(self.maxHeartRate)
+            HeartRateSyncManager.shared.saveHeartRate(self.maxHeartRate) // 60초마다 서버 api 호출 무조건 호출함.
             self.maxHeartRate = 0
         }
     }
@@ -152,13 +152,16 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
         for sample in samples {
             let heartRate = sample.quantity.doubleValue(for: HKUnit(from: "count/min"))
             DispatchQueue.main.async {
-                self.currentHeartRate = heartRate
+                self.currentHeartRate = heartRate // TODO: 워치화면에 실시간심박수 표시하면 배터리효율 안좋아짐, -> 제거 후 private으로 돌릴 필요 있음
                 self.maxHeartRate = max(self.maxHeartRate, Int(heartRate))
+                
+                // MARK: iOS 앱에 실시간 변형 정보 WCSession으로 보여야 하기 때문에, sendMessageToIOS, api 호출과는 별개로 필요함
                 self.sendMessageToIOS(["heartRate": heartRate])
             }
         }
     }
     
+    // MARK: iOS 앱에 실시간 변형 정보 WCSession으로 보여야 하기 때문에, sendMessageToIOS, api 호출과는 별개로 필요함
     private func fetchLatestHeartRate() {
         let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: false)
         let query = HKSampleQuery(sampleType: heartRateType, predicate: nil, limit: 1, sortDescriptors: [sortDescriptor]) { [weak self] query, samples, error in
@@ -168,6 +171,8 @@ class HeartRateMonitorViewModel: NSObject, ObservableObject {
             DispatchQueue.main.async {
                 self?.currentHeartRate = heartRate
                 self?.maxHeartRate = max(self?.maxHeartRate ?? -10, Int(heartRate))
+                
+                // MARK: iOS 앱에 실시간 변형 정보 WCSession으로 보여야 하기 때문에, sendMessageToIOS, api 호출과는 별개로 필요함
                 self?.sendMessageToIOS(["heartRate":heartRate])
             }
         }

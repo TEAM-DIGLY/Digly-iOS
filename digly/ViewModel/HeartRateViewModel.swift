@@ -35,7 +35,7 @@ class HeartRateViewModel: NSObject, ObservableObject {
     }
     
     private func setupMessageReceiver() {
-        manager.messageReceiver = { [weak self] message in
+        manager.iOSMessageReceiver = { [weak self] message in
             if let heartRate = message["heartRate"] as? Double {
                 DispatchQueue.main.async {
                     self?.currentHeartRate = heartRate

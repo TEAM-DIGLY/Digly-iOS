@@ -15,37 +15,30 @@ class HeartRateSyncManager {
     }
     
     func syncPendingData(forced: Bool = false) {
-        WatchConnectivityManager.shared.sendMessage(["debug":"syncPendingData1"])
         guard !isSyncing || forced else { return }
         
-        WatchConnectivityManager.shared.sendMessage(["debug":"syncPendingData2"])
         syncQueue.async { [weak self] in
             self?.isSyncing = true
             
             let fetchRequest: NSFetchRequest<HeartRateEntity> = HeartRateEntity.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "isSynced == NO")
-            WatchConnectivityManager.shared.sendMessage(["debug":"syncPendingData3"])
             
             do {
                 let unsyncedData = try self?.context.fetch(fetchRequest)
                 guard let dataToSync = unsyncedData else { return }
-                WatchConnectivityManager.shared.sendMessage(["debug":dataToSync.debugDescription])
                 
                 for heartRateData in dataToSync {
-                    self?.sendToServer(heartRate: Int(heartRateData.heartRate)) { success in
+                    self?.sendToServer(heartRate: Int(heartRateData.heartRate), time: heartRateData.timestamp?.timeStampFormat ?? "timeStamp invalid") { success in
                         if success {
                             self?.context.perform {
                                 heartRateData.isSynced = true
-                                WatchConnectivityManager.shared.sendMessage(["debug":"\(heartRateData.debugDescription) saved"])
                                 try? self?.context.save()
                             }
                         }
                     }
                 }
                 
-                WatchConnectivityManager.shared.sendMessage(["debug":"syncPendingData4"])
                 HeartRateDataModel.shared.deleteOldData()
-                WatchConnectivityManager.shared.sendMessage(["debug":"syncPendingData5"])
             } catch {
                 print("Failed to fetch unsynced data: \(error)")
             }
@@ -53,13 +46,13 @@ class HeartRateSyncManager {
         }
     }
     
-    private func sendToServer(heartRate: Int, completion: @escaping (Bool) -> Void) {
+    private func sendToServer(heartRate: Int,time:String, completion: @escaping (Bool) -> Void) {
         let baseURL = "http://43.201.140.227:8080/api"
         let endpoint = "/heartRate"
         
         AF.request(baseURL + endpoint,
                   method: .post,
-                  parameters: ["heartRate": heartRate],
+                  parameters: ["heartRate": "\(heartRate) \(time)"],
                   encoding: JSONEncoding.default)
         .validate()
         .responseDecodable(of: String.self) { response in
@@ -74,19 +67,17 @@ class HeartRateSyncManager {
     }
     
     func saveHeartRate(_ heartRate: Int, timestamp: Date = Date()) {
-            context.perform { // MARK: - debuging needs here
+            context.perform {
                 let heartRateEntity = HeartRateEntity(context: self.context)
                 heartRateEntity.heartRate = Int64(heartRate)
                 heartRateEntity.timestamp = timestamp
                 heartRateEntity.isSynced = false
-                WatchConnectivityManager.shared.sendMessage(["debug":"saveHeartRate1"])
                 
                 do {
                     try self.context.save()
                     self.syncPendingData()
-                    WatchConnectivityManager.shared.sendMessage(["debug":"saveHeartRate2"])
                 } catch {
-                    WatchConnectivityManager.shared.sendMessage(["debug":error.localizedDescription])
+                    print("WatchOS - SaveHeartRate : \(error.localizedDescription)")
                 }
             }
         }

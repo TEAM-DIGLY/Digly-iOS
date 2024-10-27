@@ -10,7 +10,7 @@ class HeartRateDataModel {
     static let shared = HeartRateDataModel()
     
     lazy var persistentContainer: NSPersistentContainer = {
-        let container = NSPersistentContainer(name: "HeartRateData")
+        let container = NSPersistentContainer(name: "HeartRateEntity")
         container.loadPersistentStores { description, error in
             if let error = error {
                 fatalError("Unable to load persistent stores: \(error)")
