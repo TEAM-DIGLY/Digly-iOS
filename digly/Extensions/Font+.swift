@@ -13,7 +13,7 @@ extension Font {
     // 앱 전체에서 일관되게 사용되어야 하는 값들은 static으로, 이렇게 안할 경우, 폰트 사용파일에서 매번 인스턴스를 생성하여 접근해야함.
     static let title1 = Font.custom("Pretendard-SemiBold", size: 36)
     static let title2 = Font.custom("Pretendard-SemiBold", size: 28)
-    static let title2Prime = Font.custom("Pretendard-SemiBold", size: 26)
+    static let title2_ = Font.custom("Pretendard-SemiBold", size: 26)
     static let title3 = Font.custom("Pretendard-SemiBold", size: 24)
     static let heading1 = Font.custom("Pretendard-SemiBold", size: 22)
     static let heading2 = Font.custom("Pretendard-SemiBold", size: 20)
@@ -32,7 +32,7 @@ extension Font {
             return 48 - 36
         case .title2:
             return 38 - 28
-        case .title2Prime:
+        case .title2_:
             return 36 - 26
         case .title3:
             return 32 - 24
