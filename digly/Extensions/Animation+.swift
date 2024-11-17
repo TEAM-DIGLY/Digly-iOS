@@ -4,7 +4,7 @@ extension Animation {
     struct Duration {
         static let fast: Double = 0.1
         static let medium: Double = 0.3
-        static let slow: Double = 1
+        static let slow: Double = 0.7
     }
     
     static var fastEaseOut: Animation {
