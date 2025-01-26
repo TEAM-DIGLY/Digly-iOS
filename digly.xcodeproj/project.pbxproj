@@ -7,172 +7,89 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AB9148A12CB6832200454750 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A02CB6832200454750 /* GoogleSignIn */; };
-		AB9148A42CB6834B00454750 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = AB9148A32CB6834B00454750 /* Alamofire */; };
-		ABBFA5872CB6886D001BA1E2 /* watchDigly Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E5084DC52CC105D000E4F874 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5084DC42CC105C500E4F874 /* WatchConnectivityManager.swift */; };
-		E5084DC72CC1E81000E4F874 /* WatchConnectivityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5084DC42CC105C500E4F874 /* WatchConnectivityManager.swift */; };
-		E5B7BE1C2CC0B19800CBFE0B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E5B7BE1B2CC0B19800CBFE0B /* Alamofire */; };
-		E5D29F302CC0E1E100427849 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = E5D29F2F2CC0E1DC00427849 /* .gitignore */; };
+		0824969F2D4636D8007C06F8 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0824969E2D4636D8007C06F8 /* FirebaseAnalytics */; };
+		082496A12D4636D8007C06F8 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 082496A02D4636D8007C06F8 /* FirebaseAppCheck */; };
+		082496A32D4636D8007C06F8 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 082496A22D4636D8007C06F8 /* FirebaseAuth */; };
+		082496A52D4636D8007C06F8 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 082496A42D4636D8007C06F8 /* FirebaseCore */; };
+		082496A72D4636D8007C06F8 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 082496A62D4636D8007C06F8 /* FirebaseCrashlytics */; };
+		082496A92D4636D8007C06F8 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 082496A82D4636D8007C06F8 /* FirebaseDatabase */; };
+		082496AB2D4636D8007C06F8 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 082496AA2D4636D8007C06F8 /* FirebaseFirestore */; };
+		082496AD2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 082496AC2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta */; };
+		082496AF2D4636D8007C06F8 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 082496AE2D4636D8007C06F8 /* FirebaseMessaging */; };
+		082496B12D4636D8007C06F8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 082496B02D4636D8007C06F8 /* FirebaseStorage */; };
+		082496B42D46370E007C06F8 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 082496B32D46370E007C06F8 /* GoogleSignIn */; };
+		082496B62D46370E007C06F8 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 082496B52D46370E007C06F8 /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		AB9148812CB681DF00454750 /* PBXContainerItemProxy */ = {
+		082495982D4630C5007C06F8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = AB9148682CB681DE00454750 /* Project object */;
+			containerPortal = 0824957F2D4630C3007C06F8 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = AB91486F2CB681DE00454750;
-			remoteInfo = digly;
+			remoteGlobalIDString = 082495862D4630C3007C06F8;
+			remoteInfo = Digly;
 		};
-		AB91488B2CB681DF00454750 /* PBXContainerItemProxy */ = {
+		082495A22D4630C5007C06F8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = AB9148682CB681DE00454750 /* Project object */;
+			containerPortal = 0824957F2D4630C3007C06F8 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = AB91486F2CB681DE00454750;
-			remoteInfo = digly;
-		};
-		ABBFA5742CB6886D001BA1E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AB9148682CB681DE00454750 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ABBFA5632CB6886C001BA1E2;
-			remoteInfo = "watchDigly Watch App";
-		};
-		ABBFA57E2CB6886D001BA1E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AB9148682CB681DE00454750 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ABBFA5632CB6886C001BA1E2;
-			remoteInfo = "watchDigly Watch App";
-		};
-		ABBFA5852CB6886D001BA1E2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = AB9148682CB681DE00454750 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = ABBFA5632CB6886C001BA1E2;
-			remoteInfo = "watchDigly Watch App";
+			remoteGlobalIDString = 082495862D4630C3007C06F8;
+			remoteInfo = Digly;
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		ABBFA5882CB6886D001BA1E2 /* Embed Watch Content */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
-			dstSubfolderSpec = 16;
-			files = (
-				ABBFA5872CB6886D001BA1E2 /* watchDigly Watch App.app in Embed Watch Content */,
-			);
-			name = "Embed Watch Content";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		AB9148702CB681DE00454750 /* digly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = digly.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB9148802CB681DF00454750 /* diglyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = diglyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AB91488A2CB681DF00454750 /* diglyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = diglyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "watchDigly Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "watchDigly Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E5084DC42CC105C500E4F874 /* WatchConnectivityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchConnectivityManager.swift; sourceTree = "<group>"; };
-		E5D29F2F2CC0E1DC00427849 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		082495872D4630C3007C06F8 /* Digly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Digly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		082495972D4630C5007C06F8 /* DiglyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DiglyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		082495A12D4630C5007C06F8 /* DiglyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DiglyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		E56270DF2CCB3DC100C631C0 /* Exceptions for "watchDigly Watch App" folder in "digly" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				HeartRateEntity.xcdatamodeld,
-			);
-			target = AB91486F2CB681DE00454750 /* digly */;
-		};
-		E5B7BE202CC0DD0700CBFE0B /* Exceptions for "digly" folder in "digly" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = AB91486F2CB681DE00454750 /* digly */;
-		};
-		E5D4DD252CBCEB56004C816B /* Exceptions for "digly" folder in "watchDigly Watch App" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Font/Pretendard-SemiBold.otf",
-			);
-			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		AB9148722CB681DE00454750 /* digly */ = {
+		082495892D4630C3007C06F8 /* Digly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				E5B7BE202CC0DD0700CBFE0B /* Exceptions for "digly" folder in "digly" target */,
-				E5D4DD252CBCEB56004C816B /* Exceptions for "digly" folder in "watchDigly Watch App" target */,
-			);
-			path = digly;
+			path = Digly;
 			sourceTree = "<group>";
 		};
-		ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */ = {
+		0824959A2D4630C5007C06F8 /* DiglyTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				E56270DF2CCB3DC100C631C0 /* Exceptions for "watchDigly Watch App" folder in "digly" target */,
-			);
-			path = "watchDigly Watch App";
+			path = DiglyTests;
 			sourceTree = "<group>";
 		};
-		ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */ = {
+		082495A42D4630C5007C06F8 /* DiglyUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "watchDigly Watch AppTests";
-			sourceTree = "<group>";
-		};
-		ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "watchDigly Watch AppUITests";
+			path = DiglyUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AB91486D2CB681DE00454750 /* Frameworks */ = {
+		082495842D4630C3007C06F8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AB9148A12CB6832200454750 /* GoogleSignIn in Frameworks */,
-				AB9148A42CB6834B00454750 /* Alamofire in Frameworks */,
+				082496AF2D4636D8007C06F8 /* FirebaseMessaging in Frameworks */,
+				082496A92D4636D8007C06F8 /* FirebaseDatabase in Frameworks */,
+				082496B42D46370E007C06F8 /* GoogleSignIn in Frameworks */,
+				082496B62D46370E007C06F8 /* GoogleSignInSwift in Frameworks */,
+				082496A12D4636D8007C06F8 /* FirebaseAppCheck in Frameworks */,
+				082496B12D4636D8007C06F8 /* FirebaseStorage in Frameworks */,
+				082496A32D4636D8007C06F8 /* FirebaseAuth in Frameworks */,
+				082496AD2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta in Frameworks */,
+				082496A72D4636D8007C06F8 /* FirebaseCrashlytics in Frameworks */,
+				082496A52D4636D8007C06F8 /* FirebaseCore in Frameworks */,
+				0824969F2D4636D8007C06F8 /* FirebaseAnalytics in Frameworks */,
+				082496AB2D4636D8007C06F8 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AB91487D2CB681DF00454750 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AB9148872CB681DF00454750 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABBFA5612CB6886C001BA1E2 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E5B7BE1C2CC0B19800CBFE0B /* Alamofire in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABBFA5702CB6886D001BA1E2 /* Frameworks */ = {
+		082495942D4630C5007C06F8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ABBFA57A2CB6886D001BA1E2 /* Frameworks */ = {
+		0824959E2D4630C5007C06F8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -182,278 +99,173 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		AB9148672CB681DE00454750 = {
+		0824957E2D4630C3007C06F8 = {
 			isa = PBXGroup;
 			children = (
-				E5084DC42CC105C500E4F874 /* WatchConnectivityManager.swift */,
-				E5D29F2F2CC0E1DC00427849 /* .gitignore */,
-				AB9148722CB681DE00454750 /* digly */,
-				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
-				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
-				ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
-				E5B7BE1A2CC0B19800CBFE0B /* Frameworks */,
-				AB9148712CB681DE00454750 /* Products */,
+				082495892D4630C3007C06F8 /* Digly */,
+				0824959A2D4630C5007C06F8 /* DiglyTests */,
+				082495A42D4630C5007C06F8 /* DiglyUITests */,
+				082495882D4630C3007C06F8 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		AB9148712CB681DE00454750 /* Products */ = {
+		082495882D4630C3007C06F8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				AB9148702CB681DE00454750 /* digly.app */,
-				AB9148802CB681DF00454750 /* diglyTests.xctest */,
-				AB91488A2CB681DF00454750 /* diglyUITests.xctest */,
-				ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */,
-				ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */,
-				ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */,
+				082495872D4630C3007C06F8 /* Digly.app */,
+				082495972D4630C5007C06F8 /* DiglyTests.xctest */,
+				082495A12D4630C5007C06F8 /* DiglyUITests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		E5B7BE1A2CC0B19800CBFE0B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		AB91486F2CB681DE00454750 /* digly */ = {
+		082495862D4630C3007C06F8 /* Digly */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AB9148942CB681DF00454750 /* Build configuration list for PBXNativeTarget "digly" */;
+			buildConfigurationList = 082495AB2D4630C5007C06F8 /* Build configuration list for PBXNativeTarget "Digly" */;
 			buildPhases = (
-				AB91486C2CB681DE00454750 /* Sources */,
-				AB91486D2CB681DE00454750 /* Frameworks */,
-				AB91486E2CB681DE00454750 /* Resources */,
-				ABBFA5882CB6886D001BA1E2 /* Embed Watch Content */,
+				082495832D4630C3007C06F8 /* Sources */,
+				082495842D4630C3007C06F8 /* Frameworks */,
+				082495852D4630C3007C06F8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				ABBFA5862CB6886D001BA1E2 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				AB9148722CB681DE00454750 /* digly */,
+				082495892D4630C3007C06F8 /* Digly */,
 			);
-			name = digly;
+			name = Digly;
 			packageProductDependencies = (
-				AB9148A02CB6832200454750 /* GoogleSignIn */,
-				AB9148A32CB6834B00454750 /* Alamofire */,
+				0824969E2D4636D8007C06F8 /* FirebaseAnalytics */,
+				082496A02D4636D8007C06F8 /* FirebaseAppCheck */,
+				082496A22D4636D8007C06F8 /* FirebaseAuth */,
+				082496A42D4636D8007C06F8 /* FirebaseCore */,
+				082496A62D4636D8007C06F8 /* FirebaseCrashlytics */,
+				082496A82D4636D8007C06F8 /* FirebaseDatabase */,
+				082496AA2D4636D8007C06F8 /* FirebaseFirestore */,
+				082496AC2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta */,
+				082496AE2D4636D8007C06F8 /* FirebaseMessaging */,
+				082496B02D4636D8007C06F8 /* FirebaseStorage */,
+				082496B32D46370E007C06F8 /* GoogleSignIn */,
+				082496B52D46370E007C06F8 /* GoogleSignInSwift */,
 			);
-			productName = digly;
-			productReference = AB9148702CB681DE00454750 /* digly.app */;
+			productName = Digly;
+			productReference = 082495872D4630C3007C06F8 /* Digly.app */;
 			productType = "com.apple.product-type.application";
 		};
-		AB91487F2CB681DF00454750 /* diglyTests */ = {
+		082495962D4630C5007C06F8 /* DiglyTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AB9148972CB681DF00454750 /* Build configuration list for PBXNativeTarget "diglyTests" */;
+			buildConfigurationList = 082495AE2D4630C5007C06F8 /* Build configuration list for PBXNativeTarget "DiglyTests" */;
 			buildPhases = (
-				AB91487C2CB681DF00454750 /* Sources */,
-				AB91487D2CB681DF00454750 /* Frameworks */,
-				AB91487E2CB681DF00454750 /* Resources */,
+				082495932D4630C5007C06F8 /* Sources */,
+				082495942D4630C5007C06F8 /* Frameworks */,
+				082495952D4630C5007C06F8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				AB9148822CB681DF00454750 /* PBXTargetDependency */,
+				082495992D4630C5007C06F8 /* PBXTargetDependency */,
 			);
-			name = diglyTests;
+			fileSystemSynchronizedGroups = (
+				0824959A2D4630C5007C06F8 /* DiglyTests */,
+			);
+			name = DiglyTests;
 			packageProductDependencies = (
 			);
-			productName = diglyTests;
-			productReference = AB9148802CB681DF00454750 /* diglyTests.xctest */;
+			productName = DiglyTests;
+			productReference = 082495972D4630C5007C06F8 /* DiglyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		AB9148892CB681DF00454750 /* diglyUITests */ = {
+		082495A02D4630C5007C06F8 /* DiglyUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = AB91489A2CB681DF00454750 /* Build configuration list for PBXNativeTarget "diglyUITests" */;
+			buildConfigurationList = 082495B12D4630C5007C06F8 /* Build configuration list for PBXNativeTarget "DiglyUITests" */;
 			buildPhases = (
-				AB9148862CB681DF00454750 /* Sources */,
-				AB9148872CB681DF00454750 /* Frameworks */,
-				AB9148882CB681DF00454750 /* Resources */,
+				0824959D2D4630C5007C06F8 /* Sources */,
+				0824959E2D4630C5007C06F8 /* Frameworks */,
+				0824959F2D4630C5007C06F8 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				AB91488C2CB681DF00454750 /* PBXTargetDependency */,
-			);
-			name = diglyUITests;
-			packageProductDependencies = (
-			);
-			productName = diglyUITests;
-			productReference = AB91488A2CB681DF00454750 /* diglyUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = ABBFA58F2CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch App" */;
-			buildPhases = (
-				ABBFA5602CB6886C001BA1E2 /* Sources */,
-				ABBFA5612CB6886C001BA1E2 /* Frameworks */,
-				ABBFA5622CB6886C001BA1E2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
+				082495A32D4630C5007C06F8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				ABBFA5652CB6886C001BA1E2 /* watchDigly Watch App */,
+				082495A42D4630C5007C06F8 /* DiglyUITests */,
 			);
-			name = "watchDigly Watch App";
-			packageProductDependencies = (
-				E5B7BE1B2CC0B19800CBFE0B /* Alamofire */,
-			);
-			productName = "watchDigly Watch App";
-			productReference = ABBFA5642CB6886C001BA1E2 /* watchDigly Watch App.app */;
-			productType = "com.apple.product-type.application";
-		};
-		ABBFA5722CB6886D001BA1E2 /* watchDigly Watch AppTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = ABBFA5902CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppTests" */;
-			buildPhases = (
-				ABBFA56F2CB6886D001BA1E2 /* Sources */,
-				ABBFA5702CB6886D001BA1E2 /* Frameworks */,
-				ABBFA5712CB6886D001BA1E2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				ABBFA5752CB6886D001BA1E2 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				ABBFA5762CB6886D001BA1E2 /* watchDigly Watch AppTests */,
-			);
-			name = "watchDigly Watch AppTests";
+			name = DiglyUITests;
 			packageProductDependencies = (
 			);
-			productName = "watchDigly Watch AppTests";
-			productReference = ABBFA5732CB6886D001BA1E2 /* watchDigly Watch AppTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		ABBFA57C2CB6886D001BA1E2 /* watchDigly Watch AppUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = ABBFA5912CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppUITests" */;
-			buildPhases = (
-				ABBFA5792CB6886D001BA1E2 /* Sources */,
-				ABBFA57A2CB6886D001BA1E2 /* Frameworks */,
-				ABBFA57B2CB6886D001BA1E2 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				ABBFA57F2CB6886D001BA1E2 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				ABBFA5802CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
-			);
-			name = "watchDigly Watch AppUITests";
-			packageProductDependencies = (
-			);
-			productName = "watchDigly Watch AppUITests";
-			productReference = ABBFA57D2CB6886D001BA1E2 /* watchDigly Watch AppUITests.xctest */;
+			productName = DiglyUITests;
+			productReference = 082495A12D4630C5007C06F8 /* DiglyUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		AB9148682CB681DE00454750 /* Project object */ = {
+		0824957F2D4630C3007C06F8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
-				LastUpgradeCheck = 1600;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
 				TargetAttributes = {
-					AB91486F2CB681DE00454750 = {
-						CreatedOnToolsVersion = 16.0;
+					082495862D4630C3007C06F8 = {
+						CreatedOnToolsVersion = 16.2;
 					};
-					AB91487F2CB681DF00454750 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = AB91486F2CB681DE00454750;
+					082495962D4630C5007C06F8 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 082495862D4630C3007C06F8;
 					};
-					AB9148892CB681DF00454750 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = AB91486F2CB681DE00454750;
-					};
-					ABBFA5632CB6886C001BA1E2 = {
-						CreatedOnToolsVersion = 16.0;
-					};
-					ABBFA5722CB6886D001BA1E2 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = ABBFA5632CB6886C001BA1E2;
-					};
-					ABBFA57C2CB6886D001BA1E2 = {
-						CreatedOnToolsVersion = 16.0;
-						TestTargetID = ABBFA5632CB6886C001BA1E2;
+					082495A02D4630C5007C06F8 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 082495862D4630C3007C06F8;
 					};
 				};
 			};
-			buildConfigurationList = AB91486B2CB681DE00454750 /* Build configuration list for PBXProject "digly" */;
+			buildConfigurationList = 082495822D4630C3007C06F8 /* Build configuration list for PBXProject "Digly" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
 			);
-			mainGroup = AB9148672CB681DE00454750;
+			mainGroup = 0824957E2D4630C3007C06F8;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				AB91489F2CB6832200454750 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
-				AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = AB9148712CB681DE00454750 /* Products */;
+			productRefGroup = 082495882D4630C3007C06F8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				AB91486F2CB681DE00454750 /* digly */,
-				AB91487F2CB681DF00454750 /* diglyTests */,
-				AB9148892CB681DF00454750 /* diglyUITests */,
-				ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */,
-				ABBFA5722CB6886D001BA1E2 /* watchDigly Watch AppTests */,
-				ABBFA57C2CB6886D001BA1E2 /* watchDigly Watch AppUITests */,
+				082495862D4630C3007C06F8 /* Digly */,
+				082495962D4630C5007C06F8 /* DiglyTests */,
+				082495A02D4630C5007C06F8 /* DiglyUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		AB91486E2CB681DE00454750 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E5D29F302CC0E1E100427849 /* .gitignore in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AB91487E2CB681DF00454750 /* Resources */ = {
+		082495852D4630C3007C06F8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AB9148882CB681DF00454750 /* Resources */ = {
+		082495952D4630C5007C06F8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ABBFA5622CB6886C001BA1E2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABBFA5712CB6886D001BA1E2 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABBFA57B2CB6886D001BA1E2 /* Resources */ = {
+		0824959F2D4630C5007C06F8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -463,44 +275,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		AB91486C2CB681DE00454750 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E5084DC52CC105D000E4F874 /* WatchConnectivityManager.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AB91487C2CB681DF00454750 /* Sources */ = {
+		082495832D4630C3007C06F8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AB9148862CB681DF00454750 /* Sources */ = {
+		082495932D4630C5007C06F8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ABBFA5602CB6886C001BA1E2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E5084DC72CC1E81000E4F874 /* WatchConnectivityManager.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABBFA56F2CB6886D001BA1E2 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		ABBFA5792CB6886D001BA1E2 /* Sources */ = {
+		0824959D2D4630C5007C06F8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -510,35 +299,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		AB9148822CB681DF00454750 /* PBXTargetDependency */ = {
+		082495992D4630C5007C06F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AB91486F2CB681DE00454750 /* digly */;
-			targetProxy = AB9148812CB681DF00454750 /* PBXContainerItemProxy */;
+			target = 082495862D4630C3007C06F8 /* Digly */;
+			targetProxy = 082495982D4630C5007C06F8 /* PBXContainerItemProxy */;
 		};
-		AB91488C2CB681DF00454750 /* PBXTargetDependency */ = {
+		082495A32D4630C5007C06F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = AB91486F2CB681DE00454750 /* digly */;
-			targetProxy = AB91488B2CB681DF00454750 /* PBXContainerItemProxy */;
-		};
-		ABBFA5752CB6886D001BA1E2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
-			targetProxy = ABBFA5742CB6886D001BA1E2 /* PBXContainerItemProxy */;
-		};
-		ABBFA57F2CB6886D001BA1E2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
-			targetProxy = ABBFA57E2CB6886D001BA1E2 /* PBXContainerItemProxy */;
-		};
-		ABBFA5862CB6886D001BA1E2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = ABBFA5632CB6886C001BA1E2 /* watchDigly Watch App */;
-			targetProxy = ABBFA5852CB6886D001BA1E2 /* PBXContainerItemProxy */;
+			target = 082495862D4630C3007C06F8 /* Digly */;
+			targetProxy = 082495A22D4630C5007C06F8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		AB9148922CB681DF00454750 /* Debug */ = {
+		082495A92D4630C5007C06F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -590,9 +364,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Digly;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -603,7 +375,7 @@
 			};
 			name = Debug;
 		};
-		AB9148932CB681DF00454750 /* Release */ = {
+		082495AA2D4630C5007C06F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -649,9 +421,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Digly;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -661,22 +431,20 @@
 			};
 			name = Release;
 		};
-		AB9148952CB681DF00454750 /* Debug */ = {
+		082495AC2D4630C5007C06F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"digly/Preview Content\"";
-				DEVELOPMENT_TEAM = H856SYKNM8;
+				DEVELOPMENT_ASSET_PATHS = "\"Digly/Preview Content\"";
+				DEVELOPMENT_TEAM = 2Q4V2LFG28;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = digly/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -684,7 +452,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.digly;
+				PRODUCT_BUNDLE_IDENTIFIER = com.DiglyTeam.Digly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -692,22 +460,20 @@
 			};
 			name = Debug;
 		};
-		AB9148962CB681DF00454750 /* Release */ = {
+		082495AD2D4630C5007C06F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"digly/Preview Content\"";
-				DEVELOPMENT_TEAM = H856SYKNM8;
+				DEVELOPMENT_ASSET_PATHS = "\"Digly/Preview Content\"";
+				DEVELOPMENT_TEAM = 2Q4V2LFG28;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = digly/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = Digly;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -715,7 +481,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.digly;
+				PRODUCT_BUNDLE_IDENTIFIER = com.DiglyTeam.Digly;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -723,288 +489,113 @@
 			};
 			name = Release;
 		};
-		AB9148982CB681DF00454750 /* Debug */ = {
+		082495AF2D4630C5007C06F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
+				DEVELOPMENT_TEAM = 2Q4V2LFG28;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.diglyTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.DiglyTeam.DiglyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/digly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/digly";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Digly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Digly";
 			};
 			name = Debug;
 		};
-		AB9148992CB681DF00454750 /* Release */ = {
+		082495B02D4630C5007C06F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
+				DEVELOPMENT_TEAM = 2Q4V2LFG28;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.diglyTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.DiglyTeam.DiglyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/digly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/digly";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Digly.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Digly";
 			};
 			name = Release;
 		};
-		AB91489B2CB681DF00454750 /* Debug */ = {
+		082495B22D4630C5007C06F8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
+				DEVELOPMENT_TEAM = 2Q4V2LFG28;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.diglyUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.DiglyTeam.DiglyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = digly;
+				TEST_TARGET_NAME = Digly;
 			};
 			name = Debug;
 		};
-		AB91489C2CB681DF00454750 /* Release */ = {
+		082495B32D4630C5007C06F8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
+				DEVELOPMENT_TEAM = 2Q4V2LFG28;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.diglyUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.DiglyTeam.DiglyUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = digly;
-			};
-			name = Release;
-		};
-		ABBFA5892CB6886D001BA1E2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "watchDigly Watch App/watchDigly Watch App.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"watchDigly Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = H856SYKNM8;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "watchDigly-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = watchDigly;
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 사용하고자 해요.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 공유하고자 해요.";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.neoself.digly;
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.digly.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.6;
-			};
-			name = Debug;
-		};
-		ABBFA58A2CB6886D001BA1E2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "watchDigly Watch App/watchDigly Watch App.entitlements";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"watchDigly Watch App/Preview Content\"";
-				DEVELOPMENT_TEAM = H856SYKNM8;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "watchDigly-Watch-App-Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = watchDigly;
-				INFOPLIST_KEY_NSHealthShareUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 사용하고자 해요.";
-				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "&quot;Digly&quot;의 디글리노트 작성 기능을 위해 건강정보를 공유하고자 해요.";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
-				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.neoself.digly;
-				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = NO;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.neoself.digly.watchkitapp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 10.6;
-			};
-			name = Release;
-		};
-		ABBFA58B2CB6886D001BA1E2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchDigly Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchDigly Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
-			};
-			name = Debug;
-		};
-		ABBFA58C2CB6886D001BA1E2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/watchDigly Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/watchDigly Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
-			};
-			name = Release;
-		};
-		ABBFA58D2CB6886D001BA1E2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "watchDigly Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
-			};
-			name = Debug;
-		};
-		ABBFA58E2CB6886D001BA1E2 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = H856SYKNM8;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.neoself.watchDigly-Watch-AppUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = "watchDigly Watch App";
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				TEST_TARGET_NAME = Digly;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		AB91486B2CB681DE00454750 /* Build configuration list for PBXProject "digly" */ = {
+		082495822D4630C3007C06F8 /* Build configuration list for PBXProject "Digly" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB9148922CB681DF00454750 /* Debug */,
-				AB9148932CB681DF00454750 /* Release */,
+				082495A92D4630C5007C06F8 /* Debug */,
+				082495AA2D4630C5007C06F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AB9148942CB681DF00454750 /* Build configuration list for PBXNativeTarget "digly" */ = {
+		082495AB2D4630C5007C06F8 /* Build configuration list for PBXNativeTarget "Digly" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB9148952CB681DF00454750 /* Debug */,
-				AB9148962CB681DF00454750 /* Release */,
+				082495AC2D4630C5007C06F8 /* Debug */,
+				082495AD2D4630C5007C06F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AB9148972CB681DF00454750 /* Build configuration list for PBXNativeTarget "diglyTests" */ = {
+		082495AE2D4630C5007C06F8 /* Build configuration list for PBXNativeTarget "DiglyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB9148982CB681DF00454750 /* Debug */,
-				AB9148992CB681DF00454750 /* Release */,
+				082495AF2D4630C5007C06F8 /* Debug */,
+				082495B02D4630C5007C06F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AB91489A2CB681DF00454750 /* Build configuration list for PBXNativeTarget "diglyUITests" */ = {
+		082495B12D4630C5007C06F8 /* Build configuration list for PBXNativeTarget "DiglyUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				AB91489B2CB681DF00454750 /* Debug */,
-				AB91489C2CB681DF00454750 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		ABBFA58F2CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch App" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				ABBFA5892CB6886D001BA1E2 /* Debug */,
-				ABBFA58A2CB6886D001BA1E2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		ABBFA5902CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				ABBFA58B2CB6886D001BA1E2 /* Debug */,
-				ABBFA58C2CB6886D001BA1E2 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		ABBFA5912CB6886D001BA1E2 /* Build configuration list for PBXNativeTarget "watchDigly Watch AppUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				ABBFA58D2CB6886D001BA1E2 /* Debug */,
-				ABBFA58E2CB6886D001BA1E2 /* Release */,
+				082495B22D4630C5007C06F8 /* Debug */,
+				082495B32D4630C5007C06F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1012,41 +603,86 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		AB91489F2CB6832200454750 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+		0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.7.0;
+			};
+		};
+		082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 8.0.0;
 			};
 		};
-		AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.9.1;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		AB9148A02CB6832200454750 /* GoogleSignIn */ = {
+		0824969E2D4636D8007C06F8 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AB91489F2CB6832200454750 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		082496A02D4636D8007C06F8 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		082496A22D4636D8007C06F8 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		082496A42D4636D8007C06F8 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		082496A62D4636D8007C06F8 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		082496A82D4636D8007C06F8 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		082496AA2D4636D8007C06F8 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		082496AC2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = "FirebaseInAppMessaging-Beta";
+		};
+		082496AE2D4636D8007C06F8 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		082496B02D4636D8007C06F8 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		082496B32D46370E007C06F8 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignIn;
 		};
-		AB9148A32CB6834B00454750 /* Alamofire */ = {
+		082496B52D46370E007C06F8 /* GoogleSignInSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-		E5B7BE1B2CC0B19800CBFE0B /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = AB9148A22CB6834B00454750 /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
+			package = 082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = AB9148682CB681DE00454750 /* Project object */;
+	rootObject = 0824957F2D4630C3007C06F8 /* Project object */;
 }
