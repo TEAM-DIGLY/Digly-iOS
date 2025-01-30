@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MainView: View {
+struct LoginView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +20,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    LoginView()
 }
