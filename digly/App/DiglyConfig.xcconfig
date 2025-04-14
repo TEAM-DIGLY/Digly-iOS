@@ -1,0 +1,8 @@
+//
+//  DiglyConfig.xcconfig
+//  Digly
+//
+//  Created by 윤동주 on 2/9/25.
+//
+
+KAKAO_NATIVE_APP_KEY = eadd4f63c07462ef2e53d8cde4317730
