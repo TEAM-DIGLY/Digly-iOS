@@ -17,6 +17,8 @@ extension Font {
     static let caption1 = Font.custom("Pretendard-SemiBold", size: 12)
     static let caption2 = Font.custom("Pretendard-SemiBold", size: 11)
     static let smallLine = Font.custom("Pretendard-Medium", size: 11)
+    static let smallBold = Font.custom("Pretendard-Bold", size: 11)
+    static let tiny = Font.custom("Pretendard-Medium", size: 9)
     
     var lineSpacing: CGFloat {
         switch self {
@@ -48,6 +50,12 @@ extension Font {
             return 16 - 12
         case .caption2:
             return 14 - 11
+        case .smallBold:
+            return 14 - 11
+        case .smallLine:
+            return 14 - 11
+        case .tiny:
+            return 11 - 9
         default:
             return 0
         }
