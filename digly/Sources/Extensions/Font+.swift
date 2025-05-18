@@ -1,16 +1,7 @@
-//
-//  Font+.swift
-//  tyte
-//
-//  Created by 김 형석 on 9/5/24.
-//
-
 import Foundation
 import SwiftUI
 
 extension Font {
-    // 인스턴스가 아닌 타입 자체에 관련된 속성이나 메서드 정의 시 사용 = 모든 인스턴스가 공유하는 값을 저장할 때 사용.
-    // 앱 전체에서 일관되게 사용되어야 하는 값들은 static으로, 이렇게 안할 경우, 폰트 사용파일에서 매번 인스턴스를 생성하여 접근해야함.
     static let title1 = Font.custom("Pretendard-SemiBold", size: 36)
     static let title2 = Font.custom("Pretendard-SemiBold", size: 28)
     static let title2_ = Font.custom("Pretendard-SemiBold", size: 26)
@@ -25,6 +16,7 @@ extension Font {
     static let label2 = Font.custom("Pretendard-SemiBold", size: 13)
     static let caption1 = Font.custom("Pretendard-SemiBold", size: 12)
     static let caption2 = Font.custom("Pretendard-SemiBold", size: 11)
+    static let smallLine = Font.custom("Pretendard-Medium", size: 11)
     
     var lineSpacing: CGFloat {
         switch self {
