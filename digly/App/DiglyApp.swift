@@ -3,12 +3,10 @@ import GoogleSignIn
 
 @main
 struct diglyApp: App {
-    @StateObject private var appState = AppState.shared
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environmentObject(appState)
+            DiglyView()
 //                .onOpenURL { url in
 //                    GIDSignIn.sharedInstance.handle(url)
 //                }
@@ -23,22 +21,4 @@ struct diglyApp: App {
 //                }
         }
     }
-}
-
-struct ContentView: View {
-    @EnvironmentObject var appState: AppState
-    
-    var body: some View {
-        if appState.isLoggedIn || appState.isGuestMode {
-            MainTabView()
-        } else {
-            OnboardingView()
-                .ignoresSafeArea()
-        }
-    }
-}
-
-#Preview {
-    ContentView()
-        .environmentObject(AppState.shared)
 }

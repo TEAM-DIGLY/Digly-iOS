@@ -4,11 +4,8 @@ import AuthenticationServices
 import GoogleSignIn
 import SwiftUI
 
+@MainActor
 class OnboardingViewModel: ObservableObject {
-    @ObservedObject private var appState: AppState
-    @Published var path = NavigationPath()
-    
-    @Published var currentToast: ToastType?
     @Published var isLoading: Bool = false
     
     @Published var isFirstChecked = false
@@ -18,9 +15,7 @@ class OnboardingViewModel: ObservableObject {
     private let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9_]{3,20}$")
     
     
-    init(appState: AppState = .shared) {
-        self.appState = appState
-    }
+    init() {}
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -29,7 +24,6 @@ class OnboardingViewModel: ObservableObject {
     
     func handleSocialLogin(_ provider:String){
         print("provider:\(provider)")
-        path.append(Route.createAccount)
     }
     
     func signUp() {
@@ -60,7 +54,6 @@ class OnboardingViewModel: ObservableObject {
     // 웹을 통해 Google 소셜로그인 진행
     func startGoogleSignIn() {
         guard let presentingViewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else {
-            self.currentToast = .error("구글 로그인이 잠시 안되고 있어요. 나중에 다시 시도해주세요.")
             return
         }
         
@@ -87,9 +80,9 @@ class OnboardingViewModel: ObservableObject {
             case .canceled:
                 print("구글 로그인 도중에 취소됨")
             case .hasNoAuthInKeychain:
-                self.currentToast = .googleError
+                print("키체인 에러")
             default:
-                self.currentToast = .googleError
+                print("다른 에러")
             }
         } else {
 //            self.currentToast = .googleError
@@ -101,7 +94,6 @@ class OnboardingViewModel: ObservableObject {
         if let idToken = signInResult.user.idToken?.tokenString {
             performGoogleLogin(with: idToken)
         } else {
-            self.currentToast = .googleError
         }
     }
     
@@ -154,9 +146,9 @@ class OnboardingViewModel: ObservableObject {
             try KeychainManager.shared.save(token: loginResponse.token, forKey: "accessToken")
             print("lastLoggedInEmail changed into \(loginResponse.user.username)")
 //            UserDefaults.standard.set(loginResponse.user.email, forKey: "lastLoggedInEmail")
-            appState.isLoggedIn = true
+            AuthManager.shared.login()
         } catch {
-            currentToast = .error(error.localizedDescription)
+            print("handleSucessfulLogin에서 취소")
         }
     }
 }

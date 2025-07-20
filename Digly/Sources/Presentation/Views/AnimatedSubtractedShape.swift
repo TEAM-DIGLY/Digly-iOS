@@ -17,11 +17,7 @@ struct AnimatedSubtractedShape: View {
 
     var body: some View {
         ZStack {
-            //            Image("icon")
-            //                .resizable()
-            //                .frame(maxWidth: .infinity,maxHeight: .infinity)
-            Color.black.edgesIgnoringSafeArea(.all).opacity(1.0)
-            
+            Color.black.edgesIgnoringSafeArea(.all)
             
             ForEach(Array([1.4, 1.7, 1.8, 2.2, 2.6, 3.2, 4.2].enumerated()), id: \.element) { index, rate in
                 let phaseOffset = CGFloat(index) * .pi / 2

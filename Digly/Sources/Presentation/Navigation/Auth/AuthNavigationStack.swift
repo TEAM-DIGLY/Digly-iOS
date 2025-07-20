@@ -1,0 +1,36 @@
+import SwiftUI
+
+@MainActor
+final class AuthRouter: BaseRouter {
+    typealias RouteType = AuthRoute
+    @Published var path = NavigationPath()
+}
+
+struct AuthNavigationStack: View {
+    @EnvironmentObject private var authRouter: AuthRouter
+    
+    var body: some View {
+        NavigationStack(path: $authRouter.path) {
+            OnboardingView()
+                .navigationDestination(for: AuthRoute.self) { route in
+                    destinationView(for: route)
+                        .onAppear {
+                            // print("📊 Auth Analytics: \(route.analyticsName)")
+                            // print("🔒 SwipeBack disabled: \(route.disableSwipeBack)")
+                        }
+                }
+        }
+    }
+    
+    @ViewBuilder
+    private func destinationView(for route: AuthRoute) -> some View {
+        switch route {
+        case .createAccount: CreateAccountView()
+        case .onboarding: OnboardingView()
+        }
+    }
+}
+
+#Preview {
+    AuthNavigationStack()
+}

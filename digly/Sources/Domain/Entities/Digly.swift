@@ -1,36 +1,37 @@
 import Foundation
 import SwiftUI
 
-import Foundation
-import SwiftUI
-
 struct Digly: Hashable, Identifiable {
     let id = UUID()
+    let diglyType: DiglyType
     let name: String
     let role: String
     let description: String
     let color: Color
     let lightColor: Color
     
+    init(diglyType: DiglyType, color: Color, lightColor: Color) {
+        self.diglyType = diglyType
+        self.name = diglyType.rawValue
+        self.role = diglyType.role
+        self.description = diglyType.description
+        self.color = color
+        self.lightColor = lightColor
+    }
+    
     static let data: [Digly] = [
         Digly(
-            name: "collector",
-            role: "수집",
-            description: "마음에 드는 굿즈들을",
+            diglyType: .collector,
             color: .pDefault,
             lightColor: .pLight
         ),
         Digly(
-            name: "analyst",
-            role: "분석",
-            description: "관람한 문화생활을",
+            diglyType: .analyst,
             color: .sbDefault,
             lightColor: .sbLight
         ),
         Digly(
-            name: "communicator",
-            role: "소통",
-            description: "다양한 사람들과 함께",
+            diglyType: .communicator,
             color: .yDefault,
             lightColor: .yLight
         )
