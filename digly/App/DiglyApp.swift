@@ -1,17 +1,24 @@
-//
-//  DiglyApp.swift
-//  Digly
-//
-//  Created by 윤동주 on 1/26/25.
-//
-
 import SwiftUI
+import GoogleSignIn
 
 @main
-struct DiglyApp: App {
+struct diglyApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            MainView()
+            DiglyView()
+//                .onOpenURL { url in
+//                    GIDSignIn.sharedInstance.handle(url)
+//                }
+//                .onAppear {
+//                    GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+//                        if error != nil || user == nil {
+//                            appState.isLoggedIn = false
+//                        } else {
+//                            appState.isLoggedIn = true
+//                        }
+//                    }
+//                }
         }
     }
 }

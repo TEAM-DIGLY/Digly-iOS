@@ -1,42 +1,39 @@
-//
-//  Digly.swift
-//  digly
-//
-//  Created by Neoself on 2/2/25.
-//
-
 import Foundation
 import SwiftUI
 
 struct Digly: Hashable, Identifiable {
     let id = UUID()
+    let diglyType: DiglyType
     let name: String
     let role: String
     let description: String
     let color: Color
     let lightColor: Color
     
+    init(diglyType: DiglyType, color: Color, lightColor: Color) {
+        self.diglyType = diglyType
+        self.name = diglyType.rawValue
+        self.role = diglyType.role
+        self.description = diglyType.description
+        self.color = color
+        self.lightColor = lightColor
+    }
+    
     static let data: [Digly] = [
         Digly(
-            name: "collector",
-            role: "수집",
-            description: "마음에 드는 굿즈들을",
-            color: Color.p50,
-            lightColor: Color.p00
+            diglyType: .collector,
+            color: .pDefault,
+            lightColor: .pLight
         ),
         Digly(
-            name: "analyst",
-            role: "분석",
-            description: "관람한 문화생활을",
-            color: Color.b50,
-            lightColor: Color.b00
+            diglyType: .analyst,
+            color: .sbDefault,
+            lightColor: .sbLight
         ),
         Digly(
-            name: "communicator",
-            role: "소통",
-            description: "다양한 사람들과 함께",
-            color: Color.y50,
-            lightColor: Color.y00
+            diglyType: .communicator,
+            color: .yDefault,
+            lightColor: .yLight
         )
     ]
 }

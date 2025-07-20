@@ -5,7 +5,7 @@ import GoogleSignIn
 import SwiftUI
 
 class CreateAccountViewModel: ObservableObject {
-    @Published var username: String = ""{ didSet{
+    @Published var username: String = ""{ didSet {
         if username != oldValue {
             withAnimation (.mediumEaseInOut){
                 isUsernameValid = false
@@ -94,7 +94,6 @@ class CreateAccountViewModel: ObservableObject {
         }
         print(idToken)
     }
-    
     
     func checkUsername(){
         // TODO: 서버로 부터 닉네임 중복여부 확인

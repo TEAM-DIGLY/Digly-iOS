@@ -59,7 +59,8 @@ struct CreateAccountView: View {
                 Text(viewModel.isUsernameValid ? "완료" : "다음")
                     .fontStyle(.title3)
                     .transition(.opacity.animation(.easeInOut))
-                    .foregroundStyle(viewModel.username.isEmpty || !viewModel.errorText.isEmpty ? .opacityCommon75 : .opacityCommon25)
+                    .foregroundStyle(viewModel.username.isEmpty || !viewModel.errorText.isEmpty ?
+                        .opacity75 : .opacity25)
             }
             .frame(width:72)
             .disabled(viewModel.username.isEmpty || !viewModel.errorText.isEmpty)
@@ -122,8 +123,8 @@ struct CreateAccountView: View {
                 HStack(spacing: 16) {
                     ForEach(0..<Digly.data.count, id: \.self) { index in
                         let digly = Digly.data[index]
-                        Image("\(digly.name)Digly")
-                            .shadow(color: Color(hex:"000000").opacity(0.2), radius: 8)
+                                                    Image("\(digly.diglyType.rawValue)_avatar_box")
+                            .shadow(color: Color("000000").opacity(0.2), radius: 8)
                         
                             .containerRelativeFrame(.horizontal, count: 1, spacing: 16)
                             .scrollTransition { content, phase in
