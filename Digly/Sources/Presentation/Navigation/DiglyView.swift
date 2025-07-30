@@ -3,61 +3,46 @@ import SwiftUI
 struct DiglyView: View {
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var popupManager = PopupManager.shared
-    @StateObject private var router = HomeRouter()
+    
+    @StateObject private var homeRouter = HomeRouter()
+    @StateObject private var ticketBookRouter = TicketBookRouter()
+    @StateObject private var diggingNoteRouter = DiggingNoteRouter()
+    
     @StateObject private var authRouter = AuthRouter()
+    
+    @State private var selectedTab = 0
     
     var body: some View {
         VStack {
             if authManager.isLoggedIn {
-                HomeNavigationStack()
-                DiggingNoteNavigationStack()
-                TicketBookNavigationStack()
+                switch(selectedTab) {
+                case 0:
+                    HomeNavigationStack(selectedTab: $selectedTab)
+                        .environmentObject(homeRouter)
+                case 1:
+                    DiggingNoteNavigationStack(selectedTab: $selectedTab)
+                        .environmentObject(diggingNoteRouter)
+                default:
+                    TicketBookNavigationStack(selectedTab: $selectedTab)
+                        .environmentObject(ticketBookRouter)
+                }
             } else {
                 AuthNavigationStack()
+                    .environmentObject(authRouter)
             }
         }
-        .environmentObject(router)
         .presentPopup(
             isPresented: $popupManager.popupPresented,
             data: popupManager.currentPopupData
         )
         .onChange(of: authManager.isLoggedIn) { _, isLoggedIn in
             if !isLoggedIn {
-                router.reset()
+                homeRouter.reset()
+                ticketBookRouter.reset()
+                diggingNoteRouter.reset()
+                
                 authRouter.reset()
             }
         }
     }
-}
-
-#Preview("로그인 상태") {
-    DiglyView()
-        .onAppear {
-            AuthManager.shared.login()
-        }
-}
-
-#Preview("로그아웃 상태") {
-    DiglyView()
-        .onAppear {
-            AuthManager.shared.logout()
-        }
-}
-
-#Preview("업데이트 필수 팝업") {
-    DiglyView()
-        .onAppear {
-            PopupManager.shared.show(type: .updateMandatory) {
-                print("업데이트 필수 액션")
-            }
-        }
-}
-
-#Preview("업데이트 선택 팝업") {
-    DiglyView()
-        .onAppear {
-            PopupManager.shared.show(type: .updateOptional) {
-                print("업데이트 선택 액션")
-            }
-        }
 }

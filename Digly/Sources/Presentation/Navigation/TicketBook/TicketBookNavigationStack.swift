@@ -8,6 +8,7 @@ final class TicketBookRouter: BaseRouter {
 
 struct TicketBookNavigationStack: View {
     @EnvironmentObject private var router: TicketBookRouter
+    @Binding var selectedTab: Int
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -36,6 +37,6 @@ struct TicketBookNavigationStack: View {
 } 
 
 #Preview {
-    TicketBookNavigationStack()
+    TicketBookNavigationStack(selectedTab: .constant(2))
         .environmentObject(TicketBookRouter())
 }

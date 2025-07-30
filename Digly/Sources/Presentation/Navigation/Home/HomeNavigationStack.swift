@@ -8,6 +8,7 @@ final class HomeRouter: BaseRouter {
 
 struct HomeNavigationStack: View {
     @EnvironmentObject private var router: HomeRouter
+    @Binding var selectedTab: Int
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -34,7 +35,6 @@ struct HomeNavigationStack: View {
 } 
 
 #Preview {
-    HomeNavigationStack()
+    HomeNavigationStack(selectedTab: .constant(0))
         .environmentObject(HomeRouter())
 }
- 

@@ -8,6 +8,7 @@ final class DiggingNoteRouter: BaseRouter {
 
 struct DiggingNoteNavigationStack: View {
     @EnvironmentObject private var router: DiggingNoteRouter
+    @Binding var selectedTab: Int
     
     var body: some View {
         NavigationStack(path: $router.path) {
@@ -34,6 +35,6 @@ struct DiggingNoteNavigationStack: View {
 } 
 
 #Preview {
-    DiggingNoteNavigationStack()
+    DiggingNoteNavigationStack(selectedTab: .constant(1))
         .environmentObject(DiggingNoteRouter())
 }
