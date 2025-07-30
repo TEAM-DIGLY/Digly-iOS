@@ -43,6 +43,23 @@ struct OnboardingView: View {
                         socialLoginButton(provider: "apple")
                         socialLoginButton(provider: "naver")
                     }
+                    .padding(.bottom, 16)
+                    
+                    // 로딩 인디케이터
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .padding(.bottom, 16)
+                    }
+                    
+                    // 에러 메시지
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .fontStyle(.caption1)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 16)
+                    }
                 }
                 .padding(.horizontal,32)
                 .padding(.top,160)
@@ -57,10 +74,8 @@ struct OnboardingView: View {
     
     private func socialLoginButton(provider: String) -> some View {
         Button(action: {
-//            viewModel.handleSocialLogin(provider)
-            withAnimation(.mediumEaseOut){
-                isPopupPresented = true
-            }
+            // 소셜로그인 실행
+            viewModel.handleSocialLogin(provider)
         } ) {
             Image(provider)
                 .resizable()
@@ -69,6 +84,8 @@ struct OnboardingView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 26))
                 .padding(12)
         }
+        .disabled(viewModel.isLoading)
+        .opacity(viewModel.isLoading ? 0.6 : 1.0)
     }
 }
 

@@ -1,24 +1,16 @@
 import SwiftUI
-import GoogleSignIn
 
 @main
 struct diglyApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     
     var body: some Scene {
         WindowGroup {
             DiglyView()
-//                .onOpenURL { url in
-//                    GIDSignIn.sharedInstance.handle(url)
-//                }
-//                .onAppear {
-//                    GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
-//                        if error != nil || user == nil {
-//                            appState.isLoggedIn = false
-//                        } else {
-//                            appState.isLoggedIn = true
-//                        }
-//                    }
-//                }
+                .onOpenURL { url in
+                    // URL 스킴 처리는 AppDelegate에서 담당
+                    _ = appDelegate.application(UIApplication.shared, open: url, options: [:])
+                }
         }
     }
 }
