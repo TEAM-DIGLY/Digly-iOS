@@ -17,8 +17,10 @@
 		082496AD2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta in Frameworks */ = {isa = PBXBuildFile; productRef = 082496AC2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta */; };
 		082496AF2D4636D8007C06F8 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 082496AE2D4636D8007C06F8 /* FirebaseMessaging */; };
 		082496B12D4636D8007C06F8 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 082496B02D4636D8007C06F8 /* FirebaseStorage */; };
-		082496B42D46370E007C06F8 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 082496B32D46370E007C06F8 /* GoogleSignIn */; };
-		082496B62D46370E007C06F8 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 082496B52D46370E007C06F8 /* GoogleSignInSwift */; };
+		E58FC5382E3A2E17008EA17B /* NaverThirdPartyLogin in Frameworks */ = {isa = PBXBuildFile; productRef = E58FC5372E3A2E17008EA17B /* NaverThirdPartyLogin */; };
+		E58FC53B2E3A2E56008EA17B /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = E58FC53A2E3A2E56008EA17B /* KakaoSDKAuth */; };
+		E58FC53D2E3A2E56008EA17B /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = E58FC53C2E3A2E56008EA17B /* KakaoSDKCommon */; };
+		E58FC53F2E3A2E56008EA17B /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = E58FC53E2E3A2E56008EA17B /* KakaoSDKUser */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -82,15 +84,17 @@
 			files = (
 				082496AF2D4636D8007C06F8 /* FirebaseMessaging in Frameworks */,
 				082496A92D4636D8007C06F8 /* FirebaseDatabase in Frameworks */,
-				082496B42D46370E007C06F8 /* GoogleSignIn in Frameworks */,
-				082496B62D46370E007C06F8 /* GoogleSignInSwift in Frameworks */,
+				E58FC5382E3A2E17008EA17B /* NaverThirdPartyLogin in Frameworks */,
+				E58FC53F2E3A2E56008EA17B /* KakaoSDKUser in Frameworks */,
 				082496A12D4636D8007C06F8 /* FirebaseAppCheck in Frameworks */,
 				082496B12D4636D8007C06F8 /* FirebaseStorage in Frameworks */,
+				E58FC53B2E3A2E56008EA17B /* KakaoSDKAuth in Frameworks */,
 				082496A32D4636D8007C06F8 /* FirebaseAuth in Frameworks */,
 				082496AD2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta in Frameworks */,
 				082496A72D4636D8007C06F8 /* FirebaseCrashlytics in Frameworks */,
 				082496A52D4636D8007C06F8 /* FirebaseCore in Frameworks */,
 				0824969F2D4636D8007C06F8 /* FirebaseAnalytics in Frameworks */,
+				E58FC53D2E3A2E56008EA17B /* KakaoSDKCommon in Frameworks */,
 				082496AB2D4636D8007C06F8 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,8 +166,10 @@
 				082496AC2D4636D8007C06F8 /* FirebaseInAppMessaging-Beta */,
 				082496AE2D4636D8007C06F8 /* FirebaseMessaging */,
 				082496B02D4636D8007C06F8 /* FirebaseStorage */,
-				082496B32D46370E007C06F8 /* GoogleSignIn */,
-				082496B52D46370E007C06F8 /* GoogleSignInSwift */,
+				E58FC5372E3A2E17008EA17B /* NaverThirdPartyLogin */,
+				E58FC53A2E3A2E56008EA17B /* KakaoSDKAuth */,
+				E58FC53C2E3A2E56008EA17B /* KakaoSDKCommon */,
+				E58FC53E2E3A2E56008EA17B /* KakaoSDKUser */,
 			);
 			productName = Digly;
 			productReference = 082495872D4630C3007C06F8 /* Digly.app */;
@@ -249,7 +255,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				E58FC5362E3A2E17008EA17B /* XCRemoteSwiftPackageReference "naveridlogin-sdk-ios" */,
+				E58FC5392E3A2E56008EA17B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 082495882D4630C3007C06F8 /* Products */;
@@ -451,7 +458,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Digly/Preview Content\"";
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -481,7 +487,6 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Digly/Preview Content\"";
 				DEVELOPMENT_TEAM = H856SYKNM8;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -626,12 +631,20 @@
 				minimumVersion = 11.7.0;
 			};
 		};
-		082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+		E58FC5362E3A2E17008EA17B /* XCRemoteSwiftPackageReference "naveridlogin-sdk-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			repositoryURL = "https://github.com/naver/naveridlogin-sdk-ios";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+		E58FC5392E3A2E56008EA17B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
+				minimumVersion = 2.24.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -687,15 +700,25 @@
 			package = 0824969D2D4636D8007C06F8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseStorage;
 		};
-		082496B32D46370E007C06F8 /* GoogleSignIn */ = {
+		E58FC5372E3A2E17008EA17B /* NaverThirdPartyLogin */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignIn;
+			package = E58FC5362E3A2E17008EA17B /* XCRemoteSwiftPackageReference "naveridlogin-sdk-ios" */;
+			productName = NaverThirdPartyLogin;
 		};
-		082496B52D46370E007C06F8 /* GoogleSignInSwift */ = {
+		E58FC53A2E3A2E56008EA17B /* KakaoSDKAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 082496B22D46370E007C06F8 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
-			productName = GoogleSignInSwift;
+			package = E58FC5392E3A2E56008EA17B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKAuth;
+		};
+		E58FC53C2E3A2E56008EA17B /* KakaoSDKCommon */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E58FC5392E3A2E56008EA17B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKCommon;
+		};
+		E58FC53E2E3A2E56008EA17B /* KakaoSDKUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E58FC5392E3A2E56008EA17B /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKUser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
