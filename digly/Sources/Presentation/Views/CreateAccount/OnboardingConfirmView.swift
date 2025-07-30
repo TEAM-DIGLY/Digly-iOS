@@ -1,18 +1,3 @@
-//
-//  OnboardingAnimationView.swift
-//  digly
-//
-//  Created by Neoself on 2/2/25.
-//
-
-
-//
-//  OnboardingAnimationView.swift
-//  digly
-//
-//  Created by Neoself on 11/3/24.
-//
-
 import SwiftUI
 
 struct OnboardingConfirmView: View {

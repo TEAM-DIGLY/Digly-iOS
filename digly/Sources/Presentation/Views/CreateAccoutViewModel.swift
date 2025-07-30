@@ -1,7 +1,6 @@
 import Foundation
 import Combine
 import AuthenticationServices
-import GoogleSignIn
 import SwiftUI
 
 class CreateAccountViewModel: ObservableObject {
