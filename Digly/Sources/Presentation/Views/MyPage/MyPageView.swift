@@ -62,7 +62,7 @@ struct MyPageView: View {
                         .fontStyle(.body2)
                         .foregroundStyle(.neutral25)
                     
-                    Text("\(KeychainManager.shared.getUsername() ?? "Username")")
+                    Text(AuthManager.shared.nickname)
                         .fontStyle(.heading2)
                         .foregroundStyle(.common0)
                 }

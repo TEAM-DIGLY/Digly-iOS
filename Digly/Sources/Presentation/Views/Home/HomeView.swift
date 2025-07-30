@@ -9,7 +9,7 @@ struct HomeView: View {
     var body: some View {
         VStack(spacing: 0) {
             HStack (spacing:4) {
-                Text("\(KeychainManager.shared.getUsername() ?? "사용자 1")의")
+                Text("\(AuthManager.shared.nickname)의")
                     .fontStyle(.headline1)
                     .foregroundStyle(.neutral5)
                 

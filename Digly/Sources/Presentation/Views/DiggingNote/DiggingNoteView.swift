@@ -40,7 +40,7 @@ struct DiggingNoteView: View {
     
     private var header: some View {
             HStack {
-                Text("\(KeychainManager.shared.getUsername() ?? "Username")'s\ndigging note")
+                Text("\(AuthManager.shared.nickname)'s\ndigging note")
                     .fontStyle(.title2)
                     .foregroundStyle(.common100)
                 

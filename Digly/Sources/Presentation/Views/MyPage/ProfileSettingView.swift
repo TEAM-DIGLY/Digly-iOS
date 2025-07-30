@@ -44,7 +44,7 @@ struct ProfileSettingView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
-            nickname = KeychainManager.shared.getUsername() ?? ""
+            nickname = AuthManager.shared.nickname
             currentCharacterIndex = characters.firstIndex { $0.diglyType == digly.diglyType } ?? 0
         }
     }
@@ -195,7 +195,7 @@ struct ProfileSettingView: View {
     // MARK: - Save Profile
     private func saveProfile() {
         // Update nickname
-        KeychainManager.shared.setUsername(nickname)
+        AuthManager.shared.saveNickname(nickname)
         
         // Update character
         digly.updateDiglyType(characters[currentCharacterIndex].diglyType)
