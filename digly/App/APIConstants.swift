@@ -1,6 +1,9 @@
 import Foundation
 
 struct APIConstants {
-    static let isDevelopment = false
-    static let baseUrl = isDevelopment ? "http://localhost:8080/api" : "http://43.201.140.227:8080/api"
+    static let isServerDevelopment = false
+    static let baseUrl = isServerDevelopment ? "http://localhost:8080" : "http://digly.shop"
+    
+    static let developmentURL = "http://localhost:8080"
+    static let productionURL = "http://digly.shop"
 }
