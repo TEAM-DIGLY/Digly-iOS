@@ -7,43 +7,76 @@ enum KeychainError: Error {
     case encodingError
 }
 
-protocol KeychainManagerProtocol {
-    func save(token: String, forKey:String,service:String) throws
-    func retrieve(forKey: String, service: String) throws -> String
-    func delete(forKey: String, service: String) throws
+enum KeychainKeys {
+    static let serviceName = "com.digly.ios"
+    
+    static let accessToken = "accessToken"
+    static let refreshToken = "refreshToken"
+    static let fcmToken = "fcmToken"
 }
 
-class KeychainManager {
-    static let shared = KeychainManager() // 싱글톤 유지
-    private init() {} // 싱글톤 유지
+final class KeychainManager {
+    static let shared = KeychainManager()
+    
+    private init() {}
     
     func getAccessToken() -> String? {
-        try? self.retrieve(forKey:"accessToken")
+        do {
+            return try retrieve(forKey: KeychainKeys.accessToken)
+        } catch {
+            print("getAccessToken Error in KeychainManager")
+            return nil
+        }
     }
+    
     func getRefreshToken() -> String? {
-        try? self.retrieve(forKey:"refreshToken")
+        do {
+            return try retrieve(forKey: KeychainKeys.refreshToken)
+        } catch {
+            print("getRefreshToken Error in KeychainManager")
+            return nil
+        }
     }
     
-    func clearToken() {
-        try? self.delete(forKey: "accessToken")
-        try? self.delete(forKey: "refreshToken")
+    func getFcmToken() -> String? {
+        do {
+            return try retrieve(forKey: KeychainKeys.fcmToken)
+        } catch {
+            print("getFcmToken Error in KeychainManager")
+            return nil
+        }
     }
     
-    func getUsername() -> String? {
-        UserDefaults.standard.string(forKey: "lastLoggedInUsername")
+    func saveFcmToken(_ fcmToken: String) {
+        do {
+            try save(token: fcmToken, forKey: KeychainKeys.fcmToken)
+        } catch {
+            print("Save Fcm Token Error in KeychainManager")
+        }
     }
     
-    func setUsername(_ username: String) {
-        UserDefaults.standard.set(username, forKey: "lastLoggedInUsername")
+    func saveTokens(_ accessToken: String, _ refreshToken: String) {
+        do {
+            try save(token: accessToken, forKey: KeychainKeys.accessToken)
+            try save(token: refreshToken, forKey: KeychainKeys.refreshToken)
+        } catch {
+            print("Save tokens Error in KeychainManager")
+        }
     }
     
-    func getDiglyType() -> String? {
-        UserDefaults.standard.string(forKey: "diglyType")
+    func clearTokens() {
+        do {
+            try delete(forKey: KeychainKeys.accessToken)
+            try delete(forKey: KeychainKeys.refreshToken)
+        } catch{
+            print("clear token Error in KeychainManager")
+        }
     }
+    
 }
 
-extension KeychainManager: KeychainManagerProtocol {
-    func save(token: String, forKey key: String, service: String = "com.clip.ddom") throws {
+private extension KeychainManager {
+    func save(token: String, forKey key: String, service: String = KeychainKeys.serviceName) throws {
         guard let data = token.data(using: .utf8) else {
             throw KeychainError.encodingError
         }
@@ -59,12 +92,12 @@ extension KeychainManager: KeychainManagerProtocol {
         let status = SecItemAdd(query as CFDictionary, nil)
         
         if status == errSecDuplicateItem {
-            // Item already exists, let's update it
             let updateQuery: [String: Any] = [
                 kSecClass as String: kSecClassGenericPassword,
                 kSecAttrService as String: service,
                 kSecAttrAccount as String: key
             ]
+            
             let updateAttributes: [String: Any] = [kSecValueData as String: data]
             let updateStatus = SecItemUpdate(updateQuery as CFDictionary, updateAttributes as CFDictionary)
             
@@ -76,7 +109,7 @@ extension KeychainManager: KeychainManagerProtocol {
         }
     }
     
-    func retrieve(forKey key: String, service: String = "com.yourapp.tokens") throws -> String {
+    func retrieve(forKey key: String, service: String = KeychainKeys.serviceName) throws -> String {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
@@ -102,7 +135,7 @@ extension KeychainManager: KeychainManagerProtocol {
         return token
     }
     
-    func delete(forKey key: String, service: String = "com.yourapp.tokens") throws {
+    func delete(forKey key: String, service: String = KeychainKeys.serviceName) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,

@@ -39,7 +39,6 @@ final class DiglyManager: ObservableObject {
         return "\(diglyType.rawValue)_avatar"
     }
     
-    
     var avatarBoxImageName: String {
         return "\(diglyType.rawValue)_avatar_box"
     }
