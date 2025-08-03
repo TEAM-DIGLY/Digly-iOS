@@ -4,6 +4,7 @@ enum PlatformType: String, Codable, CaseIterable {
     case kakao = "KAKAO"
     case apple = "APPLE"
     case naver = "NAVER"
+    case withdraw = "WITHDRAW"
     
     var displayName: String {
         switch self {
@@ -13,6 +14,8 @@ enum PlatformType: String, Codable, CaseIterable {
             return "애플"
         case .naver:
             return "네이버"
+        case .withdraw:
+            return "탈퇴"
         }
     }
     
@@ -24,18 +27,8 @@ enum PlatformType: String, Codable, CaseIterable {
             return "apple_icon"
         case .naver:
             return "naver_icon"
-        }
-    }
-    
-    // API에서 사용하는 소문자 값 (SignInRequest에서 사용)
-    var apiValue: String {
-        switch self {
-        case .kakao:
-            return "kakao"
-        case .apple:
-            return "apple"
-        case .naver:
-            return "naver"
+        case .withdraw:
+            return "withdraw_icon"
         }
     }
 }

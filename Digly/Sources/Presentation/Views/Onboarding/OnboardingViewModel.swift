@@ -8,11 +8,15 @@ class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String? = nil
     
+    @Published  var isPopupPresented: Bool = false
+    
     @Published var isFirstChecked = false
     @Published var isSecondChecked = false
     @Published var isThirdChecked = false
     
     private let authUseCase: AuthUseCase
+    private var tempAccessToken: String?
+    private var tempRefreshToken: String?
     
     init(authUseCase: AuthUseCase = AuthUseCase()) {
         self.authUseCase = authUseCase
@@ -33,7 +37,14 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
             
             print("카카오 로그인 성공: \(response)")
-            // 로그인 성공 후 필요한 처리 (예: 화면 전환)
+            
+            if response.name == nil {
+                tempAccessToken = response.accessToken
+                tempRefreshToken = response.refreshToken
+                isPopupPresented = true
+            } else {
+                AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "")
+            }
             
         } catch {
             errorMessage = "카카오 로그인 중 오류가 발생했습니다: \(error.localizedDescription)"
@@ -52,7 +63,14 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
             
             print("네이버 로그인 성공: \(response)")
-            // 로그인 성공 후 필요한 처리 (예: 화면 전환)
+            
+            if response.name == nil {
+                tempAccessToken = response.accessToken
+                tempRefreshToken = response.refreshToken
+                isPopupPresented = true
+            } else {
+                AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "")
+            }
             
         } catch {
             errorMessage = "네이버 로그인 중 오류가 발생했습니다: \(error.localizedDescription)"
@@ -71,7 +89,14 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .apple, socialToken: identityToken)
             
             print("애플 로그인 성공: \(response)")
-            // 로그인 성공 후 필요한 처리 (예: 화면 전환)
+            
+            if response.name == nil {
+                tempAccessToken = response.accessToken
+                tempRefreshToken = response.refreshToken
+                isPopupPresented = true
+            } else {
+                AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "")
+            }
             
         } catch {
             errorMessage = "애플 로그인 중 오류가 발생했습니다: \(error.localizedDescription)"
@@ -118,5 +143,17 @@ class OnboardingViewModel: ObservableObject {
             isSecondChecked = newValue
             isThirdChecked = newValue
         }
+    }
+    
+    func getAccessToken() -> String? {
+        return tempAccessToken
+    }
+    
+    func getRefreshToken() -> String? {
+        return tempRefreshToken
+    }
+    
+    func getTokens() -> (accessToken: String?, refreshToken: String?) {
+        return (tempAccessToken, tempRefreshToken)
     }
 }

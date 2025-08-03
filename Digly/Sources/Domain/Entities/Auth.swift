@@ -4,14 +4,14 @@ struct SignInRequest: Codable {
     let platform: String
     
     init(platformType: PlatformType) {
-        self.platform = platformType.apiValue
+        self.platform = platformType.rawValue
     }
 }
 
 struct SignInResponse: Codable {
-    let id: Int64
-    let name: String
-    let memberType: MemberType
+    let id: Int
+    let name: String?
+    let memberType: MemberType?
     let accessToken: String
     let refreshToken: String
 }

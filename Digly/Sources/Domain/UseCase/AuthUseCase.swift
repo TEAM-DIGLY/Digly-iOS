@@ -13,19 +13,16 @@ final class AuthUseCase {
     }
     
     func signIn(platform: PlatformType, socialToken: String) async throws -> SignInResponse {
-        let request = SignInRequest(platformType: platform)
+        let apiResponse = try await authRepository.signIn(platform: platform, socialToken: socialToken)
         
-        let response = try await authRepository.signIn(request: request, socialToken: socialToken)
+        saveMemberId(apiResponse.data.id)
         
-        saveMemberId(response.id)
-        await AuthManager.shared.login(response.accessToken, response.refreshToken, response.name)
-        
-        return response
+        return apiResponse.data
     }
     
-    func signUp(name: String, memberType: MemberType, socialToken: String) async throws -> SignUpResponse {
+    func signUp(name: String, memberType: MemberType, accessToken: String) async throws -> SignUpResponse {
         let request = SignUpRequest(name: name, memberType: memberType)
-        return try await authRepository.signUp(request: request, socialToken: socialToken)
+        return try await authRepository.signUp(request: request, accessToken: accessToken)
     }
     
     func reissueToken() async throws -> ReissueResponse {
@@ -47,7 +44,7 @@ final class AuthUseCase {
         await AuthManager.shared.logout()
     }
     
-    private func saveMemberId(_ memberId: Int64) {
+    private func saveMemberId(_ memberId: Int) {
         UserDefaults.standard.set(memberId, forKey: "currentMemberId")
     }
     

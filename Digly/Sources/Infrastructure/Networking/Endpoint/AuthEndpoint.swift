@@ -2,7 +2,7 @@ import Foundation
 
 enum AuthEndpoint: APIEndpoint {
     case postLogin(String) // socialToken
-    case postSignup(String) // socialToken
+    case postSignup(String) // accessToken
     case postReissue(String) // refreshToken
     
     var path: String {
@@ -27,8 +27,8 @@ enum AuthEndpoint: APIEndpoint {
         switch self {
         case .postLogin(let socialToken):
             return .custom(key: "Authorization", value: socialToken)
-        case .postSignup(let socialToken):
-            return .custom(key: "Authorization", value: socialToken)
+        case .postSignup(let accessToken):
+            return .custom(key: "Authorization", value: "Bearer \(accessToken)")
         case .postReissue(let refreshToken):
             return .custom(key: "Authorization", value: refreshToken)
         }

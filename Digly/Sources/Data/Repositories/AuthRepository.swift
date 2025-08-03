@@ -7,16 +7,15 @@ final class AuthRepository: AuthRepositoryProtocol {
         self.networkAPI = networkAPI
     }
     
-    func signIn(request: SignInRequest, socialToken: String) async throws -> SignInResponse {
-        return try await networkAPI.request(
-            AuthEndpoint.postLogin(socialToken),
-            parameters: request.toDictionary()
-        )
+    func signIn(platform: PlatformType, socialToken: String) async throws -> APIResponse<SignInResponse> {
+        let params = ["platform" : platform.rawValue]
+        
+        return try await networkAPI.request(AuthEndpoint.postLogin(socialToken), parameters: params)
     }
     
-    func signUp(request: SignUpRequest, socialToken: String) async throws -> SignUpResponse {
+    func signUp(request: SignUpRequest, accessToken: String) async throws -> SignUpResponse {
         return try await networkAPI.request(
-            AuthEndpoint.postSignup(socialToken),
+            AuthEndpoint.postSignup(accessToken),
             parameters: request.toDictionary()
         )
     }

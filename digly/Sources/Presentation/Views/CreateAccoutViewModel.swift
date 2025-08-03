@@ -16,22 +16,51 @@ class CreateAccountViewModel: ObservableObject {
     @Published var errorText: String = ""
     @Published var isExistingUser: Bool = false
     @Published var isUsernameValid: Bool = false
-    @Published var isSelectingDigly: Bool = false
+    
+    @Published var isSelectingDigly: Bool = true
     
     @Published var isLoading: Bool = false
     @Published var isAppleLoading: Bool = false
     @Published var selectedIndex :Int = 0
+    @Published var signupErrorMessage: String? = nil
     
     private let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9_]{3,20}$")
+    private let authUseCase: AuthUseCase
+    private let accessToken: String
+    private let refreshToken: String
     
     private var cancellables = Set<AnyCancellable>()
     
-    func handleDone(){
-        
+    init(accessToken: String, refreshToken: String, authUseCase: AuthUseCase = AuthUseCase()) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        self.authUseCase = authUseCase
     }
     
-    //TODO: 추후 Service 레이어나, useCase를 통해 로직 캡슐화할 필요 있음.
-    func signIn(){
+    func performSignUp(onSuccess: @escaping (SignUpResponse) -> Void) {
+        Task {
+            do {
+                signupErrorMessage = nil
+                isLoading = true
+                let selectedDiglyType = Digly.data[selectedIndex].diglyType
+                let memberType = selectedDiglyType.toMemberType()
+                
+                let response = try await authUseCase.signUp(
+                    name: username,
+                    memberType: memberType,
+                    accessToken: accessToken
+                )
+                
+                print("회원가입 성공: \(response)")
+                isLoading = false
+                
+                onSuccess(response)
+                
+            } catch {
+                isLoading = false
+                signupErrorMessage = "회원가입 중 오류가 발생했습니다: \(error.localizedDescription)"
+            }
+        }
     }
     
     func handleLeftArrowPress(_ proxy:ScrollViewProxy){

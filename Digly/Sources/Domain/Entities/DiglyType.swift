@@ -61,5 +61,15 @@ public enum DiglyType: String, CaseIterable, Codable {
         }
     }
     
+    func toMemberType() -> MemberType {
+        switch self {
+        case .collector:
+            return .collector
+        case .analyst:
+            return .analyzer
+        case .communicator:
+            return .communicator
+        }
+    }
 
 } 

@@ -4,6 +4,7 @@ struct OnboardingDetailView: View {
     @Binding var isPresented: Bool
     @State private var isTermsAccepted: Bool = false
     @State private var isPrivacyAccepted: Bool = false
+    let onContinue: () -> Void
     
     var body: some View {
         ZStack {
@@ -25,7 +26,7 @@ struct OnboardingDetailView: View {
                         Text("digly")
                             .fontStyle(.body1)
                             .foregroundStyle(.opacity5)
-                        
+                         
                         Text("문화생활의 여운, 일상에서 누리는\n디깅라이프의 시작")
                             .fontStyle(.tiny)
                             .foregroundStyle(.opacity65)
@@ -36,7 +37,6 @@ struct OnboardingDetailView: View {
                 Divider()
                 
                 VStack(alignment: .leading, spacing: 16) {
-                    // 전체 동의하기
                     HStack(alignment: .top) {
                         Image(isTermsAccepted && isPrivacyAccepted ? "checkBox_filled" : "checkBox")
                             .resizable()
@@ -129,7 +129,7 @@ struct OnboardingDetailView: View {
                 .padding(.bottom, 8)
                 
                 Button(action: {
-                    // 동의하고 계속하기 액션
+                    onContinue()
                 }) {
                     Text("동의하고 계속하기")
                         .fontStyle(.body1)
@@ -171,7 +171,7 @@ struct OnboardingDetailView: View {
 // 미리보기
 struct OnboardingDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingDetailView(isPresented: .constant(true))
+        OnboardingDetailView(isPresented: .constant(true), onContinue: {})
     }
 }
 
