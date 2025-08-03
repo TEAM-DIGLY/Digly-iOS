@@ -3,6 +3,7 @@ import SwiftUI
 struct DiglyView: View {
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var popupManager = PopupManager.shared
+    @StateObject private var toastManager = ToastManager.shared
     
     @StateObject private var homeRouter = HomeRouter()
     @StateObject private var ticketBookRouter = TicketBookRouter()
@@ -34,6 +35,10 @@ struct DiglyView: View {
         .presentPopup(
             isPresented: $popupManager.popupPresented,
             data: popupManager.currentPopupData
+        )
+        .presentToast(
+            isPresented: $toastManager.toastPresented,
+            data: toastManager.currentToastType
         )
         .onChange(of: authManager.isLoggedIn) { _, isLoggedIn in
             if !isLoggedIn {
