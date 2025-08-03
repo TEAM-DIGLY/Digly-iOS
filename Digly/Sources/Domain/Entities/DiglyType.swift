@@ -2,9 +2,9 @@ import Foundation
 import SwiftUI
 
 public enum DiglyType: String, CaseIterable, Codable {
-    case collector = "collector"
-    case analyst = "analyst"
-    case communicator = "communicator"
+    case collector = "COLLECTION"
+    case analyst = "ANALYZE"
+    case communicator = "COMMUNICATION"
     
     var displayName: String {
         switch self {
@@ -14,6 +14,17 @@ public enum DiglyType: String, CaseIterable, Codable {
             return "분석가"
         case .communicator:
             return "소통가"
+        }
+    }
+    
+    var imageName: String {
+        switch self {
+        case .collector:
+            "collector"
+        case .analyst:
+            "analyst"
+        case .communicator:
+            "communicator"
         }
     }
     
@@ -60,16 +71,4 @@ public enum DiglyType: String, CaseIterable, Codable {
             return "소통"
         }
     }
-    
-    func toMemberType() -> MemberType {
-        switch self {
-        case .collector:
-            return .collector
-        case .analyst:
-            return .analyzer
-        case .communicator:
-            return .communicator
-        }
-    }
-
 } 

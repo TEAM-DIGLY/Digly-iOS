@@ -13,30 +13,28 @@ final class AuthUseCase {
     }
     
     func signIn(platform: PlatformType, socialToken: String) async throws -> SignInResponse {
-        let apiResponse = try await authRepository.signIn(platform: platform, socialToken: socialToken)
+        let response = try await authRepository.signIn(platform: platform, socialToken: socialToken)
         
-        saveMemberId(apiResponse.data.id)
-        
-        return apiResponse.data
+        return response.data
     }
     
-    func signUp(name: String, memberType: MemberType, accessToken: String) async throws -> SignUpResponse {
-        let request = SignUpRequest(name: name, memberType: memberType)
-        return try await authRepository.signUp(request: request, accessToken: accessToken)
+    func signUp(name: String, diglyType: DiglyType, accessToken: String) async throws -> SignUpResponse {
+        let request = SignUpRequest(name: name, diglyType: diglyType)
+        let response = try await authRepository.signUp(request: request, accessToken: accessToken)
+        
+        return response.data
     }
     
     func reissueToken() async throws -> ReissueResponse {
-        guard let refreshToken = keychainManager.getRefreshToken(),
-              let memberId = getCurrentMemberId() else {
+        guard let refreshToken = keychainManager.getRefreshToken() else {
             throw APIError.unauthorized
         }
         
-        let request = ReissueRequest(memberId: memberId)
-        let response = try await authRepository.reissue(request: request, refreshToken: refreshToken)
+        let response = try await authRepository.reissue(refreshToken: refreshToken)
         
-        keychainManager.saveTokens(response.accessToken, response.refreshToken)
+        keychainManager.saveTokens(response.data.accessToken, response.data.refreshToken)
         
-        return response
+        return response.data
     }
     
     func logout() async {
@@ -44,11 +42,4 @@ final class AuthUseCase {
         await AuthManager.shared.logout()
     }
     
-    private func saveMemberId(_ memberId: Int) {
-        UserDefaults.standard.set(memberId, forKey: "currentMemberId")
-    }
-    
-    private func getCurrentMemberId() -> Int64? {
-        return UserDefaults.standard.object(forKey: "currentMemberId") as? Int64
-    }
 }

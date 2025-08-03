@@ -11,18 +11,18 @@ struct SignInRequest: Codable {
 struct SignInResponse: Codable {
     let id: Int
     let name: String?
-    let memberType: MemberType?
+    let memberType: DiglyType?
     let accessToken: String
     let refreshToken: String
 }
 
 struct SignUpRequest: Codable {
     let name: String
-    let memberType: MemberType
+    let diglyType: DiglyType
 }
 
 struct SignUpResponse: Codable {
-    let id: Int64
+    let id: Int
     let name: String
     let memberType: MemberType
 }

@@ -13,17 +13,19 @@ final class AuthRepository: AuthRepositoryProtocol {
         return try await networkAPI.request(AuthEndpoint.postLogin(socialToken), parameters: params)
     }
     
-    func signUp(request: SignUpRequest, accessToken: String) async throws -> SignUpResponse {
+    func signUp(request: SignUpRequest, accessToken: String) async throws -> APIResponse<SignUpResponse> {
+        let params = [
+            "name": request.name,
+            "memberType": request.diglyType.rawValue
+        ]
+        
         return try await networkAPI.request(
             AuthEndpoint.postSignup(accessToken),
-            parameters: request.toDictionary()
+            parameters: params
         )
     }
     
-    func reissue(request: ReissueRequest, refreshToken: String) async throws -> ReissueResponse {
-        return try await networkAPI.request(
-            AuthEndpoint.postReissue(refreshToken),
-            parameters: request.toDictionary()
-        )
+    func reissue(refreshToken: String) async throws -> APIResponse<ReissueResponse> {
+        return try await networkAPI.request(AuthEndpoint.postReissue(refreshToken))
     }
 }

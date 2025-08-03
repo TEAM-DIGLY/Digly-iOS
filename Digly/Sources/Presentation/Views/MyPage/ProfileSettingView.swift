@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ProfileSettingView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var digly = DiglyManager.shared
+    @StateObject private var authManager = AuthManager.shared
     @State private var nickname: String = ""
     @State private var currentCharacterIndex: Int = 0
     
@@ -44,8 +44,8 @@ struct ProfileSettingView: View {
         }
         .navigationBarHidden(true)
         .onAppear {
-            nickname = AuthManager.shared.nickname
-            currentCharacterIndex = characters.firstIndex { $0.diglyType == digly.diglyType } ?? 0
+            nickname = authManager.nickname
+            currentCharacterIndex = characters.firstIndex { $0.diglyType == authManager.diglyType } ?? 0
         }
     }
     
@@ -88,7 +88,7 @@ struct ProfileSettingView: View {
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral35)
             
-            CustomTextField.profileStyle(text: $nickname)
+            DGTextField.profileStyle(text: $nickname)
         }
     }
     
@@ -195,10 +195,10 @@ struct ProfileSettingView: View {
     // MARK: - Save Profile
     private func saveProfile() {
         // Update nickname
-        AuthManager.shared.saveNickname(nickname)
+        authManager.updateNickname(nickname)
         
         // Update character
-        digly.updateDiglyType(characters[currentCharacterIndex].diglyType)
+        authManager.updateDiglyType(characters[currentCharacterIndex].diglyType)
         
         dismiss()
     }

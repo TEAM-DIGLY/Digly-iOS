@@ -3,13 +3,10 @@ import SwiftUI
 struct MyPageView: View {
     @Environment(\.dismiss) private var dismiss
     
-    @StateObject private var digly = DiglyManager.shared
+    @StateObject private var authManager = AuthManager.shared
     
     var body: some View {
-        ZStack {
-            Color.clear
-                .ignoresSafeArea()
-            
+        DGScreen(horizontalPadding: 0, isAlignCenter: true) {
             VStack(spacing: 0) {
                 BackNavWithTitle(title: "마이페이지") {
                     EmptyView()
@@ -44,25 +41,23 @@ struct MyPageView: View {
             
             logoutButton
         }
-        .navigationBarHidden(true)
     }
-    
     
     // MARK: - Profile Section
     private var profileSection: some View {
         VStack(spacing: 16) {
             HStack {
-                Image(digly.avatarImageName)
+                Image(authManager.avatarImageName)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 97)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(digly.diglyType.verb)
+                    Text(authManager.diglyType.verb)
                         .fontStyle(.body2)
                         .foregroundStyle(.neutral25)
                     
-                    Text(AuthManager.shared.nickname)
+                    Text(authManager.nickname)
                         .fontStyle(.heading2)
                         .foregroundStyle(.common0)
                 }
@@ -89,7 +84,7 @@ struct MyPageView: View {
         .padding(.top, 20)
         .padding(.horizontal, 20)
         .padding(.bottom, 16)
-        .background(digly.diglyType.subColor, in:
+        .background(authManager.diglyType.subColor, in:
                         UnevenRoundedRectangle(
                             topLeadingRadius: 0,
                             bottomLeadingRadius: 24,

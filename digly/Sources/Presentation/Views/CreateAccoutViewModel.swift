@@ -3,6 +3,7 @@ import Combine
 import AuthenticationServices
 import SwiftUI
 
+@MainActor
 class CreateAccountViewModel: ObservableObject {
     @Published var username: String = ""{ didSet {
         if username != oldValue {
@@ -17,12 +18,11 @@ class CreateAccountViewModel: ObservableObject {
     @Published var isExistingUser: Bool = false
     @Published var isUsernameValid: Bool = false
     
-    @Published var isSelectingDigly: Bool = true
+    @Published var isSelectingDigly: Bool = false
     
     @Published var isLoading: Bool = false
     @Published var isAppleLoading: Bool = false
     @Published var selectedIndex :Int = 0
-    @Published var signupErrorMessage: String? = nil
     
     private let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9_]{3,20}$")
     private let authUseCase: AuthUseCase
@@ -40,25 +40,18 @@ class CreateAccountViewModel: ObservableObject {
     func performSignUp(onSuccess: @escaping (SignUpResponse) -> Void) {
         Task {
             do {
-                signupErrorMessage = nil
                 isLoading = true
                 let selectedDiglyType = Digly.data[selectedIndex].diglyType
-                let memberType = selectedDiglyType.toMemberType()
+                let diglyType = selectedDiglyType
                 
-                let response = try await authUseCase.signUp(
-                    name: username,
-                    memberType: memberType,
-                    accessToken: accessToken
-                )
-                
-                print("회원가입 성공: \(response)")
+                let response = try await authUseCase.signUp(name: username, diglyType: diglyType, accessToken: accessToken)
                 isLoading = false
                 
                 onSuccess(response)
                 
             } catch {
                 isLoading = false
-                signupErrorMessage = "회원가입 중 오류가 발생했습니다: \(error.localizedDescription)"
+                ToastManager.shared.show(.errorStringWithTask("회원가입"))
             }
         }
     }
