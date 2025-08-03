@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct CustomTextField<T>: View where T: Hashable {
+struct DGTextField<T>: View where T: Hashable {
     @Binding var text: T
     
     let placeholder: String
@@ -59,8 +59,8 @@ struct CustomTextField<T>: View where T: Hashable {
     }
     
     // Profile style initializer
-    static func profileStyle(text: Binding<T>) -> CustomTextField<T> {
-        CustomTextField(
+    static func profileStyle(text: Binding<T>) -> DGTextField<T> {
+        DGTextField(
             text: text,
             placeholder: "",
             isProfileStyle: true

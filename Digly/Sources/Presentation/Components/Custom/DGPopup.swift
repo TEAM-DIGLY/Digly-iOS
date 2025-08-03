@@ -24,7 +24,6 @@ struct DGPopup: View {
                     hidePopup()
                 }
                 
-                
                 buttonSection(popup.primaryButtonText) {
                     popupData.action()
                     hidePopup()
@@ -37,7 +36,7 @@ struct DGPopup: View {
         .padding(.horizontal, 48)
     }
     
-    private func buttonSection(_ text: String ,isSub: Bool = false, action: @escaping ()-> Void)-> some View {
+    private func buttonSection(_ text: String, isSub: Bool = false, action: @escaping ()-> Void)-> some View {
         Button(action: action) {
             Text(text)
                 .font(.label2)

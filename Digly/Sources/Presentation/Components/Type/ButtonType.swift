@@ -1,34 +1,39 @@
-//import SwiftUI
-//
-//enum ButtonType {
-//    case primary
-//    case secondary
-//    case secondaryGray
-//    
-//    var font: Font { .subhead3 }
-//    
-//    var backgroundColor: Color {
-//        switch self {
-//        case .primary: .primary50
-//        case .secondary, .secondaryGray: .gray10
-//        }
-//    }
-//    
-//    var foregroundColor: Color {
-//        switch self {
-//        case .primary: .white
-//        case .secondary: .primary50
-//        case .secondaryGray: .gray50
-//        }
-//    }
-//    
-//    var strokeColor: Color {
-//        switch self {
-//        case .primary: .clear
-//        case .secondary, .secondaryGray: .gray30
-//        }
-//    }
-//    
-//    var disabledBackgroundColor: Color { .gray20 }
-//    var disabledForegroundColor: Color { .gray60 }
-//}
+import SwiftUI
+
+enum ButtonType {
+    case primary
+    
+    var font: Font {
+        switch self {
+        case .primary:
+                .body1
+        default:
+                .body1
+        }
+    }
+    
+    var backgroundColor: Color {
+        switch self {
+        case .primary: .neutral5
+        }
+    }
+    
+    var foregroundColor: Color {
+        switch self {
+        case .primary: .common100
+        }
+    }
+    
+    var strokeColor: Color {
+        switch self {
+        case .primary: .clear
+        }
+    }
+    
+    var height: CGFloat {
+        56
+    }
+    
+    var disabledBackgroundColor: Color { .opacity55 }
+    var disabledForegroundColor: Color { .common100 }
+}
