@@ -15,7 +15,7 @@ struct CreateAccountView: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        DGScreen(isAlignCenter: true, isLoading: viewModel.isLoading) {
             Button(action:{
                 if viewModel.isSelectingDigly {
                     viewModel.isSelectingDigly = false
@@ -46,17 +46,9 @@ struct CreateAccountView: View {
                     diglySection
                 }
             }
-            .padding(.horizontal, 28)
+            .padding(.horizontal, 12)
             
             Spacer()
-        
-            if let errorMessage = viewModel.signupErrorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .fontStyle(.caption1)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 16)
-            }
         }
         .background(.common100)
         .navigationBarBackButtonHidden()
@@ -157,10 +149,12 @@ struct CreateAccountView: View {
             Button(action: {
                 Task {
                     viewModel.performSignUp { signUpResponse in
+                        let selectedDiglyType = Digly.data[viewModel.selectedIndex].diglyType
                         authRouter.push(to: .onboardingConfirm(
                             signUpResponse: signUpResponse,
                             accessToken: accessToken,
-                            refreshToken: refreshToken
+                            refreshToken: refreshToken,
+                            diglyType: selectedDiglyType
                         ))
                     }
                 }
@@ -186,7 +180,7 @@ struct CreateAccountView: View {
                 HStack(spacing: 16) {
                     ForEach(0..<Digly.data.count, id: \.self) { index in
                         let digly = Digly.data[index]
-                        Image("\(digly.diglyType.rawValue)_avatar_box")
+                        Image("\(digly.diglyType.imageName)_avatar_box")
                             .shadow(color: .common0.opacity(0.2), radius: 8)
                         
                             .containerRelativeFrame(.horizontal, count: 1, spacing: 16)

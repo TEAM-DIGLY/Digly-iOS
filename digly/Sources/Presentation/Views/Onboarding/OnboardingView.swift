@@ -5,8 +5,8 @@ struct OnboardingView: View {
     @EnvironmentObject private var authRouter: AuthRouter
     
     var body: some View {
-        ZStack{
-            VStack(spacing:0){
+        ZStack {
+            DGScreen(horizontalPadding: 36, isAlignCenter: true, isLoading: viewModel.isLoading) {
                 VStack(alignment:.leading,spacing:24){
                     Image("diglyText")
                         .resizable()
@@ -41,42 +41,24 @@ struct OnboardingView: View {
                     socialLoginButton(provider: "apple")
                     socialLoginButton(provider: "naver")
                 }
-                .padding(.bottom, 16)
-                
-                // 로딩 인디케이터
-                if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle())
-                        .padding(.bottom, 16)
-                }
-                
-                // 에러 메시지
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundColor(.red)
-                        .fontStyle(.caption1)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 16)
-                }
             }
-            .padding(.horizontal,32)
-            .padding(.top,160)
-            .padding(.bottom,64)
+            .padding(.top, 160)
+            .padding(.bottom, 80)
             
             if viewModel.isPopupPresented {
                 OnboardingDetailView(
                     isPresented: $viewModel.isPopupPresented,
                     onContinue: {
                         viewModel.isPopupPresented = false
-                        let tokens = viewModel.getTokens()
-                        if let accessToken = tokens.accessToken,
-                            let refreshToken = tokens.refreshToken {
+                        if let accessToken = viewModel.tempAccessToken,
+                           let refreshToken = viewModel.tempRefreshToken {
                             authRouter.push(to: .createAccount(accessToken: accessToken, refreshToken: refreshToken))
                         }
                     }
                 )
             }
-        }   
+        }
+        .ignoresSafeArea()
     }
     
     private func socialLoginButton(provider: String) -> some View {

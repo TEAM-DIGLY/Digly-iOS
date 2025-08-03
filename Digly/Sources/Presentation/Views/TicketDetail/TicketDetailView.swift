@@ -12,33 +12,17 @@ struct TicketDetailView: View {
     }
     
     var body: some View {
-        Group {
-            if viewModel.isLoading {
-                loadingView
-            } else if let errorMessage = viewModel.errorMessage {
-                errorView(message: errorMessage)
-            } else if let ticketDetail = ticketDetail {
-                ticketDetailContent(ticketDetail: ticketDetail)
-            } else {
-                errorView(message: "티켓 정보를 불러올 수 없습니다.")
+        DGScreen(horizontalPadding: 0, isLoading: viewModel.isLoading) {
+            Group {
+                if let ticketDetail = ticketDetail {
+                    ticketDetailContent(ticketDetail: ticketDetail)
+                } else if !viewModel.isLoading {
+                    errorView(message: "티켓 정보를 불러올 수 없습니다.")
+                }
             }
         }
     }
     
-    private var loadingView: some View {
-        VStack {
-            ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: .common100))
-                .scaleEffect(1.5)
-            
-            Text("티켓 정보를 불러오는 중...")
-                .font(.body1)
-                .foregroundColor(.common100)
-                .padding(.top, 16)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
-    }
     
     private func errorView(message: String) -> some View {
         VStack(spacing: 16) {

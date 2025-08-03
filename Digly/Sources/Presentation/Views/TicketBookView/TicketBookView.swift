@@ -6,23 +6,24 @@ struct TicketBookView: View {
     
     // MARK: - Body
     var body: some View {
-        ZStack {
-            Color.black.edgesIgnoringSafeArea(.all)
-            
-            ScrollView {
-                VStack(spacing: 24) {
-                    headerView
-                    
-                    upperTicketList
-                    
-                    subHeader
-                    
-                    ticketGridView
+        DGScreen(horizontalPadding: 0) {
+            ZStack {
+                Color.black.edgesIgnoringSafeArea(.all)
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        headerView
+                        
+                        upperTicketList
+                        
+                        subHeader
+                        
+                        ticketGridView
+                    }
+                    .padding(.horizontal, 16)
                 }
-                .padding(.horizontal, 16)
             }
         }
-        .navigationBarHidden(true)
     }
     
     // MARK: - Header View

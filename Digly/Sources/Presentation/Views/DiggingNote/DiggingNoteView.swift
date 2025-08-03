@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DiggingNoteView: View {
+    @StateObject private var authManager = AuthManager.shared
     @State private var expandedNoteId: String? = "1"
     @State private var notes: [NoteItem] = [
         NoteItem(id: "1", title: "캣츠 내한공연 50주년", date: "2025.03.03", noteCount: 3, content: [
@@ -12,35 +13,37 @@ struct DiggingNoteView: View {
     ]
     
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 40){
-                header
-                
-                VStack(spacing: 16) {
-                    ForEach(notes, id: \.id) { note in
-                        NoteCardView(
-                            note: note,
-                            isExpanded: expandedNoteId == note.id,
-                            toggleExpand: {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    if expandedNoteId == note.id {
-                                        expandedNoteId = nil
-                                    } else {
-                                        expandedNoteId = note.id
+        DGScreen(horizontalPadding: 0) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 40){
+                    header
+                    
+                    VStack(spacing: 16) {
+                        ForEach(notes, id: \.id) { note in
+                            NoteCardView(
+                                note: note,
+                                isExpanded: expandedNoteId == note.id,
+                                toggleExpand: {
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        if expandedNoteId == note.id {
+                                            expandedNoteId = nil
+                                        } else {
+                                            expandedNoteId = note.id
+                                        }
                                     }
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
+                    .padding(.horizontal, 24)
                 }
-                .padding(.horizontal, 24)
             }
         }
     }
     
     private var header: some View {
             HStack {
-                Text("\(AuthManager.shared.nickname)'s\ndigging note")
+                Text("\(authManager.nickname)'s\ndigging note")
                     .fontStyle(.title2)
                     .foregroundStyle(.common100)
                 
