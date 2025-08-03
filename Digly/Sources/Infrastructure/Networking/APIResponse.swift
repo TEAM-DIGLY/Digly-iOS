@@ -1,14 +1,24 @@
 import Foundation
 
-struct LoginResponse: Codable {
-    let user: User
-    let token: String
+struct APIResponse<T: Codable>: Codable {
+    let status: Int
+    let message: String
+    let data: T
 }
 
-struct ValidateResponse: Codable {
-    let isValid: Bool
+struct PageableResponse<T: Codable>: Codable {
+    struct Pagination: Codable {
+        let page: Int
+        let size: Int
+        let total: Int
+        let hasNext: Bool
+    }
+    let content: [T]
+    let pagination: Pagination
 }
 
-struct CheckEmailResponse: Decodable {
-    let isValid: Bool
+struct ContentResponse<T: Codable>: Codable {
+    let content: [T]
 }
+
+struct EmptyResult: Codable {}
