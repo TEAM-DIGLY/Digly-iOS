@@ -66,7 +66,7 @@ struct AnimatedSubtractedShape: View {
                 topTrailingRadius: 24
             )
         )
-        .shadow(color: Color("000000").opacity(0.4), radius: 8)
+        .shadow(color: .common0.opacity(0.4), radius: 8)
     }
 }
 

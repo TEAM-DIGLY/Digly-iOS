@@ -7,7 +7,7 @@ struct TextInputLimitModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .onChange(of: text) { newValue in
+            .onChange(of: text) { _, newValue in
                 if newValue.count > maxLength {
                     text = String(newValue.prefix(maxLength))
                 }

@@ -219,7 +219,6 @@ extension DiglyType {
 }
 
 #Preview {
-    NavigationStack {
         ProfileSettingView()
-    }
+    
 } 

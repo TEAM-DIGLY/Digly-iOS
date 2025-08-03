@@ -1,11 +1,3 @@
-//
-//  LogoNavBar.swift
-//  digly
-//
-//  Created by Neoself on 4/13/25.
-//
-
-
 import SwiftUI
 
 // MARK: - 기본 네비게이션 바 뷰 (로고 + 알림)

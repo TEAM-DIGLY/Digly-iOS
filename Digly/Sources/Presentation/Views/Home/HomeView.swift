@@ -87,7 +87,7 @@ struct HomeView: View {
                             .background(RoundedRectangle(cornerRadius: 20)
                                 .fill(backgroundColorForRemainingDays(viewModel.remainingDate))
                                 .opacity(opacityForRemainingDays(viewModel.remainingDate))
-                                .shadow(color: Color("000000")
+                                .shadow(color:.common0
                                     .opacity(viewModel.remainingDate > 4 ? 0.15 : 0.0), radius: 4)
                             )
                     }
@@ -155,7 +155,7 @@ struct HomeView: View {
                             .fill(.neutral85)
                             .frame(width: 112, height: 112)
                             .foregroundColor(.clear)
-                            .shadow(color: Color("000000")
+                            .shadow(color: .common0
                                 .opacity(0.15), radius: 4
                             )
                             .rotationEffect(.degrees(20))
@@ -165,7 +165,7 @@ struct HomeView: View {
                             .fill(.neutral85)
                             .frame(width: 112, height: 112)
                             .foregroundColor(.clear)
-                            .shadow(color: Color("000000")
+                            .shadow(color: .common0
                                 .opacity(0.15), radius: 4
                             )
                             .rotationEffect(.degrees(-20))
@@ -177,7 +177,7 @@ struct HomeView: View {
                                     .fill(.neutral85)
                                     .frame(width: 130, height: 130)
                                     .foregroundColor(.clear)
-                                    .shadow(color: Color("000000")
+                                    .shadow(color: .common0
                                         .opacity(0.15), radius: 4)
                             )
                             .onTapGesture {

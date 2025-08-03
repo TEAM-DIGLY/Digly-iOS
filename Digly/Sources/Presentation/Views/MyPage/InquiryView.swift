@@ -46,7 +46,6 @@ struct InquiryView: View {
 }
 
 #Preview {
-    NavigationStack {
         InquiryView()
-    }
+    
 } 

@@ -1,9 +1,3 @@
-//
-//  LiveDigly.swift
-//  digly
-//
-//  Created by Neoself on 11/17/24.
-//
 import SwiftUI
 
 struct LiveDigly : View {
