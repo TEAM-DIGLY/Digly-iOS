@@ -30,8 +30,8 @@ struct AuthNavigationStack: View {
             CreateAccountView(accessToken: accessToken, refreshToken: refreshToken)
         case .onboarding: 
             OnboardingView()
-        case .onboardingConfirm(let signUpResponse, let accessToken, let refreshToken): 
-            OnboardingConfirmView(signUpResponse: signUpResponse, accessToken: accessToken, refreshToken: refreshToken)
+        case .onboardingConfirm(let signUpResponse, let accessToken, let refreshToken, let diglyType): 
+            OnboardingConfirmView(signUpResponse: signUpResponse, accessToken: accessToken, refreshToken: refreshToken, diglyType: diglyType)
         }
     }
 }

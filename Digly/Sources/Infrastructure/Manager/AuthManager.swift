@@ -45,6 +45,17 @@ final class AuthManager: ObservableObject {
         return "\(diglyType.imageName)_avatar"
     }
     
+    var paddingBottom: CGFloat {
+        switch diglyType {
+        case .analyst:
+            -28
+        case .collector:
+            -28
+        case .communicator:
+            0       
+        }
+    }
+    
     var avatarBoxImageName: String {
         return "\(diglyType.imageName)_avatar_box"
     }

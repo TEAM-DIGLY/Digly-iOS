@@ -5,7 +5,6 @@ import SwiftUI
 class TicketDetailViewModel: ObservableObject {
     @Published var ticket: TicketModel?
     @Published var isLoading: Bool = false
-    @Published var errorMessage: String?
     
     private var cancellables = Set<AnyCancellable>()
     private let ticketId: String
@@ -27,7 +26,7 @@ class TicketDetailViewModel: ObservableObject {
             }
             
             if self.ticket == nil {
-                self.errorMessage = "티켓을 찾을 수 없습니다."
+                ToastManager.shared.show(.errorStringWithTask("티켓 로딩"))
             }
             
             self.isLoading = false

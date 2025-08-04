@@ -7,7 +7,7 @@ final class TicketRepository: TicketRepositoryProtocol {
         self.networkAPI = networkAPI
     }
     
-    func getTickets(startAt: Date?, endAt: Date?, page: Int?, size: Int?) async throws -> TicketsResponse {
+    func getTickets(startAt: Date?, endAt: Date?, page: Int?, size: Int?) async throws -> APIResponse<TicketsResponse> {
         var queryParams: [String: String] = [:]
         
         if let startAt = startAt {

@@ -8,7 +8,7 @@ final class TicketUseCase {
         self.ticketRepository = ticketRepository
     }
     
-    func getAllTickets(startDate: Date? = nil, endDate: Date? = nil, page: Int = 0, size: Int = 20) async throws -> TicketsResponse{
+    func getAllTickets(startDate: Date? = nil, endDate: Date? = nil, page: Int = 0, size: Int = 20) async throws -> APIResponse<TicketsResponse> {
         return try await ticketRepository.getTickets(startAt: startDate, endAt: endDate, page: page, size: size)
     }
     
@@ -34,7 +34,7 @@ final class TicketUseCase {
             seatNumber: seatNumber,
             price: price,
             color: color,
-            feeling: feeling
+            feeling: feeling.map{ Feeling(rawValue:$0) ?? .joyful }
         )
         
         return try await ticketRepository.createTicket(request: request)
@@ -59,17 +59,17 @@ final class TicketUseCase {
             seatNumber: seatNumber,
             price: price,
             color: color,
-            feeling: feeling
+            feeling: feeling.map{ Feeling(rawValue:$0) ?? .joyful }
         )
         
         return try await ticketRepository.updateTicket(ticketId: ticketId, request: request)
     }
     
-    func getUpcomingTickets() async throws -> TicketsResponse {
+    func getUpcomingTickets() async throws -> APIResponse<TicketsResponse> {
         return try await ticketRepository.getTickets(startAt: Date(), endAt: nil, page: 0, size: 10)
     }
     
-    func getPastTickets() async throws -> TicketsResponse {
+    func getPastTickets() async throws -> APIResponse<TicketsResponse> {
         return try await ticketRepository.getTickets(startAt: nil, endAt: Date(), page: 0, size: 20)
     }
     

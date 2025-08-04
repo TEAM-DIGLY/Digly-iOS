@@ -6,7 +6,6 @@ import SwiftUI
 @MainActor
 class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
-    @Published var errorMessage: String? = nil
     
     @Published  var isPopupPresented: Bool = false
     
@@ -15,96 +14,14 @@ class OnboardingViewModel: ObservableObject {
     @Published var isThirdChecked = false
     
     private let authUseCase: AuthUseCase
-    private var tempAccessToken: String?
-    private var tempRefreshToken: String?
+    var tempAccessToken: String?
+    var tempRefreshToken: String?
     
     init(authUseCase: AuthUseCase = AuthUseCase()) {
         self.authUseCase = authUseCase
     }
     
     private var cancellables = Set<AnyCancellable>()
-    
-    func submit(){
-    }
-    
-    // MARK: - 소셜로그인 메서드들
-    func performKakaoLogin() async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let token = try await KakaoLoginManager.shared.login()
-            let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
-            
-            print("카카오 로그인 성공: \(response)")
-            
-            if response.name == nil {
-                tempAccessToken = response.accessToken
-                tempRefreshToken = response.refreshToken
-                isPopupPresented = true
-            } else {
-                AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "")
-            }
-            
-        } catch {
-            errorMessage = "카카오 로그인 중 오류가 발생했습니다: \(error.localizedDescription)"
-            print("카카오 로그인 실패: \(error)")
-        }
-        
-        isLoading = false
-    }
-    
-    func performNaverLogin() async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let token = try await NaverLoginManager.shared.login()
-            let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
-            
-            print("네이버 로그인 성공: \(response)")
-            
-            if response.name == nil {
-                tempAccessToken = response.accessToken
-                tempRefreshToken = response.refreshToken
-                isPopupPresented = true
-            } else {
-                AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "")
-            }
-            
-        } catch {
-            errorMessage = "네이버 로그인 중 오류가 발생했습니다: \(error.localizedDescription)"
-            print("네이버 로그인 실패: \(error)")
-        }
-        
-        isLoading = false
-    }
-    
-    func performAppleLogin() async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            let identityToken = try await AppleLoginManager.shared.login()
-            let response = try await authUseCase.signIn(platform: .apple, socialToken: identityToken)
-            
-            print("애플 로그인 성공: \(response)")
-            
-            if response.name == nil {
-                tempAccessToken = response.accessToken
-                tempRefreshToken = response.refreshToken
-                isPopupPresented = true
-            } else {
-                AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "")
-            }
-            
-        } catch {
-            errorMessage = "애플 로그인 중 오류가 발생했습니다: \(error.localizedDescription)"
-            print("애플 로그인 실패: \(error)")
-        }
-        
-        isLoading = false
-    }
     
     func handleSocialLogin(_ provider: String) {
         Task {
@@ -121,8 +38,57 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    func signUp() {
-        isLoading = true
+    func handleLoginSuccess(_ response: SignInResponse) {
+        if let name = response.name, let diglyType = response.memberType {
+            AuthManager.shared.login(response.accessToken, response.refreshToken, name, diglyType)
+        } else {
+            tempAccessToken = response.accessToken
+            tempRefreshToken = response.refreshToken
+            isPopupPresented = true
+        }
+    }
+    
+    // MARK: - 소셜로그인 메서드들
+    func performKakaoLogin() async {
+        do {
+            isLoading = true
+            let token = try await KakaoLoginManager.shared.login()
+            let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
+            isLoading = false
+            
+            handleLoginSuccess(response)
+        } catch {
+            isLoading = false
+            ToastManager.shared.show(.errorStringWithTask("카카오 로그인"))
+        }
+    }
+    
+    func performNaverLogin() async {
+        do {
+            isLoading = true
+            let token = try await NaverLoginManager.shared.login()
+            let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
+            isLoading = false
+            
+            handleLoginSuccess(response)
+        } catch {
+            isLoading = false
+            ToastManager.shared.show(.errorStringWithTask("네이버 로그인"))
+        }
+    }
+    
+    func performAppleLogin() async {
+        do {
+            isLoading = true
+            let token = try await AppleLoginManager.shared.login()
+            let response = try await authUseCase.signIn(platform: .apple, socialToken: token)
+            isLoading = false
+            
+            handleLoginSuccess(response)
+        } catch {
+            isLoading = false
+            ToastManager.shared.show(.errorStringWithTask("애플 로그인"))
+        }
     }
     
     var isAllChecked: Bool {
@@ -143,17 +109,5 @@ class OnboardingViewModel: ObservableObject {
             isSecondChecked = newValue
             isThirdChecked = newValue
         }
-    }
-    
-    func getAccessToken() -> String? {
-        return tempAccessToken
-    }
-    
-    func getRefreshToken() -> String? {
-        return tempRefreshToken
-    }
-    
-    func getTokens() -> (accessToken: String?, refreshToken: String?) {
-        return (tempAccessToken, tempRefreshToken)
     }
 }

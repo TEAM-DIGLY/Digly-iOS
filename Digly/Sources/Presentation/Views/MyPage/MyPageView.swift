@@ -35,11 +35,11 @@ struct MyPageView: View {
                         
                         Spacer(minLength: 100)
                     }
-                    .padding(.top, 16)
+                    .padding(.vertical, 16)
+                    
+                    logoutButton
                 }
             }
-            
-            logoutButton
         }
     }
     
