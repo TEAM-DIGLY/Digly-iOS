@@ -23,8 +23,8 @@ final class TicketUseCase {
         count: Int32,
         seatNumber: String? = nil,
         price: Int32? = nil,
-        color: String,
-        feeling: [String]
+        colors: [String],
+        feelings: [String]
     ) async throws -> Ticket {
         let request = CreateTicketRequest(
             name: name,
@@ -33,8 +33,8 @@ final class TicketUseCase {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: color,
-            feeling: feeling.map{ Feeling(rawValue:$0) ?? .joyful }
+            color: colors,
+            feeling: feelings
         )
         
         return try await ticketRepository.createTicket(request: request)
@@ -48,8 +48,8 @@ final class TicketUseCase {
         count: Int32,
         seatNumber: String? = nil,
         price: Int32? = nil,
-        color: String,
-        feeling: [String]
+        colors: [String],
+        feelings: [String]
     ) async throws -> Ticket {
         let request = UpdateTicketRequest(
             name: name,
@@ -58,8 +58,8 @@ final class TicketUseCase {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: color,
-            feeling: feeling.map{ Feeling(rawValue:$0) ?? .joyful }
+            color: colors,
+            feeling: feelings
         )
         
         return try await ticketRepository.updateTicket(ticketId: ticketId, request: request)

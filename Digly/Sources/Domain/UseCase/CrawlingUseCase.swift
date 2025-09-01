@@ -13,7 +13,7 @@ final class CrawlingUseCase {
             return []
         }
         
-        return try await crawlingRepository.getTicketsTitleByTitle(title: query).titleList
+        return try await crawlingRepository.getTicketsTitleByTitle(title: query).data.titleList
     }
 //    
 //    func getRecommendedTitles(based currentTickets: [Ticket]) -> AnyPublisher<[String], APIError> {

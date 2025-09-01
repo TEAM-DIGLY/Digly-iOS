@@ -22,7 +22,7 @@ final class NoteUseCase {
         return try await noteRepository.updateNote(noteId: noteId, request: request)
     }
     
-    func getNotesByTicket(ticketId: Int64, page: Int = 0, size: Int = 20) async throws -> TicketsResponse {
+    func getNotesByTicket(ticketId: Int64, page: Int = 0, size: Int = 5) async throws -> NotesResponse {
         return try await noteRepository.getNotesByTicket(ticketId: ticketId, page: page, size: size)
     }
     
