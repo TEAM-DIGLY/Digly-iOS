@@ -11,16 +11,13 @@ public enum UserDefaultKeys {
 final class AuthManager: ObservableObject {
     static let shared = AuthManager()
     
-    @Published private(set) var isLoading: Bool = true
-    @Published private(set) var isLoggedIn: Bool = true
+    @Published private(set) var isLoggedIn: Bool = false
     
     @Published private(set) var nickname: String = ""
     @Published private(set) var diglyType: DiglyType = .analyst
     
     private init() {
-        Task {
-            await initializeAuthState()
-        }
+        loadUserData()
     }
     
     func updateNickname(_ newNickname: String) {
@@ -76,9 +73,7 @@ final class AuthManager: ObservableObject {
         return "\(diglyType.imageName)_logo"
     }
     
-    private func initializeAuthState() async {
-        let savedLoginState = UserDefaults.standard.bool(forKey: UserDefaultKeys.isLoggedIn)
-        
+    private func loadUserData() {
         // Load saved DiglyType
         if let savedDiglyTypeString = UserDefaults.standard.string(forKey: UserDefaultKeys.userDiglyType),
            let savedDiglyType = DiglyType(rawValue: savedDiglyTypeString) {
@@ -87,45 +82,47 @@ final class AuthManager: ObservableObject {
             diglyType = .communicator
         }
         
-        if savedLoginState {
-            if let accessToken = KeychainManager.shared.getAccessToken(),
-               let refreshToken = KeychainManager.shared.getRefreshToken(),
-               !accessToken.isEmpty, !refreshToken.isEmpty {
-                isLoggedIn = true
-                
-                nickname = UserDefaults.standard.string(forKey: UserDefaultKeys.nickname) ?? ""
-            } else {
-                logout()
-            }
-        } else {
-            isLoggedIn = false
-            nickname = ""
-        }
+        // Load nickname
+        nickname = UserDefaults.standard.string(forKey: UserDefaultKeys.nickname) ?? ""
         
-        isLoading = false
+        // isLoggedIn will be set by DiglyViewModel after token validation
+        isLoggedIn = false
+    }
+    
+    func setLoggedIn(_ loggedIn: Bool) {
+        isLoggedIn = loggedIn
+        if loggedIn {
+            UserDefaults.standard.set(true, forKey: UserDefaultKeys.isLoggedIn)
+        } else {
+            UserDefaults.standard.set(false, forKey: UserDefaultKeys.isLoggedIn)
+        }
     }
 
     
     func login(_ accessToken: String, _ refreshToken: String, _ name: String, _ _diglyType: DiglyType) {
-        isLoggedIn = true
         nickname = name
-        
         diglyType = _diglyType
         
         KeychainManager.shared.saveTokens(accessToken, refreshToken)
         UserDefaults.standard.set(name, forKey: UserDefaultKeys.nickname)
         UserDefaults.standard.set(_diglyType.rawValue, forKey: UserDefaultKeys.userDiglyType)
-        UserDefaults.standard.set(true, forKey: UserDefaultKeys.isLoggedIn)
+        
+        setLoggedIn(true)
     }
 
     func logout() {
-        isLoggedIn = false
         nickname = ""
         diglyType = .communicator
         
         KeychainManager.shared.clearTokens()
-        UserDefaults.standard.set(false, forKey: UserDefaultKeys.isLoggedIn)
         UserDefaults.standard.removeObject(forKey: UserDefaultKeys.nickname)
         UserDefaults.standard.removeObject(forKey: UserDefaultKeys.userDiglyType)
+        
+        setLoggedIn(false)
+        
+        // Clear tokens in TokenManager as well
+        Task {
+            await TokenManager.shared.clearTokens()
+        }
     }
 }

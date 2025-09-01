@@ -4,6 +4,7 @@ import AuthenticationServices
 
 // MARK: - 카카오 로그인 매니저
 import KakaoSDKUser
+import KakaoSDKCommon
 
 final class KakaoLoginManager {
     static let shared = KakaoLoginManager()
@@ -13,7 +14,14 @@ final class KakaoLoginManager {
         return try await withCheckedThrowingContinuation { continuation in
             UserApi.shared.loginWithKakaoAccount { oauthToken, error in
                 if let error = error {
-                    continuation.resume(throwing: error)
+                    // 사용자 취소 감지 (cherrydan-iOS 패턴)
+                    if let sdkError = error as? SdkError,
+                       case .ClientFailed(let reason, _) = sdkError,
+                       reason == .Cancelled {
+                        continuation.resume(throwing: SocialLoginError.userCancelled)
+                    } else {
+                        continuation.resume(throwing: SocialLoginError.networkError)
+                    }
                 } else if let token = oauthToken?.accessToken {
                     continuation.resume(returning: token)
                 } else {
@@ -68,7 +76,17 @@ extension NaverLoginManager: NaverThirdPartyLoginConnectionDelegate {
     
     func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
         isLoading = false
-        continuation?.resume(throwing: error)
+        
+        // 네이버 로그인 취소/오류 상세 처리
+        if let nsError = error as NSError? {
+            if nsError.code == -1002 || nsError.localizedDescription.contains("cancelled") {
+                continuation?.resume(throwing: SocialLoginError.userCancelled)
+            } else {
+                continuation?.resume(throwing: SocialLoginError.networkError)
+            }
+        } else {
+            continuation?.resume(throwing: SocialLoginError.unknownError)
+        }
         continuation = nil
     }
     
@@ -123,7 +141,25 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-        continuation?.resume(throwing: error)
+        // Apple 로그인 사용자 취소 감지
+        if let authError = error as? ASAuthorizationError {
+            switch authError.code {
+            case .canceled:
+                continuation?.resume(throwing: SocialLoginError.userCancelled)
+            case .failed:
+                continuation?.resume(throwing: SocialLoginError.networkError)
+            case .invalidResponse:
+                continuation?.resume(throwing: SocialLoginError.tokenNotFound)
+            case .notHandled:
+                continuation?.resume(throwing: SocialLoginError.unknownError)
+            case .unknown:
+                continuation?.resume(throwing: SocialLoginError.unknownError)
+            @unknown default:
+                continuation?.resume(throwing: SocialLoginError.unknownError)
+            }
+        } else {
+            continuation?.resume(throwing: SocialLoginError.unknownError)
+        }
         continuation = nil
     }
 }
