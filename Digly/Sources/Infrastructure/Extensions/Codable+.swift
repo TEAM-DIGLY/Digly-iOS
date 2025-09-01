@@ -2,7 +2,12 @@ import Foundation
 
 extension Encodable {
     func toDictionary() -> [String: Any] {
-        guard let data = try? JSONEncoder().encode(self),
+        let encoder = JSONEncoder()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        encoder.dateEncodingStrategy = .formatted(dateFormatter)
+        guard let data = try? encoder.encode(self),
               let dictionary = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
             return [:]
         }
