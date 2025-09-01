@@ -10,12 +10,12 @@ struct DGPopup: View {
         VStack(spacing: 0) {
             Text(popup.title)
                 .font(.body2)
-                .foregroundColor(.opacity15)
+                .foregroundColor(.opacityWhite15)
                 .padding(.bottom, 8)
             
             Text(popup.description)
                 .font(.label2)
-                .foregroundColor(.opacity35)
+                .foregroundColor(.opacityWhite35)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 20)
             
@@ -40,7 +40,7 @@ struct DGPopup: View {
         Button(action: action) {
             Text(text)
                 .font(.label2)
-                .foregroundStyle(.opacity5)
+                .foregroundStyle(.opacityWhite5)
         }
         .frame(maxWidth: .infinity, maxHeight: 44)
     }

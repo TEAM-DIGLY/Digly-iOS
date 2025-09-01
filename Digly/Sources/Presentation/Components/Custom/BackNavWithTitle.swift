@@ -4,15 +4,18 @@ struct BackNavWithTitle<Content: View>: View {
     @Environment(\.dismiss) private var dismiss
     
     let title: String?
+    let backgroundColor: Color?
     let backAction: (() -> Void)?
     let rightContent: (() -> Content)?
     
     init(
         title: String,
+        backgroundColor: Color = .common100,
         backAction: (() -> Void)?,
         @ViewBuilder rightContent: @escaping () -> Content
     ) {
         self.title = title
+        self.backgroundColor = backgroundColor
         self.backAction = backAction
         self.rightContent = rightContent
     }
@@ -29,7 +32,7 @@ struct BackNavWithTitle<Content: View>: View {
                 }) {
                     Image("chevron_left")
                         .renderingMode(.template)
-                        .foregroundStyle(.neutral5)
+                        .foregroundStyle(backgroundColor == .common100 ? .neutral5  : .common100)
                 }
                 
                 Spacer()
@@ -44,18 +47,23 @@ struct BackNavWithTitle<Content: View>: View {
             if let title {
                 Text(title)
                     .font(.headline2)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(backgroundColor == .common100 ? .neutral5  : .common100)
             }
         }
         .frame(height: 48)
-        .background(.common100)
+        .background(backgroundColor)
     }
 }
 
 // MARK: - BackNavWithTitle 확장 (rightContent 없는 경우)
 extension BackNavWithTitle where Content == EmptyView {
-    init(title: String,_ backAction: (() -> Void)? = nil) {
+    init(
+        title: String,
+        backgroundColor: Color = .common100,
+        _ backAction: (() -> Void)? = nil
+    ) {
         self.title = title
+        self.backgroundColor = backgroundColor
         self.backAction = backAction
         self.rightContent = nil
     }
@@ -65,11 +73,60 @@ extension BackNavWithTitle where Content == EmptyView {
 extension BackNavWithTitle {
     init(
         title: String,
-         @ViewBuilder rightContent: @escaping () -> Content
+        backgroundColor: Color = .common100,
+        @ViewBuilder rightContent: @escaping () -> Content
     ) {
         self.title = title
+        self.backgroundColor = backgroundColor
         self.backAction = nil
         self.rightContent = rightContent
     }
 }
 
+
+struct BackNavWithProgress: View {
+    let percentage: Double
+    let title: String
+    let onBackTapped: () -> Void
+    
+    var body: some View {
+        VStack(spacing: 16) {
+            ZStack {
+                HStack {
+                    Button(action: onBackTapped) {
+                        Image("chevron_left")
+                            .renderingMode(.template)
+                            .foregroundStyle(.common100)
+                    }
+                    
+                    Spacer()
+                    
+                    Text("다음")
+                        .fontStyle(.body1)
+                        .foregroundStyle(.neutral45)
+                }
+                .frame(height: 44)
+                
+                
+                Text(title)
+                    .font(.headline2)
+                    .foregroundStyle(.common100)
+            }
+            
+            GeometryReader { geometry in
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(.neutral15)
+                        .frame(height: 2)
+                    
+                    Rectangle()
+                        .fill(.neutral35)
+                        .frame(width: geometry.size.width * percentage, height: 2)
+                        .animation(.easeInOut(duration: 0.3), value: percentage)
+                }
+            }
+            .padding(.horizontal, 12)
+            .frame(height: 4)
+        }
+    }
+}

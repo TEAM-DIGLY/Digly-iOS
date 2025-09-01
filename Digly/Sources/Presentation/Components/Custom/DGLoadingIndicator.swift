@@ -10,12 +10,12 @@ struct DGLoadingIndicator: View {
     var body: some View {
         if isFullScreen {
             ProgressView()
-                .tint(.opacity35)
+                .tint(.opacityWhite35)
                 .scaleEffect(1.2)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         } else {
             ProgressView()
-                .tint(.opacity35)
+                .tint(.opacityWhite35)
                 .scaleEffect(1.2)
         }
     }
