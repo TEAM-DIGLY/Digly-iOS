@@ -19,11 +19,10 @@ enum DateTimeStep: CaseIterable {
 final class CreateTicketViewModel: ObservableObject {
     @Published var currentStep: CreateTicketStep = .title
     @Published var formData = CreateTicketFormData()
+    @Published var isSelected: Bool = false
     @Published var isLoading: Bool = false
     @Published var dateTimeStep: DateTimeStep = .date
-    @Published var titleSearchResults: [String] = []
-    
-    private let venueOptions = ["샤롯데씨어터", "세종문화회관", "예술의전당", "블루스퀘어", "LG아트센터", "충무아트센터", "국립극장"]
+    @Published var searchResults: [String] = []
     
     private let crawlingUseCase: CrawlingUseCase
     private let ticketUseCase: TicketUseCase
@@ -46,7 +45,7 @@ final class CreateTicketViewModel: ObservableObject {
     var isNextButtonEnabled: Bool {
         switch currentStep {
         case .title:
-            return !formData.showName.isEmpty
+            return isSelected
         case .dateTime:
             return formData.isDateTimeValid
         case .venue:
@@ -56,20 +55,11 @@ final class CreateTicketViewModel: ObservableObject {
         }
     }
     
-    var showOptionsForCurrentStep: [String] {
-        switch currentStep {
-        case .title:
-            return titleSearchResults
-        case .venue:
-            return venueOptions
-        default:
-            return []
-        }
-    }
     
     func moveToNextStep() {
         guard isNextButtonEnabled else { return }
         
+        isSelected = false
         if currentStep == .ticketDetails {
             // Final step - submit ticket
             submitTicket()
@@ -103,12 +93,12 @@ final class CreateTicketViewModel: ObservableObject {
         )
     }
     
-    func updateTitle(_ show: String) {
-        formData.showName = show
-    }
-    
-    func updateVenueSelection(_ venue: String) {
-        formData.venueName = venue
+    func updateValueOf(_ type: CreateTicketStep, _ value: String) {
+        if type == .title {
+            formData.showName = value
+        } else {
+            formData.venueName = value
+        }
     }
     
     func updateDate(_ date: String) {
@@ -168,7 +158,7 @@ final class CreateTicketViewModel: ObservableObject {
     private func performTitleSearch(query: String) {
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else {
-            titleSearchResults = []
+            searchResults = []
             return
         }
         
@@ -178,11 +168,11 @@ final class CreateTicketViewModel: ObservableObject {
             do {
                 let results = try await self.crawlingUseCase.searchTicketTitles(query: trimmed)
                 await MainActor.run {
-                    self.titleSearchResults = results
+                    self.searchResults = results
                 }
             } catch {
                 await MainActor.run {
-                    self.titleSearchResults = []
+                    self.searchResults = []
                 }
             }
         }

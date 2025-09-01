@@ -7,9 +7,10 @@ struct CreateTicketFormView: View {
     @State private var isTimeFocused: Bool = false
     @State private var tempDate: Date = Date()
     @State private var tempTime: Date = Date()
+    @FocusState private var isFocused: Bool
     
     var body: some View {
-        DGScreen(backgroundColor: .common0) {
+        DGScreen(backgroundColor: .common0, onClick: { isFocused = false }) {
             BackNavWithProgress(
                 percentage: viewModel.progressPercentage,
                 title: "티켓 추가하기",
@@ -66,25 +67,70 @@ extension CreateTicketFormView {
             
             switch viewModel.currentStep {
             case .title:
-                titleSection
+                textFieldSection(for: .title)
             case .dateTime:
                 dateTimeSection
             case .venue:
-                venueSelectionSection
+                textFieldSection(for: .venue)
             case .ticketDetails:
                 ticketDetailsSection
             }
         }
     }
     
-    private var titleSection: some View {
-        TextFieldWithMenu(
-            selectedValue: viewModel.setFieldBinding(for: .title),
-            placeholder: viewModel.currentStep.placeholderText,
-            searchResults: viewModel.showOptionsForCurrentStep,
-            onSelectionChanged: { show in
-                viewModel.updateTitle(show)
+    @ViewBuilder
+    private func textFieldSection(for type: CreateTicketStep) -> some View {
+        let isExpanded = !viewModel.searchResults.isEmpty && isFocused
+        
+        VStack(alignment: .leading, spacing: 12) {
+            DGTextField(
+                text: viewModel.setFieldBinding(for: type),
+                placeholder: type.placeholderText,
+                placeholderColor: .opacityWhite65,
+                backgroundColor: .opacityWhite95,
+                borderColor: .opacityWhite85,
+                cursorColor: .common100,
+                isFocused: $isFocused,
+                onClear: {
+                    viewModel.isSelected = false
+                }
+            )
+            .focused($isFocused)
+            .onAppear {
+                isFocused = true
             }
+            
+            if isExpanded {
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 0) {
+                        ForEach(viewModel.searchResults, id: \.self) { searchResult in
+                            Button(action: {
+                                viewModel.isSelected = true
+                                isFocused = false
+                                viewModel.updateValueOf(type, searchResult)
+                            }) {
+                                Text(searchResult)
+                                    .fontStyle(.body2)
+                                    .foregroundStyle(.opacityWhite5)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(height: 44)
+                            }
+                            
+                            if searchResult != viewModel.searchResults.last {
+                                Divider()
+                                    .background(.opacityWhite65)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                }
+                .frame(maxHeight: 200)
+            }
+        }
+        .background(.opacityWhite95, in: RoundedRectangle(cornerRadius: 14))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(isFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFocused ? 1.5 : 1)
         )
     }
     
@@ -107,7 +153,17 @@ extension CreateTicketFormView {
     @ViewBuilder
     private func dateTimeField(_ step: DateTimeStep) -> some View {
         let isFieldFocused = step == .date ? isDateFocused : isTimeFocused
-        let value = step == .date ? viewModel.formData.selectedDate : viewModel.formData.selectedTime
+        let value: String = {
+            if step == .date {
+                let df = DateFormatter()
+                df.dateFormat = "yyyy.MM.dd"
+                return isDateFocused ? df.string(from: tempDate) : viewModel.formData.selectedDate
+            } else {
+                let tf = DateFormatter()
+                tf.dateFormat = "HH:mm"
+                return isTimeFocused ? tf.string(from: tempTime) : viewModel.formData.selectedTime
+            }
+        }()
         
         VStack(alignment: .leading, spacing: 6) {
             Text(step.labelText)
@@ -159,11 +215,15 @@ extension CreateTicketFormView {
                     )
                     .tint(.common100)
                     .datePickerStyle(.graphical)
+                    .colorScheme(.light)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .padding(.horizontal, 8)
                     .onChange(of: tempDate) { _, newValue in
                         let df = DateFormatter()
                         df.dateFormat = "yyyy.MM.dd"
-                        viewModel.setDateTimeFieldBinding(for: .date).wrappedValue = df.string(from: newValue)
+                        let formattedDate = df.string(from: newValue)
+                        viewModel.formData.setDate(formattedDate)
                     }
                 }
                 
@@ -175,44 +235,35 @@ extension CreateTicketFormView {
                     )
                     .tint(.common100)
                     .datePickerStyle(.wheel)
+                    .colorScheme(.light)
+                    .background(Color.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
                     .padding(.horizontal, 8)
                     .onChange(of: tempTime) { _, newValue in
                         let tf = DateFormatter()
                         tf.dateFormat = "HH:mm"
-                        viewModel.setDateTimeFieldBinding(for: .time).wrappedValue = tf.string(from: newValue)
+                        let formattedTime = tf.string(from: newValue)
+                        viewModel.formData.setTime(formattedTime)
                     }
                 }
             }
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(.opacityWhite95)
-                    .stroke(.opacityWhite95, lineWidth: 1)
+                    .fill(Color.white.opacity(0.95))
+                    .stroke(.opacityWhite85, lineWidth: 1)
             )
         }
     }
     
-    private var venueSelectionSection: some View {
-        TextFieldWithMenu(
-            selectedValue: viewModel.setFieldBinding(for: .venue),
-            placeholder: viewModel.currentStep.placeholderText,
-            searchResults: viewModel.showOptionsForCurrentStep,
-            onSelectionChanged: { venue in
-                viewModel.updateVenueSelection(venue)
-            }
-        )
-    }
-    
     private var ticketDetailsSection: some View {
         VStack(spacing: 34) {
-            // Show info - 극 제목
             formFieldView(
                 label: "극 제목",
                 value: viewModel.formData.showName,
                 isRequired: true
             )
             
-            // Date and time info - 관람 일시
             HStack(spacing: 20) {
                 formFieldView(
                     label: "관람 일시",
