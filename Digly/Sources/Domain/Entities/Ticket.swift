@@ -9,8 +9,8 @@ struct Ticket: Codable, Identifiable {
     let count: Int32
     let seatNumber: String?
     let price: Int32?
-    let color: String
-    let feeling: [Feeling]
+    let color: [String]
+    let feeling: [String]
     
     enum CodingKeys: String, CodingKey {
         case id, name, performanceTime, place, count, seatNumber, price, color, feeling
@@ -24,8 +24,8 @@ struct CreateTicketRequest: Codable {
     let count: Int32
     let seatNumber: String?
     let price: Int32?
-    let color: String
-    let feeling: [Feeling]
+    let color: [String]
+    let feeling: [String]
 }
 
 struct UpdateTicketRequest: Codable {
@@ -35,8 +35,8 @@ struct UpdateTicketRequest: Codable {
     let count: Int32
     let seatNumber: String?
     let price: Int32?
-    let color: String
-    let feeling: [Feeling]
+    let color: [String]
+    let feeling: [String]
 }
 
 struct PageInfo: Codable {
@@ -48,6 +48,12 @@ struct PageInfo: Codable {
 
 struct TicketsResponse: Codable {
     let tickets: [Ticket]
+    let pageInfo: PageInfo
+}
+
+
+struct NotesResponse: Codable {
+    let notes: [Note]
     let pageInfo: PageInfo
 }
 

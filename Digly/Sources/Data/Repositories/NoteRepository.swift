@@ -25,7 +25,7 @@ final class NoteRepository: NoteRepositoryProtocol {
         )
     }
     
-    func getNotesByTicket(ticketId: Int64, page: Int?, size: Int?) async throws -> TicketsResponse {
+    func getNotesByTicket(ticketId: Int64, page: Int?, size: Int?) async throws -> NotesResponse {
         var queryParams: [String: String] = [:]
         
         if let page = page {

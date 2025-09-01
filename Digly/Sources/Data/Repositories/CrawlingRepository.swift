@@ -7,7 +7,7 @@ final class CrawlingRepository: CrawlingRepositoryProtocol {
         self.networkAPI = networkAPI
     }
     
-    func getTicketsTitleByTitle(title: String) async throws -> CrawlingTicketsTitleResponse {
+    func getTicketsTitleByTitle(title: String) async throws -> APIResponse<CrawlingTicketsTitleResponse> {
         return try await networkAPI.request(
             CrawlingEndpoint.getTicketsTitle,
             queryParameters: ["title": title]
