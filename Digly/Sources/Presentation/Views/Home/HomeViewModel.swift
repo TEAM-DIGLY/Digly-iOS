@@ -10,8 +10,7 @@ class HomeViewModel: ObservableObject {
     @Published var tickets: [Ticket] = []
     @Published var isLoading: Bool = false
     @Published var focusedTicketIndex: Int = 0
-    @Published var notes: [Note] = []
-    @Published var noteCount: Int = 0
+    @Published var ticketNotes: [Note] = []
     
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
@@ -34,7 +33,9 @@ class HomeViewModel: ObservableObject {
             do {
                 let response = try await ticketUseCase.getAllTickets()
                 tickets = response.data.tickets
+                
                 if !tickets.isEmpty {
+                    focusedTicketIndex = 0
                     await loadNotesForFocusedTicket()
                 }
             } catch {
@@ -45,33 +46,33 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func updateFocusedTicket(index: Int) {
-        guard index != focusedTicketIndex && index >= 0 && index < tickets.count else { return }
-        focusedTicketIndex = index
-        Task {
-            await loadNotesForFocusedTicket()
-        }
-    }
-    
-    private func loadNotesForFocusedTicket() async {
+    func loadNotesForFocusedTicket() async {
         guard let focusedTicket = focusedTicket else {
-            notes = []
-            noteCount = 0
+            ticketNotes = []
             return
         }
         
         do {
             let response = try await noteUseCase.getNotesByTicket(ticketId: focusedTicket.id)
-            notes = response.tickets.compactMap { ticket in
-                // Assuming the API returns notes in the same format, need to properly map
-                Note(id: ticket.id, title: ticket.name, content: ticket.place)
-            }
-            noteCount = notes.count
+            ticketNotes = response.notes
         } catch {
             print("Failed to load notes for ticket \(focusedTicket.id): \(error)")
-            notes = []
-            noteCount = 0
+            ticketNotes = []
         }
+    }
+    
+    func updateFocusedTicket(index: Int) {
+        guard index != focusedTicketIndex && index >= 0 && index < tickets.count else { return }
+        focusedTicketIndex = index
+        
+        Task {
+            await loadNotesForFocusedTicket()
+        }
+    }
+    
+    // Computed property to get note count for focused ticket
+    var noteCount: Int {
+        ticketNotes.count
     }
     
     // Calculate days remaining until performance

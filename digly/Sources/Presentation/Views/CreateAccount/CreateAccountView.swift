@@ -83,8 +83,7 @@ struct CreateAccountView: View {
                     Text(viewModel.isUsernameValid ? "완료" : "다음")
                         .fontStyle(.title3)
                         .transition(.opacity.animation(.easeInOut))
-                        .foregroundStyle(viewModel.username.isEmpty || !viewModel.errorText.isEmpty ?
-                            .opacity75 : .opacity25)
+                        .foregroundStyle(.common100)
                 }
                 .frame(width:72)
                 .disabled(viewModel.username.isEmpty || !viewModel.errorText.isEmpty)

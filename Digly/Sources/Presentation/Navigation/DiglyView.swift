@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DiglyView: View {
+    @StateObject private var viewModel = DiglyViewModel()
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var popupManager = PopupManager.shared
     @StateObject private var toastManager = ToastManager.shared
@@ -11,25 +12,29 @@ struct DiglyView: View {
     
     @StateObject private var authRouter = AuthRouter()
     
-    @State private var selectedTab = 0
-    
     var body: some View {
-        VStack {
-            if authManager.isLoggedIn {
-                switch(selectedTab) {
-                case 0:
-                    HomeNavigationStack(selectedTab: $selectedTab)
-                        .environmentObject(homeRouter)
-                case 1:
-                    DiggingNoteNavigationStack(selectedTab: $selectedTab)
-                        .environmentObject(diggingNoteRouter)
-                default:
-                    TicketBookNavigationStack(selectedTab: $selectedTab)
-                        .environmentObject(ticketBookRouter)
+        ZStack(alignment: .bottom) {
+            // Main content
+            VStack(spacing: 0) {
+                if viewModel.isInitializing {
+                    // Launch Screen
+                    LaunchScreenView()
+                } else if authManager.isLoggedIn {
+                    switch(viewModel.selectedTab) {
+                    case 0:
+                        HomeNavigationStack(selectedTab: $viewModel.selectedTab)
+                            .environmentObject(homeRouter)
+                    case 1:
+                        DiggingNoteNavigationStack(selectedTab: $viewModel.selectedTab)
+                            .environmentObject(diggingNoteRouter)
+                    default:
+                        TicketBookNavigationStack(selectedTab: $viewModel.selectedTab)
+                            .environmentObject(ticketBookRouter)
+                    }
+                } else {
+                    AuthNavigationStack()
+                        .environmentObject(authRouter)
                 }
-            } else {
-                AuthNavigationStack()
-                    .environmentObject(authRouter)
             }
         }
         .presentPopup(
@@ -47,7 +52,11 @@ struct DiglyView: View {
                 diggingNoteRouter.reset()
                 
                 authRouter.reset()
+                viewModel.selectedTab = 0
             }
+        }
+        .task {
+            await viewModel.initialize()
         }
     }
 }

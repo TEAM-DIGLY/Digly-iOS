@@ -25,11 +25,11 @@ struct OnboardingDetailView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("digly")
                             .fontStyle(.body1)
-                            .foregroundStyle(.opacity5)
+                            .foregroundStyle(.opacityWhite5)
                          
                         Text("문화생활의 여운, 일상에서 누리는\n디깅라이프의 시작")
                             .fontStyle(.tiny)
-                            .foregroundStyle(.opacity65)
+                            .foregroundStyle(.opacityWhite65)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -45,11 +45,11 @@ struct OnboardingDetailView: View {
                         VStack(alignment: .leading, spacing: 8) {
                             Text("전체 동의하기")
                                 .fontStyle(.label2)
-                                .foregroundStyle(.opacity5)
+                                .foregroundStyle(.opacityWhite5)
                             
                             Text("전체동의는 카카오 및 digly의 서비스 동의를 포함하고 있습니다. 전체동의는 선택적인 동의 항목에 대한 동의를 포함하고 있으며, 선택적인 동의 항목에 대한 동의를 거부해도 서비스 이용이 가능합니다.")
                                 .fontStyle(.smallLine)
-                                .foregroundStyle(.opacity65)
+                                .foregroundStyle(.opacityWhite65)
                         }
                         .padding(.top,4)
                     }
@@ -75,7 +75,7 @@ struct OnboardingDetailView: View {
                             
                             Text("[필수] 이용약관 동의")
                                 .fontStyle(.smallBold)
-                                .foregroundStyle(isTermsAccepted ? .opacity5 : .opacity65)
+                                .foregroundStyle(isTermsAccepted ? .opacityBlack5 : .opacityBlack65)
                         }
                         .onTapGesture {
                             withAnimation(.fastEaseInOut) { isTermsAccepted.toggle() }
@@ -104,7 +104,7 @@ struct OnboardingDetailView: View {
                             
                             Text("[필수] 개인정보 수집 및 이용 동의")
                                 .fontStyle(.smallBold)
-                                .foregroundStyle(isPrivacyAccepted ? .opacity5 : .opacity65)
+                                .foregroundStyle(isPrivacyAccepted ? .opacityBlack5 : .opacityBlack65)
                         }
                         .onTapGesture {
                             withAnimation(.fastEaseInOut) { isPrivacyAccepted.toggle() }
@@ -138,7 +138,7 @@ struct OnboardingDetailView: View {
                         .padding(.vertical, 16)
                         .background( (isTermsAccepted && isPrivacyAccepted) ?
                             .opacityCool0 :
-                                .opacity85
+                                .opacityBlack85
                         )
                         .cornerRadius(16)
                 }

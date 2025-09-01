@@ -88,7 +88,7 @@ struct ProfileSettingView: View {
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral35)
             
-            DGTextField.profileStyle(text: $nickname)
+            DGTextField(text: $nickname, placeholder: "")
         }
     }
     

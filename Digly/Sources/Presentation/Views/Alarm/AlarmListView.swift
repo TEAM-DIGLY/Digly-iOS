@@ -6,8 +6,7 @@ struct AlarmListView: View {
     var body: some View {
         DGScreen(horizontalPadding: 0) {
             VStack(spacing: 0) {
-                BackNavWithTitle(title:"알림함")
-                    .padding(.horizontal, 16)
+                BackNavWithTitle(title:"알림함")                    .padding(.horizontal, 16)
                 
                 ScrollView {
                     LazyVStack(spacing: 0) {

@@ -12,16 +12,16 @@ struct HomeNavigationStack: View {
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            HomeView()
-                .navigationDestination(for: HomeRoute.self) { route in
-                    destinationView(for: route)
-                        .swipeBackDisabled(route.disableSwipeBack)
-                        .onAppear {
-//                            print("📊 Main Analytics: \(route.analyticsName)")
-//                            print("🔒 SwipeBack enabled: \(route.disableSwipeBack)")
-//                            print("📋 TabBar hidden: \(route.hidesTabBar)")
-                        }
-                }
+            ZStack(alignment: .bottom){
+                HomeView()
+                BottomTabView(selectedTab: $selectedTab)
+            }
+            .navigationDestination(for: HomeRoute.self) { route in
+                destinationView(for: route)
+                    .swipeBackDisabled(route.disableSwipeBack)
+                    .onAppear {
+                    }
+            }
         }
     }
     
@@ -30,6 +30,8 @@ struct HomeNavigationStack: View {
         switch route {
         case .alarmList: AlarmListView()
         case .myPage: MyPageView()
+        case .addTicket: AddTicketView()
+        case .createTicketForm: CreateTicketFormView()
         }
     }
 } 

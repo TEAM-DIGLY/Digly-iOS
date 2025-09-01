@@ -58,14 +58,14 @@ struct DiggingNoteView: View {
                         
                         Text("노트 추가")
                             .font(.label2)
-                            .foregroundColor(.opacity15)
+                            .foregroundColor(.opacityWhite15)
                     }
                     .padding(.horizontal, 16)
                     .frame(height: 72)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
                             .fill(Color.clear)
-                            .stroke(.opacity75, lineWidth: 1)
+                            .stroke(.opacityWhite75, lineWidth: 1)
                     )
                 }
             }
@@ -123,7 +123,7 @@ struct NoteCardView: View {
                     .padding(.vertical, 4)
                     .padding(.horizontal, 8)
                     .overlay(RoundedRectangle(cornerRadius: 8)
-                        .stroke(.opacity85, lineWidth: 1)
+                        .stroke(.opacityWhite85, lineWidth: 1)
                     )
                     
                     VStack(spacing: 8) {
@@ -168,7 +168,7 @@ struct NoteCardView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color.clear)
-                .shadow(color: .opacity15, radius: 4, x: 0, y: 2)
+//                .shadow(color: .opacityBlack15, radius: 4, x: 0, y: 2)
         )
     }
 }

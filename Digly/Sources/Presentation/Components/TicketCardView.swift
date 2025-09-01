@@ -86,7 +86,7 @@ struct TicketCardView: View {
             if !isLarge {
                 Text(date)
                     .font(.caption1)
-                    .foregroundStyle(.opacity25)
+                    .foregroundStyle(.opacityWhite25)
                     .padding(.bottom, 8)
             }
             
@@ -101,7 +101,7 @@ struct TicketCardView: View {
                 if isLarge {
                     Image("chevron_right")
                         .renderingMode(.template)
-                        .foregroundStyle(.opacity25)
+                        .foregroundStyle(.opacityWhite25)
                 }
             }
             .padding(.bottom, 24)
@@ -110,16 +110,16 @@ struct TicketCardView: View {
                 VStack(alignment: .leading, spacing: 8) {
                     Text("#\(ticketNumber)번째 관람")
                         .fontStyle(.caption1)
-                        .foregroundStyle(.opacity5)
+                        .foregroundStyle(.opacityWhite5)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
                         .overlay(RoundedRectangle(cornerRadius: 8)
-                            .stroke(.opacity75, lineWidth: 1)
+                            .stroke(.opacityWhite75, lineWidth: 1)
                         )
                     
                     Text("\(date) • \(location)")
                         .fontStyle(.caption1)
-                        .foregroundStyle(.opacity15)
+                        .foregroundStyle(.opacityWhite15)
                         .lineLimit(1)
                 }
             }

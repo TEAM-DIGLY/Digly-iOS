@@ -24,6 +24,9 @@ struct TicketBookView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.setRouter(router)
+        }
     }
     
     // MARK: - Header View
@@ -52,7 +55,7 @@ struct TicketBookView: View {
                 .padding(16)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(.opacity75, lineWidth: 1)
+                        .stroke(.opacityWhite75, lineWidth: 1)
                 )
             }
         }
@@ -88,7 +91,7 @@ struct TicketBookView: View {
             
             Text("\(viewModel.totalTickets)")
                 .fontStyle(.heading2)
-                .foregroundStyle(.opacity45)
+                .foregroundStyle(.opacityWhite45)
             
             Spacer()
             

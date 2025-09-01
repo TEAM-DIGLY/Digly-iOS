@@ -3,13 +3,15 @@ import Foundation
 enum TicketBookRoute: BaseRoute {
     case ticketBook
     case ticketDetail(String)
+    case addTicket
+    case createTicketForm
     
     var id: String {
         switch self {
-        case .ticketBook:
-            return "ticketBook"
         case .ticketDetail(let ticketId):
-            return "ticketDetail_\(ticketId)"
+            "ticketDetail_\(ticketId)"
+        default:
+            String(describing: self)
         }
     }
     

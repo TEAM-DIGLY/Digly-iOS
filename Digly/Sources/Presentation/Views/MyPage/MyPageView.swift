@@ -2,15 +2,12 @@ import SwiftUI
 
 struct MyPageView: View {
     @Environment(\.dismiss) private var dismiss
-    
     @StateObject private var authManager = AuthManager.shared
     
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true) {
             VStack(spacing: 0) {
-                BackNavWithTitle(title: "마이페이지") {
-                    EmptyView()
-                }
+                BackNavWithTitle(title: "마이페이지") {}
                 .padding(.horizontal, 8)
                 .padding(.top, 8)
                 

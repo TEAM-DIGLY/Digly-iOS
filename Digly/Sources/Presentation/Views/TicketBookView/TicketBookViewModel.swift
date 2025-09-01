@@ -86,14 +86,17 @@ struct TicketModel: Identifiable {
     ]
 }
 
+@MainActor
 class TicketBookViewModel: ObservableObject {
     @Published var username: String = "Username"
     @Published var totalTickets: Int = 110
     @Published var tickets: [TicketModel] = TicketModel.sampleData
     
     private var cancellables = Set<AnyCancellable>()
+    private weak var router: TicketBookRouter?
     
-    init() {
+    init(router: TicketBookRouter? = nil) {
+        self.router = router
         setupBindings()
     }
     
@@ -116,8 +119,11 @@ class TicketBookViewModel: ObservableObject {
     
     // MARK: - Actions
     func addTicketAction() {
-        // 티켓 추가 로직
-        print("티켓 추가 액션")
+        router?.push(to: .addTicket)
+    }
+    
+    func setRouter(_ router: TicketBookRouter) {
+        self.router = router
     }
     
     func filterAction() {

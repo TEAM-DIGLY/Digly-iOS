@@ -99,14 +99,14 @@ struct TicketDetailView: View {
                     Text("관람 후에 느낀\n나만의 감정을 남겨볼까요?")
                         .font(.label2)
                         .multilineTextAlignment(.center)
-                        .foregroundStyle(.opacity25)
+                        .foregroundStyle(.opacityWhite25)
                     
                     Image("chevron_down_sm")
                         .padding(.bottom, 20)
                     
                     Text("감정 남기기 가기")
                         .font(.headline2)
-                        .foregroundColor(.opacity5)
+                        .foregroundColor(.opacityWhite5)
                         .frame(maxWidth: .infinity)
                         .padding(.bottom, 12)
                 }
@@ -136,7 +136,7 @@ struct TicketDetailView: View {
             .padding(.vertical, 20)
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
-                    .stroke(.opacity85, lineWidth: 1)
+                    .stroke(.opacityWhite85, lineWidth: 1)
             )
         }
     }
@@ -145,7 +145,7 @@ struct TicketDetailView: View {
         HStack(alignment: .top) {
             Text(title)
                 .font(.label2)
-                .foregroundColor(.opacity45)
+                .foregroundColor(.opacityWhite45)
                 .frame(width: 64, alignment: .leading)
             
             VStack(alignment: .leading, spacing: 8) {

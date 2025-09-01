@@ -12,16 +12,16 @@ struct DiggingNoteNavigationStack: View {
     
     var body: some View {
         NavigationStack(path: $router.path) {
-            DiggingNoteView()
-                .navigationDestination(for: DiggingNoteRoute.self) { route in
-                    destinationView(for: route)
-                        .swipeBackDisabled(route.disableSwipeBack)
-                        .onAppear {
-//                            print("📊 Main Analytics: \(route.analyticsName)")
-//                            print("🔒 SwipeBack enabled: \(route.disableSwipeBack)")
-//                            print("📋 TabBar hidden: \(route.hidesTabBar)")
-                        }
-                }
+            ZStack(alignment: .bottom){
+                DiggingNoteView()
+                BottomTabView(selectedTab: $selectedTab)
+            }
+            .navigationDestination(for: DiggingNoteRoute.self) { route in
+                destinationView(for: route)
+                    .swipeBackDisabled(route.disableSwipeBack)
+                    .onAppear {
+                    }
+            }
         }
     }
     

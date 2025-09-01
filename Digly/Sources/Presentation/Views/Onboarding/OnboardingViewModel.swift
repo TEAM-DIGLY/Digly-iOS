@@ -59,7 +59,7 @@ class OnboardingViewModel: ObservableObject {
             handleLoginSuccess(response)
         } catch {
             isLoading = false
-            ToastManager.shared.show(.errorStringWithTask("카카오 로그인"))
+            handleSocialLoginError(error, platform: "카카오")
         }
     }
     
@@ -73,7 +73,7 @@ class OnboardingViewModel: ObservableObject {
             handleLoginSuccess(response)
         } catch {
             isLoading = false
-            ToastManager.shared.show(.errorStringWithTask("네이버 로그인"))
+            handleSocialLoginError(error, platform: "네이버")
         }
     }
     
@@ -87,7 +87,24 @@ class OnboardingViewModel: ObservableObject {
             handleLoginSuccess(response)
         } catch {
             isLoading = false
-            ToastManager.shared.show(.errorStringWithTask("애플 로그인"))
+            handleSocialLoginError(error, platform: "애플")
+        }
+    }
+    
+    private func handleSocialLoginError(_ error: Error, platform: String) {
+        if let socialError = error as? SocialLoginError {
+            switch socialError {
+            case .userCancelled:
+                return
+            case .tokenNotFound:
+                ToastManager.shared.show(.errorWithMessage("\(platform) 인증 정보를 가져올 수 없습니다."))
+            case .networkError:
+                ToastManager.shared.show(.errorWithMessage("네트워크 오류가 발생했습니다. 다시 시도해주세요."))
+            case .unknownError:
+                ToastManager.shared.show(.errorWithMessage("알 수 없는 오류가 발생했습니다."))
+            }
+        } else {
+            ToastManager.shared.show(.errorStringWithTask("\(platform) 로그인"))
         }
     }
     
