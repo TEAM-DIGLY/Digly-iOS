@@ -10,14 +10,12 @@ struct HomeView: View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
             headerSection
             mainSection
-            
             Spacer()
-            
             notesSection
         }
         .edgesIgnoringSafeArea(.bottom)
     }
-        
+    
     private var notesSection: some View {
         HStack(alignment: .bottom, spacing: 0) {
             VStack(spacing: 0) {
@@ -47,7 +45,7 @@ struct HomeView: View {
                 .background(.common100, in: UnevenRoundedRectangle(
                     topLeadingRadius: 0,
                     bottomLeadingRadius: 0,
-                    bottomTrailingRadius:24,
+                    bottomTrailingRadius: 24,
                     topTrailingRadius: 24)
                 )
             }
@@ -55,8 +53,8 @@ struct HomeView: View {
             stackSection
                 .frame(maxWidth: .infinity)
         }
-        .padding(.bottom, 64)
-        .frame(height: 330)
+        .padding(.bottom, 120)
+        .frame(height: 360)
         .background(.neutral85, in: UnevenRoundedRectangle(topLeadingRadius: 64))
     }
     
@@ -90,7 +88,7 @@ struct HomeView: View {
     
     @ViewBuilder
     private var mainSection: some View {
-        Group {
+        VStack(alignment: .center) {
             if viewModel.tickets.isEmpty {
                 ZStack(alignment: .bottom) {
                     Image(authManager.baseImageName)
@@ -126,7 +124,6 @@ struct HomeView: View {
                 )
             }
         }
-        .padding(.horizontal, 45)
         .padding(.bottom, 16)
     }
     
@@ -140,72 +137,71 @@ struct HomeView: View {
                 .padding(24)
                 .background(.neutral84, in: RoundedRectangle(cornerRadius: 24))
         } else if viewModel.tickets.count == 1 {
-            ticketCard(isMain: true, ticketIndex: 0)
+            ticketCard
         } else {
             ZStack {
-                ticketCard(isMain: false, ticketIndex: 1)
-                    .offset(x: 10, y: 15)
-                    .scaleEffect(0.95)
-                
-                ticketCard(isMain: true, ticketIndex: 0)
+                Image("ticket-base")
+                    .rotationEffect(Angle(degrees: 4))
+                ticketCard
             }
         }
     }
     
     @ViewBuilder
-    private func ticketCard(isMain: Bool, ticketIndex: Int) -> some View {
-        if let ticket = viewModel.tickets.indices.contains(ticketIndex) ? viewModel.tickets[ticketIndex] : nil {
-            VStack(spacing: 12) {
-                VStack(spacing: 8) {
+    private var ticketCard: some View {
+        if let ticket = viewModel.tickets.first {
+            ZStack {
+                Image("ticket-base")
+                
+                VStack(alignment: .leading, spacing: 0) {
                     Text(ticket.name)
-                        .fontStyle(.headline1)
-                        .foregroundStyle(.common100)
+                        .fontStyle(.body2)
+                        .foregroundStyle(.text0)
                         .lineLimit(1)
+                        .padding(.bottom, 12)
                     
-                    VStack(spacing: 2) {
-                        Text(ticket.performanceTime.toTicketDateString())
-                            .fontStyle(.label1)
-                            .foregroundStyle(.common100.opacity(0.8))
-                        Text(ticket.performanceTime.toTimeString())
-                            .fontStyle(.label1)
-                            .foregroundStyle(.common100.opacity(0.8))
-                    }
+                    Text(ticket.performanceTime.toTicketDateString())
+                        .fontStyle(.smallLine)
+                        .foregroundStyle(.opacityCool35)
+                        .padding(.bottom, 2)
+                    
+                    Text(ticket.performanceTime.toTimeString())
+                        .fontStyle(.smallLine)
+                        .foregroundStyle(.opacityCool35)
+                        .padding(.bottom, 8)
                     
                     Text(ticket.place)
-                        .fontStyle(.caption2)
-                        .foregroundStyle(.common100.opacity(0.7))
+                        .fontStyle(.smallLine)
+                        .foregroundStyle(.opacityCool35)
                         .lineLimit(1)
-                }
-                .padding(.horizontal, 14)
-                .padding(.top, 19)
-                .padding(.bottom, 8)
-                
-                Divider()
-                    .background(.common100.opacity(0.3))
-                    .padding(.horizontal, 14)
-                
-                HStack(spacing: 8) {
-                    ForEach(Array(ticket.feeling.prefix(2).enumerated()), id: \.offset) { index, feeling in
-                        tagView(text: "#\(feeling)", color: getTagColor(index: index))
-                    }
+                    
                     Spacer()
+                    
+                    HStack(spacing: 8) {
+                        ForEach(Array(ticket.feeling.prefix(2).enumerated()), id: \.offset) { index, feeling in
+                            if index < ticket.color.count {
+                                tagView(text: "#\(feeling)", color: ticket.color[index])
+                            }
+                        }
+                        Spacer()
+                    }
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 16)
+                .padding(.horizontal, 12)
+                .padding(.top, 16)
+                .padding(.bottom, 12)
             }
-            .frame(width: isMain ? 146 : 140, height: isMain ? 197 : 190)
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: getGradientColors(for: ticket)),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 20))
-            .shadow(color: .black.opacity(0.1), radius: 8, x: 0, y: 4)
+            .frame(width: 146, height: 197)
         }
     }
     
+    private func tagView(text: String, color: String) -> some View {
+        Text(text)
+            .fontStyle(.caption2)
+            .foregroundStyle(Color(hex: color))
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color(hex: color).opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+    }
     
     private func getTagColor(index: Int) -> Color {
         let colors: [Color] = [.green, .orange, .blue, .purple, .red]
@@ -235,16 +231,6 @@ struct HomeView: View {
         } else {
             return [.blue.opacity(0.8), .purple.opacity(0.6)]
         }
-    }
-    
-    private func tagView(text: String, color: Color) -> some View {
-        Text(text)
-            .fontStyle(.caption2)
-            .foregroundStyle(.neutral15)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(color.opacity(0.3))
-            .clipShape(RoundedRectangle(cornerRadius: 11))
     }
 }
 
