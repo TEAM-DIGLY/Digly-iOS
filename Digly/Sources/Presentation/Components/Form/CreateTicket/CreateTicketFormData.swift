@@ -2,8 +2,8 @@ import Foundation
 
 struct CreateTicketFormData {
     var showName: String = ""
-    var selectedDate: String = "관람 일자"
-    var selectedTime: String = "관람 시간"
+    var performanceDate: Date? = nil
+    var performanceTime: Date? = nil
     var venueName: String = ""
     var seatNumber: String = "1"
     var seatLocation: String = ""
@@ -12,13 +12,13 @@ struct CreateTicketFormData {
     func value(for field: CreateTicketStep) -> String {
         switch field {
         case .title:
-            return showName
+            showName
         case .dateTime:
-            return "\(selectedDate) \(selectedTime)"
+            ""
         case .venue:
-            return venueName
+            venueName
         case .ticketDetails:
-            return ""
+            ""
         }
     }
     
@@ -35,12 +35,25 @@ struct CreateTicketFormData {
         }
     }
     
-    mutating func setDate(_ date: String) {
-        selectedDate = date
+    mutating func setPerformanceDateTime(_ dateTime: Date) {
+        performanceDate = dateTime
+        performanceTime = dateTime
     }
     
-    mutating func setTime(_ time: String) {
-        selectedTime = time
+    mutating func updateDateComponent(from date: Date) {
+        performanceDate = date
+        // 시간이 설정되지 않았다면 기본 시간(현재 시간)으로 설정
+        if performanceTime == nil {
+            performanceTime = Date()
+        }
+    }
+    
+    mutating func updateTimeComponent(from time: Date) {
+        performanceTime = time
+        // 날짜가 설정되지 않았다면 기본 날짜(오늘)로 설정
+        if performanceDate == nil {
+            performanceDate = Date()
+        }
     }
     
     mutating func setSeatNumber(_ number: String) {
@@ -55,13 +68,27 @@ struct CreateTicketFormData {
         ticketPrice = price
     }
     
-    // Validation helpers
-    var isDateTimeValid: Bool {
-        return selectedDate != "관람 일자" && selectedTime != "관람 시간" &&
-               !selectedDate.isEmpty && !selectedTime.isEmpty
+    var isBasicInfoComplete: Bool {
+        !showName.isEmpty &&
+        !venueName.isEmpty &&
+        performanceDate != nil &&
+        performanceTime != nil
     }
     
-    var isBasicInfoComplete: Bool {
-        return !showName.isEmpty && !venueName.isEmpty && isDateTimeValid
+    /// API 호출시 사용할 수 있도록 날짜와 시간을 합친 Date 객체
+    var combinedPerformanceDateTime: Date? {
+        guard let date = performanceDate, let time = performanceTime else {
+            return nil
+        }
+        
+        let calendar = Calendar.current
+        let dateComponents = calendar.dateComponents([.year, .month, .day], from: date)
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: time)
+        
+        var combinedComponents = dateComponents
+        combinedComponents.hour = timeComponents.hour
+        combinedComponents.minute = timeComponents.minute
+        
+        return calendar.date(from: combinedComponents)
     }
 }

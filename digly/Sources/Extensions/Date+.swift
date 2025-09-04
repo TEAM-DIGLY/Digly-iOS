@@ -62,6 +62,15 @@ extension Date {
         return formatter.string(from: self)
     }
     
+    /// Date를 "yyyy년 MM월 dd일 (E)" 형식으로 포맷팅 (티켓 카드용)
+    /// - Returns: "2025년 08월 31일 (일)" 형식의 문자열
+    func toyyyyMMddString() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy. MM. dd"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter.string(from: self)
+    }
+    
     /// Date를 "HH:mm" 형식으로 포맷팅 (시간용)
     /// - Returns: "14:30" 형식의 문자열
     func toTimeString() -> String {

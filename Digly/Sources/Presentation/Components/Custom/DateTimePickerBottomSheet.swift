@@ -50,7 +50,8 @@ struct DateTimePickerBottomSheet: View {
                         selection: $tempDate,
                         displayedComponents: .date
                     )
-                    .datePickerStyle(.graphical)
+                    .datePickerStyle(GraphicalDatePickerStyle())
+                    .frame(height: 400)
                     .padding(.horizontal, 24)
                 } else {
                     DatePicker(

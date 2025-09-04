@@ -5,8 +5,7 @@ struct CreateTicketFormView: View {
     @StateObject private var viewModel = CreateTicketViewModel()
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
-    @State private var tempDate: Date = Date()
-    @State private var tempTime: Date = Date()
+    @State private var isTimeSelected: Bool = false
     @FocusState private var isFocused: Bool
     
     var body: some View {
@@ -22,7 +21,6 @@ struct CreateTicketFormView: View {
                     }
                 }
             )
-            .padding(.horizontal, 16)
             .padding(.bottom, 24)
             
             contentSection
@@ -34,9 +32,8 @@ struct CreateTicketFormView: View {
                 .padding(.horizontal, 24)
                 .padding(.bottom, 34)
         }
+
         .animation(.mediumSpring, value: viewModel.currentStep)
-        .animation(.mediumSpring, value: viewModel.formData.selectedDate)
-        .animation(.mediumSpring, value: viewModel.formData.selectedTime)
         .animation(.mediumSpring, value: isDateFocused)
         .animation(.mediumSpring, value: isTimeFocused)
         .animation(.mediumSpring, value: viewModel.dateTimeStep)
@@ -76,6 +73,7 @@ extension CreateTicketFormView {
                 ticketDetailsSection
             }
         }
+        .frame(maxWidth: .infinity,alignment: .leading)
     }
     
     @ViewBuilder
@@ -132,6 +130,7 @@ extension CreateTicketFormView {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(isFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFocused ? 1.5 : 1)
         )
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var dateTimeSection: some View {
@@ -148,22 +147,23 @@ extension CreateTicketFormView {
             
             bottomPickerSection
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     @ViewBuilder
     private func dateTimeField(_ step: DateTimeStep) -> some View {
         let isFieldFocused = step == .date ? isDateFocused : isTimeFocused
-        let value: String = {
+        var value: String {
             if step == .date {
-                let df = DateFormatter()
-                df.dateFormat = "yyyy.MM.dd"
-                return isDateFocused ? df.string(from: tempDate) : viewModel.formData.selectedDate
+                viewModel.formData.performanceDate?.toyyyyMMddString() ?? "관람 일자"
             } else {
-                let tf = DateFormatter()
-                tf.dateFormat = "HH:mm"
-                return isTimeFocused ? tf.string(from: tempTime) : viewModel.formData.selectedTime
+                if isTimeSelected {
+                    viewModel.formData.performanceTime?.toTimeString() ?? "관람 시간"
+                } else {
+                    "관람 시간"
+                }
             }
-        }()
+        }
         
         VStack(alignment: .leading, spacing: 6) {
             Text(step.labelText)
@@ -172,32 +172,30 @@ extension CreateTicketFormView {
                 .padding(.leading, 8)
             
             Button(action: {
+                if step == .time {
+                    isTimeSelected = true
+                }
                 isDateFocused = step == .date
                 isTimeFocused = step != .date
                 viewModel.dateTimeStep = step
-                // 현재 값으로 피커 초기화
-                if step == .date {
-                    let df = DateFormatter()
-                    df.dateFormat = "yyyy.MM.dd"
-                    if let d = df.date(from: viewModel.formData.selectedDate) { tempDate = d }
-                } else {
-                    let tf = DateFormatter()
-                    tf.dateFormat = "HH:mm"
-                    if let t = tf.date(from: viewModel.formData.selectedTime) { tempTime = t }
-                }
             }) {
-                Text(value)
-                    .fontStyle(.headline1)
-                    .foregroundStyle(.neutral85)
-                
-                    .padding(.horizontal, 16)
-                    .frame(height: 48)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(isFieldFocused ? .opacityWhite35 : .opacityWhite95, lineWidth: isFieldFocused ? 1.5 : 1)
-                            .background(.opacityWhite95)
-                    )
+                HStack {
+                    Text(value)
+                        .fontStyle(.headline1)
+                        .foregroundStyle(.neutral65)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    if value.contains("관람") {
+                        Image(step.rawValue)
+                    }
+                }
+                .padding(.leading, 16)
+                .frame(height: 48)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(isFieldFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFieldFocused ? 1.5 : 1)
+                        .background(.opacityWhite95)
+                )
             }
         }
         .contentTransition(.numericText())
@@ -210,47 +208,30 @@ extension CreateTicketFormView {
                 if isDateFocused {
                     DatePicker(
                         "",
-                        selection: $tempDate,
+                        selection: viewModel.setDateTimeFieldBinding(for: .date),
                         displayedComponents: .date
                     )
-                    .tint(.common100)
-                    .datePickerStyle(.graphical)
-                    .colorScheme(.light)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 8)
-                    .onChange(of: tempDate) { _, newValue in
-                        let df = DateFormatter()
-                        df.dateFormat = "yyyy.MM.dd"
-                        let formattedDate = df.string(from: newValue)
-                        viewModel.formData.setDate(formattedDate)
-                    }
+                    .onTapGesture(count: 99){}
+                    .tint(.neutral65)
+                    .colorScheme(.dark)
+                    .datePickerStyle(GraphicalDatePickerStyle())
                 }
                 
                 if isTimeFocused {
                     DatePicker(
                         "",
-                        selection: $tempTime,
+                        selection: viewModel.setDateTimeFieldBinding(for: .time),
                         displayedComponents: .hourAndMinute
                     )
                     .tint(.common100)
                     .datePickerStyle(.wheel)
-                    .colorScheme(.light)
-                    .background(Color.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 8))
-                    .padding(.horizontal, 8)
-                    .onChange(of: tempTime) { _, newValue in
-                        let tf = DateFormatter()
-                        tf.dateFormat = "HH:mm"
-                        let formattedTime = tf.string(from: newValue)
-                        viewModel.formData.setTime(formattedTime)
-                    }
+                    .tint(.neutral65)
+                    .colorScheme(.dark)
                 }
             }
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.white.opacity(0.95))
                     .stroke(.opacityWhite85, lineWidth: 1)
             )
         }
@@ -267,13 +248,13 @@ extension CreateTicketFormView {
             HStack(spacing: 20) {
                 formFieldView(
                     label: "관람 일시",
-                    value: viewModel.formData.selectedDate,
+                    value: viewModel.formData.performanceDate?.toyyyyMMddString() ?? "관람 일자",
                     isRequired: true
                 )
                 
                 formFieldView(
                     label: "",
-                    value: viewModel.formData.selectedTime,
+                    value: viewModel.formData.performanceTime?.toTimeString() ?? "관람 시간",
                     isRequired: false
                 )
             }
@@ -351,6 +332,7 @@ extension CreateTicketFormView {
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     @ViewBuilder

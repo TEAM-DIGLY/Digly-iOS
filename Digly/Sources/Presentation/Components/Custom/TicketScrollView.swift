@@ -56,72 +56,81 @@ struct TicketScrollView: View {
         let isFocused = index == focusedIndex
         
         return ZStack {
-            // Background based on days until performance
-            if daysUntil >= 4 {
+            switch (daysUntil) {
+            case 0:
+                Image("DDayBox")
+                    .aspectRatio(contentMode: .fit)
+                
+            case 1...3:
+                Image(authManager.liveBaseImageName)
+                    .aspectRatio(contentMode: .fit)
+                
+            default:
                 RoundedRectangle(cornerRadius: 28)
                     .fill(.neutral95)
                     .stroke(.neutral75, lineWidth: 1.5)
-                    .frame(width: 300, height: 300)
-            } else if daysUntil >= 1 {
-                Image(authManager.liveBaseImageName)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 300, height: 300)
-            } else {
-                Image("DDayBox")
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 300, height: 300)
+                    .padding(1)
             }
             
-            VStack(spacing: 24) {
-                VStack(spacing: 2) {
-                    Text(ticket.name)
-                        .fontStyle(.body2)
-                        .foregroundStyle(daysUntil >= 4 ? .neutral55 : 
-                                        daysUntil >= 1 ? authManager.digly.lightColor : .opacityCool55)
-                    
-                    Text(daysUntil > 0 ? "D-\(String(format: "%02d", daysUntil))" : "D-DAY")
-                        .fontStyle(.title1)
-                        .foregroundStyle(daysUntil >= 4 ? authManager.digly.color :
-                                        daysUntil >= 1 ? .common100 : .common0)
-                }
-                .padding(.top, 40)
+            VStack(alignment: 0 <= daysUntil && daysUntil < 4 ? .center : .leading, spacing: 0) {
+                Spacer()
+                
+                Text(DDayString(daysUntil))
+                    .fontStyle(.title1)
+                    .foregroundStyle(DDayForegroundColor(daysUntil))
+                    .padding(.bottom, 24)
+                    .padding(.horizontal, 8)
+                
+                Text(ticket.name)
+                    .fontStyle(.body2)
+                    .foregroundStyle(foregroundTicketNameColor(daysUntil))
+                    .padding(.bottom, 8)
+                    .padding(.horizontal, 8)
+                
+                Text(ticket.place)
+                    .fontStyle(.body2)
+                    .foregroundStyle(foregroundTicketNameColor(daysUntil))
+                    .padding(.horizontal, 8)
+                
+                Spacer()
                 
                 Button(action: {
                     // Navigate to ticket detail
                 }) {
                     Text(ticket.name)
                         .fontStyle(.heading2)
-                        .foregroundStyle(daysUntil >= 4 ? .common0 : .common100)
-                        .frame(width: 240, height: 60)
-                        .background(
-                            RoundedRectangle(cornerRadius: 20)
-                                .fill(backgroundColorForRemainingDays(daysUntil))
-                                .opacity(opacityForRemainingDays(daysUntil))
-                                .shadow(color: .common0.opacity(daysUntil >= 4 ? 0.15 : 0.0), radius: 4)
-                        )
+                        .foregroundStyle(foregroundColor(daysUntil))
                 }
-                
-                HStack(alignment: .bottom) {
-                    Image("liveplay")
-                    Spacer()
-                    HStack(alignment: .center, spacing: 4) {
-                        Image("secure")
-                        Text("사용 가이드")
-                            .fontStyle(.label1)
-                            .foregroundStyle(.neutral15)
-                        
-                        Image("chevron_right")
-                            .foregroundStyle(.neutral45)
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity)
+                .background(backgroundColor(daysUntil), in: RoundedRectangle(cornerRadius: 20))
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
         }
-        .frame(width: 300, height: 300)
+        .frame(width: 264, height: 280)
         .scaleEffect(isFocused ? 1.0 : 0.9)
-        .opacity(isFocused ? 1.0 : 0.7)
-        .animation(.spring(response: 0.5, dampingFraction: 0.8), value: isFocused)
+        .animation(.spring, value: isFocused)
+    }
+    
+    private func DDayString(_ days: Int) -> String {
+        switch days {
+        case 0:
+            return "D-DAY"
+        default:
+            return "D\(days < 0 ? "+" : "")\(days * -1)"
+        }
+    }
+    
+    private func DDayForegroundColor(_ days: Int) -> Color {
+        switch days {
+        case 0:
+            return .neutral5
+        case 1...3:
+            return .common100
+        default:
+            return authManager.digly.color
+        }
     }
     
     private func daysUntilPerformance(for ticket: Ticket) -> Int {
@@ -133,27 +142,35 @@ struct TicketScrollView: View {
         return components.day ?? 0
     }
     
-    private func backgroundColorForRemainingDays(_ days: Int) -> Color {
+    private func foregroundColor(_ days: Int) -> Color {
         switch days {
         case 0...3:
-            return .opacityCool65
-        case 4:
-            return authManager.digly.lightColor
+            return .common100
         default:
-            return .neutral85
+            return .neutral5
         }
     }
     
-    private func opacityForRemainingDays(_ days: Int) -> Double {
+    private func backgroundColor(_ days: Int) -> Color {
         switch days {
         case 0...3:
-            return 0.25
-        case 4:
-            return 0.5
+            return .opacityCool25
         default:
-            return 0.8
+            return authManager.digly.lightColor
         }
     }
+    
+    private func foregroundTicketNameColor(_ days: Int) -> Color {
+        switch days {
+        case 0:
+            return .text0
+        case 1...3:
+            return authManager.digly.lightColor
+        default:
+            return .neutral55
+        }
+    }
+    
 }
 
 struct ScrollOffsetPreferenceKey: PreferenceKey {

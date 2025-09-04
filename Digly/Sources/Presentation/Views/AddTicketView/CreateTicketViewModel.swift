@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-enum DateTimeStep: CaseIterable {
+enum DateTimeStep: String, CaseIterable {
     case date
     case time
     
@@ -17,7 +17,7 @@ enum DateTimeStep: CaseIterable {
 
 @MainActor
 final class CreateTicketViewModel: ObservableObject {
-    @Published var currentStep: CreateTicketStep = .title
+    @Published var currentStep: CreateTicketStep = .dateTime
     @Published var formData = CreateTicketFormData()
     @Published var isSelected: Bool = false
     @Published var isLoading: Bool = false
@@ -47,7 +47,7 @@ final class CreateTicketViewModel: ObservableObject {
         case .title:
             return isSelected
         case .dateTime:
-            return formData.isDateTimeValid
+            return formData.performanceDate != nil && formData.performanceTime != nil
         case .venue:
             return !formData.venueName.isEmpty
         case .ticketDetails:
@@ -101,14 +101,6 @@ final class CreateTicketViewModel: ObservableObject {
         }
     }
     
-    func updateDate(_ date: String) {
-        formData.setDate(date)
-    }
-    
-    func updateTime(_ time: String) {
-        formData.setTime(time)
-    }
-    
     func updateSeatNumber(_ seat: String) {
         formData.setSeatNumber(seat)
     }
@@ -125,20 +117,20 @@ final class CreateTicketViewModel: ObservableObject {
         return formData.showName.isEmpty ? "(뮤지컬명)" : formData.showName
     }
     
-    func setDateTimeFieldBinding(for step: DateTimeStep) -> Binding<String> {
+    func setDateTimeFieldBinding(for step: DateTimeStep) -> Binding<Date> {
         switch step {
         case .date:
             return Binding(
-                get: { self.formData.selectedDate },
+                get: { self.formData.performanceDate ?? Date() },
                 set: { newValue in
-                    self.formData.setDate(newValue)
+                    self.formData.updateDateComponent(from: newValue)
                 }
             )
         case .time:
             return Binding(
-                get: { self.formData.selectedTime },
+                get: { self.formData.performanceTime ?? Date() },
                 set: { newValue in
-                    self.formData.setTime(newValue)
+                    self.formData.updateTimeComponent(from: newValue)
                 }
             )
         }
@@ -183,10 +175,9 @@ final class CreateTicketViewModel: ObservableObject {
         
         Task {
             do {
-                let performanceDate = try parsePerformanceDateTime(
-                    dateString: formData.selectedDate,
-                    timeString: formData.selectedTime
-                )
+                guard let performanceDate = formData.combinedPerformanceDateTime else {
+                    throw NSError(domain: "CreateTicket", code: 0, userInfo: [NSLocalizedDescriptionKey: "관람 일시를 선택해주세요."])
+                }
                 
                 let seatNumberValue: String? = formData.seatLocation.isEmpty ? nil : formData.seatLocation
                 let priceValue: Int32? = Int32(formData.ticketPrice.replacingOccurrences(of: ",", with: "").replacingOccurrences(of: " ", with: ""))
@@ -217,33 +208,4 @@ final class CreateTicketViewModel: ObservableObject {
         }
     }
     
-    private func parsePerformanceDateTime(dateString: String, timeString: String) throws -> Date {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy.MM.dd HH:mm"
-        dateFormatter.timeZone = TimeZone.current
-        
-        let combined = "\(dateString) \(timeString)"
-        if let date = dateFormatter.date(from: combined) {
-            return date
-        }
-        
-        // 폴백: 각각 파싱 후 캘린더로 합치기
-        let dF = DateFormatter()
-        dF.dateFormat = "yyyy.MM.dd"
-        let tF = DateFormatter()
-        tF.dateFormat = "HH:mm"
-        guard let d = dF.date(from: dateString), let t = tF.date(from: timeString) else {
-            throw NSError(domain: "CreateTicket", code: 0, userInfo: [NSLocalizedDescriptionKey: "날짜/시간 형식이 올바르지 않습니다."])
-        }
-        let calendar = Calendar.current
-        let dateComponents = calendar.dateComponents([.year, .month, .day], from: d)
-        let timeComponents = calendar.dateComponents([.hour, .minute], from: t)
-        var merged = DateComponents()
-        merged.year = dateComponents.year
-        merged.month = dateComponents.month
-        merged.day = dateComponents.day
-        merged.hour = timeComponents.hour
-        merged.minute = timeComponents.minute
-        return calendar.date(from: merged) ?? d
-    }
 }

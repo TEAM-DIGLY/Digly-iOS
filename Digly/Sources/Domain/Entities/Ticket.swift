@@ -1,8 +1,8 @@
 import SwiftUI
 import Foundation
 
-struct Ticket: Codable, Identifiable {
-    let id: Int64
+struct Ticket: Codable {
+    let id: Int64?
     let name: String
     let performanceTime: Date
     let place: String

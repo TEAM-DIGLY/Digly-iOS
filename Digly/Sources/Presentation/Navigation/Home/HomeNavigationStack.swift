@@ -31,6 +31,7 @@ struct HomeNavigationStack: View {
         case .alarmList: AlarmListView()
         case .myPage: MyPageView()
         case .addTicket: AddTicketView()
+        case .ticketAutoInput: TicketAutoInputView()
         case .createTicketForm: CreateTicketFormView()
         }
     }

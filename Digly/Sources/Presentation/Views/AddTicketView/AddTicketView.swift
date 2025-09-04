@@ -76,8 +76,7 @@ struct AddTicketView: View {
         
         switch selectedType {
         case .copyTicket:
-            // TODO: 티켓 정보 불러오기 화면으로 이동
-            print("티켓 정보 불러오기 선택")
+            router.push(to: .ticketAutoInput)
         case .createTicket:
             router.push(to: .createTicketForm)
         }

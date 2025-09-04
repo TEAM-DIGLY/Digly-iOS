@@ -5,6 +5,7 @@ enum HomeRoute: BaseRoute {
     case alarmList
     case myPage
     case addTicket
+    case ticketAutoInput
     case createTicketForm
     
     var id: String {
