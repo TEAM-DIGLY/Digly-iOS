@@ -7,8 +7,20 @@ class TicketBookViewModel: ObservableObject {
     @Published var bigTickets: [Ticket] = []
     @Published var tickets: [Ticket] = []
     
-    @Published var startedDate: Date? = nil
-    @Published var endDate: Date? = nil
+    @Published var startedDate: Date? = nil {
+        didSet {
+            if oldValue != startedDate {
+                refreshTickets()
+            }
+        }
+    }
+    @Published var endDate: Date? = nil {
+        didSet {
+            if oldValue != endDate {
+                refreshTickets()
+            }
+        }
+    }
     
     @Published var totalCnt: Int = 0
     @Published var username: String = "username"
@@ -32,15 +44,11 @@ class TicketBookViewModel: ObservableObject {
         fetchBigTickets()
     }
     
-    func changeSort() {
-        print("정렬 방식 변경 후, 티켓 조회 api 재호출")
-    }
-    
     func initializeFetch() {
         currentPage = 0
         tickets = []
         hasMorePages = true
-        
+
         Task {
             do {
                 isLoading = true
@@ -51,6 +59,11 @@ class TicketBookViewModel: ObservableObject {
                 ToastManager.shared.show(.errorStringWithTask("티켓 조회"))
             }
         }
+    }
+
+    func refreshTickets() {
+        guard !isLoading else { return }
+        initializeFetch()
     }
     
     func loadNextPage() {

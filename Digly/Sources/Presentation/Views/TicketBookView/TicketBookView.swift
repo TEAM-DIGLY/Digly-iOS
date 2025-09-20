@@ -5,18 +5,31 @@ struct TicketBookView: View {
     @EnvironmentObject private var router: TicketBookRouter
     
     @State private var showSortBottomSheet = false
+    @State private var showFilterBottomSheet = false
     
     var body: some View {
         DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 24) {
+                VStack(spacing: 16) {
                     headerView
                     upperTicketList
+                    Spacer().frame(height: 24)
                     subHeader
                     ticketGridView
+                    Spacer().frame(height: 120)
                 }
-                .padding(.horizontal, 16)
             }
+        }
+        .sheet(isPresented: $showFilterBottomSheet) {
+            FilterBottomSheet(
+                startedDate: $viewModel.startedDate,
+                endDate: $viewModel.endDate
+            )
+            .presentationDetents([.height(480)])
+            .presentationDragIndicator(.hidden)
+            .presentationCornerRadius(24)
+            .background(.bottomSheetBackground)
+            .presentationBackground(.bottomSheetBackground)
         }
     }
     
@@ -50,7 +63,7 @@ struct TicketBookView: View {
                 )
             }
         }
-        .padding(.top, 16)
+        .padding(16)
     }
     
     // MARK: - Featured Tickets View
@@ -62,12 +75,8 @@ struct TicketBookView: View {
                         router.push(to: .ticketDetail(ticket.id))
                     }) {
                         TicketCardView(
-                            title: ticket.name,
-                            date: ticket.time,
-                            location: ticket.place,
-                            ticketNumber: ticket.seatNumber,
-                            cardType: .large,
-                            colors: ticket.color
+                            ticket: ticket,
+                            cardType: .large
                         )
                     }
                 }
@@ -89,11 +98,13 @@ struct TicketBookView: View {
             
             Image("filter")
                 .onTapGesture {
-                    showSortBottomSheet = true
+                    showFilterBottomSheet = true
                 }
             
             Image("search")
         }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 8)
     }
     
     private var ticketGridView: some View {
@@ -106,21 +117,11 @@ struct TicketBookView: View {
                     router.push(to: .ticketDetail(ticket.id))
                 }) {
                     TicketCardView(
-                        title: ticket.name,
-                        date: ticket.time,
-                        location: ticket.place,
-                        ticketNumber: ticket.seatNumber,
-                        cardType: .small,
-                        colors: ticket.color
+                        ticket: ticket,
+                        cardType: .small
                     )
                 }
             }
-        }
-        .sheet(isPresented: $showSortBottomSheet) {
-            SortBottomSheet(
-                startedDate: $viewModel.startedDate,
-                endDate: $viewModel.endDate
-            )
         }
     }
 }

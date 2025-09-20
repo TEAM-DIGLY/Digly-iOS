@@ -9,7 +9,7 @@ struct Ticket: Identifiable, Codable {
     let count: Int
     let seatNumber: String?
     let price: Int?
-    let color: [String]
+    let color: [EmotionColor]
     let feeling: [Feeling]
 }
 

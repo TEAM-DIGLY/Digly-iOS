@@ -180,7 +180,7 @@ struct HomeView: View {
                     HStack(spacing: 8) {
                         ForEach(Array(ticket.feeling.prefix(2).enumerated()), id: \.offset) { index, feeling in
                             if index < ticket.color.count {
-                                tagView(text: "#\(feeling)", color: Color(hex: ticket.color[index]))
+                                tagView(text: "#\(feeling)", color: ticket.color[index].color)
                             }
                         }
                         Spacer()

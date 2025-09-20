@@ -157,7 +157,7 @@ final class CreateTicketViewModel: ObservableObject {
                     count: formData.count,
                     seatNumber: formData.seatNumber,
                     price: formData.price,
-                    colors: [],
+                    colors: [], // TODO: EmotionColor 선택 기능 추가 시 수정
                     feelings: []
                 )
                 isLoading = false

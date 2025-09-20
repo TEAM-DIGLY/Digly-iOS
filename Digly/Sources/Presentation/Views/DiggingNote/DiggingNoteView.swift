@@ -2,15 +2,7 @@ import SwiftUI
 
 struct DiggingNoteView: View {
     @StateObject private var authManager = AuthManager.shared
-    @State private var expandedNoteId: String? = "1"
-    @State private var notes: [NoteItem] = [
-        NoteItem(id: "1", title: "캣츠 내한공연 50주년", date: "2025.03.03", noteCount: 3, content: [
-            "나는 이렇게 생각해서 이렇게 만들었는데 또 이게 아닌 것 같고 어디서 잘 모르겠어.",
-            "나는 이렇게 생각해서 이렇게 만들었는데 또 이게 아닌 것 같고 어디서 잘 모르겠어.",
-            "나는 이렇게 생각해서 이렇게 만들었는데 또 이게 아닌 것 같고 어디서 잘 모르겠어."
-        ]),
-        NoteItem(id: "2", title: "캣츠 내한공연 50주년", date: "2025.03.03", noteCount: 3, content: [])
-    ]
+    @StateObject private var viewModel = DiggingNoteViewModel()
     
     var body: some View {
         DGScreen(horizontalPadding: 0) {
@@ -18,24 +10,22 @@ struct DiggingNoteView: View {
                 VStack(spacing: 40){
                     header
                     
-                    VStack(spacing: 16) {
-                        ForEach(notes, id: \.id) { note in
-                            NoteCardView(
-                                note: note,
-                                isExpanded: expandedNoteId == note.id,
-                                toggleExpand: {
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        if expandedNoteId == note.id {
-                                            expandedNoteId = nil
-                                        } else {
-                                            expandedNoteId = note.id
-                                        }
+                    if viewModel.ticketsWithNotes.isEmpty {
+                        EmptyNoteView()
+                    } else {
+                        VStack(spacing: 32) {
+                            ForEach(viewModel.ticketsWithNotes) { ticketWithNotes in
+                                TicketNoteCardView(
+                                    ticketWithNotes: ticketWithNotes,
+                                    isExpanded: viewModel.expandedTicketId == ticketWithNotes.ticket.id,
+                                    toggleExpand: {
+                                        viewModel.toggleExpanded(for: ticketWithNotes.ticket.id)
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
+                        .padding(.horizontal, 24)
                     }
-                    .padding(.horizontal, 24)
                 }
             }
         }
@@ -74,128 +64,205 @@ struct DiggingNoteView: View {
     }
 }
 
-struct NoteItem: Identifiable {
-    let id: String
-    let title: String
-    let date: String
-    let noteCount: Int
-    let content: [String]
-}
-
-struct NoteCardView: View {
-    let note: NoteItem
+struct TicketNoteCardView: View {
+    let ticketWithNotes: TicketWithNotes
     let isExpanded: Bool
     let toggleExpand: () -> Void
-    
+
+    private var ticketGradient: LinearGradient {
+        let colors = ticketWithNotes.ticket.color.map { $0.color }
+        if colors.isEmpty {
+            return LinearGradient(colors: [.neutral15, .neutral25], startPoint: .topLeading, endPoint: .bottomTrailing)
+        } else if colors.count == 1 {
+            return LinearGradient(colors: [colors[0], colors[0].opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing)
+        } else {
+            return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
+        }
+    }
+
     var body: some View {
         VStack(spacing: 0) {
-            // Header
-            Button(action: toggleExpand) {
-                HStack {
-                    Text(note.title)
-                        .fontStyle(.body1)
-                        .foregroundStyle(.common100)
-                    
-                    Spacer()
-                    
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .foregroundColor(.common100)
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 16)
-                .background(
-                    RoundedRectangle(cornerRadius: isExpanded ? 12 : 12)
-                        .fill(.neutral15)
-                )
-            }
-            
             if isExpanded {
-                VStack(spacing: 8) {
-                    HStack(spacing: 4) {
-                        Image("diggingNote")
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                        
-                        Text("\(note.noteCount)개의 노트")
-                            .fontStyle(.caption1)
-                            .foregroundStyle(.neutral55)
-                    }
-                    .padding(.vertical, 4)
-                    .padding(.horizontal, 8)
-                    .overlay(RoundedRectangle(cornerRadius: 8)
-                        .stroke(.opacityWhite85, lineWidth: 1)
-                    )
-                    
-                    VStack(spacing: 8) {
-                        ForEach(0..<note.content.count, id: \.self) { index in
-                            NoteContentItem(content: note.content[index])
-                        }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                }
-//                .background(
-//                    RoundedRectangle(cornerRadius: 12)
-//                        .fill(.)
-//                )
-            }
-            
-            // Footer (collapsed view in second card)
-            if !isExpanded {
-                HStack {
-                    Image(systemName: "note.text")
-                        .foregroundColor(.neutral55)
-                    
-                    Text("\(note.noteCount)개의 노트")
-                        .fontStyle(.caption1)
-                        .foregroundStyle(.neutral55)
-                    
-                    Spacer()
-                    
-                    Text("최근 작성일 · \(note.date)")
-                        .fontStyle(.caption1)
-                        .foregroundStyle(.neutral55)
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.common100)
-                        .stroke(.neutral75, lineWidth: 1)
-                )
+                expandedView
+            } else {
+                collapsedView
             }
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.clear)
-//                .shadow(color: .opacityBlack15, radius: 4, x: 0, y: 2)
+                .fill(ticketGradient)
         )
+        .onTapGesture {
+            toggleExpand()
+        }
+    }
+
+    private var expandedView: some View {
+        VStack(spacing: 0) {
+            // Header with gradient background
+            VStack(spacing: 0) {
+                HStack {
+                    Text(ticketWithNotes.ticket.name)
+                        .fontStyle(.heading2)
+                        .foregroundStyle(.common100)
+                        .multilineTextAlignment(.leading)
+
+                    Spacer()
+
+                    Button(action: toggleExpand) {
+                        Image(systemName: "chevron.up")
+                            .foregroundColor(.common100)
+                            .frame(width: 24, height: 24)
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 24)
+
+                HStack {
+                    Image("digging_note")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+
+                    Text("\(ticketWithNotes.noteCount)개의 노트")
+                        .fontStyle(.caption1)
+                        .foregroundStyle(.common100)
+
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 16)
+            }
+
+            // Notes content
+            if !ticketWithNotes.notes.isEmpty {
+                VStack(spacing: 16) {
+                    ForEach(ticketWithNotes.notes) { note in
+                        NoteContentItem(note: note)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.bottom, 16)
+            }
+        }
+    }
+
+    private var collapsedView: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text(ticketWithNotes.ticket.name)
+                    .fontStyle(.heading2)
+                    .foregroundStyle(.common100)
+                    .multilineTextAlignment(.leading)
+
+                Spacer()
+
+                Button(action: toggleExpand) {
+                    Image(systemName: "chevron.down")
+                        .foregroundColor(.common100)
+                        .frame(width: 24, height: 24)
+                }
+            }
+
+            HStack {
+                HStack(spacing: 8) {
+                    Image("digging_note")
+                        .resizable()
+                        .frame(width: 12, height: 12)
+
+                    Text("\(ticketWithNotes.noteCount)개의 노트")
+                        .fontStyle(.caption1)
+                        .foregroundStyle(.common100)
+                }
+
+                Spacer()
+
+                if !ticketWithNotes.formattedLastNoteDate.isEmpty {
+                    HStack(spacing: 4) {
+                        Text("최근 작성일")
+                            .fontStyle(.caption1)
+                            .foregroundStyle(.common100.opacity(0.7))
+
+                        Circle()
+                            .fill(.common100.opacity(0.7))
+                            .frame(width: 2, height: 2)
+
+                        Text(ticketWithNotes.formattedLastNoteDate)
+                            .fontStyle(.caption1)
+                            .foregroundStyle(.common100.opacity(0.7))
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 24)
+    }
+}
+
+struct EmptyNoteView: View {
+    var body: some View {
+        VStack(spacing: 24) {
+            VStack(spacing: 16) {
+                Text("!")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundStyle(.neutral55)
+
+                Circle()
+                    .fill(.neutral25)
+                    .frame(width: 48, height: 48)
+                    .overlay(
+                        Image(systemName: "note.text")
+                            .foregroundColor(.neutral55)
+                            .font(.system(size: 20))
+                    )
+            }
+
+            VStack(spacing: 8) {
+                Text("아직 작성된 노트가 없어요.")
+                    .fontStyle(.heading2)
+                    .foregroundStyle(.common100)
+
+                Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
+                    .fontStyle(.body2)
+                    .foregroundStyle(.neutral55)
+                    .multilineTextAlignment(.center)
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.top, 80)
+        .padding(.horizontal, 24)
     }
 }
 
 struct NoteContentItem: View {
-    let content: String
-    
+    let note: Note
+
+    private var relativeTimeString: String {
+        // This would typically calculate the relative time from note creation date
+        // For now, returning placeholder values
+        let timeOptions = ["어제", "3일 전", "7일 전", "2주 전", "1개월 전"]
+        return timeOptions.randomElement() ?? "최근"
+    }
+
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            Text("어제")
+        VStack(alignment: .leading, spacing: 8) {
+            Text(relativeTimeString)
                 .fontStyle(.caption1)
                 .foregroundStyle(.neutral55)
-                .frame(width: 30, alignment: .leading)
-            
-            Text(content)
+
+            Text(note.content)
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral25)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+        .padding(.vertical, 14)
         .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(.neutral95)
+            RoundedRectangle(cornerRadius: 12)
+                .fill(.common0.opacity(0.95))
         )
     }
 }
+
 
 #Preview {
     DiggingNoteView()

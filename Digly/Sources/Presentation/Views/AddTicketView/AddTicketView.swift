@@ -70,7 +70,6 @@ struct AddTicketView: View {
                     handleNextButton()
                 }
                 .padding(.horizontal, 24)
-                
             NavigationLink(
                 destination: TicketAutoInputView(),
                 isActive: $shouldNavigateToAutoInput

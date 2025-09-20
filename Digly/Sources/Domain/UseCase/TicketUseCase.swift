@@ -33,7 +33,7 @@ final class TicketUseCase {
         count: Int,
         seatNumber: String? = nil,
         price: Int? = nil,
-        colors: [String],
+        colors: [EmotionColor],
         feelings: [String]
     ) async throws -> Bool {
         let request = CreateTicketRequest(
@@ -43,7 +43,7 @@ final class TicketUseCase {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: colors,
+            color: EmotionColor.toRawValues(colors),
             feeling: feelings
         )
         
@@ -59,7 +59,7 @@ final class TicketUseCase {
         count: Int32,
         seatNumber: String? = nil,
         price: Int32? = nil,
-        colors: [String],
+        colors: [EmotionColor],
         feelings: [String]
     ) async throws -> Bool {
         let request = UpdateTicketRequest(
@@ -69,7 +69,7 @@ final class TicketUseCase {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: colors,
+            color: EmotionColor.toRawValues(colors),
             feeling: feelings
         )
         let response: APIResponse<TicketDTO> = try await ticketRepository.updateTicket(ticketId: ticketId, request: request)

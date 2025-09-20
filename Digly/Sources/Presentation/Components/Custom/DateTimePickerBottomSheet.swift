@@ -101,16 +101,3 @@ struct DateTimePickerBottomSheet: View {
         }
     }
 }
-
-#Preview {
-    @State var date = "2021.04.03"
-    @State var time = "15:00"
-    
-    return DateTimePickerBottomSheet(
-        step: .date,
-        selectedDate: $date,
-        selectedTime: $time,
-        onNext: { print("Next tapped") },
-        onClose: { print("Close tapped") }
-    )
-}

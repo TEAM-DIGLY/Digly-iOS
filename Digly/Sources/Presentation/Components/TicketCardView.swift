@@ -6,12 +6,8 @@ enum TicketCardType {
 }
 
 struct TicketCardView: View {
-    var title: String
-    var date: Date
-    var location: String
-    var ticketNumber: String?
-    var cardType: TicketCardType
-    var colors: [String] = []
+    let ticket: Ticket
+    let cardType: TicketCardType
     
     private var isLarge: Bool {
         cardType == .large
@@ -45,7 +41,7 @@ struct TicketCardView: View {
     }
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .topLeading) {
             DiglyShape(
                 upperGradientColors: gradientColors.upper,
                 bottomGradientColors: gradientColors.bottom,
@@ -53,9 +49,7 @@ struct TicketCardView: View {
             )
             
             ticketInfo
-                .padding(.horizontal, isLarge ? 14 : 12)
                 .padding(.vertical, 20)
-                .frame(maxWidth: .infinity,maxHeight: .infinity, alignment: .topLeading)
         }
         .frame(width: shapeSize[0], height: shapeSize[1])
         .clipShape(
@@ -66,13 +60,14 @@ struct TicketCardView: View {
                 topTrailingRadius: cornerSize[0]
             )
         )
-        .shadow(color: .common100.opacity(0.2), radius: 20)
+        .shadow(color: .common100.opacity(0.2), radius: 16)
+        .padding(16)
     }
 
     // MARK: - Gradient Colors Logic
     private var gradientColors: (upper: [Color], bottom: [Color]) {
-        if !colors.isEmpty {
-            let mapped = colors.map { Color(hex: $0) }
+        if !ticket.color.isEmpty {
+            let mapped = ticket.color.map { $0.color }
             if mapped.count == 1 {
                 let c = mapped[0]
                 return ([c.opacity(0.2), c.opacity(0.02)], [c.opacity(0.2), c.opacity(0.1)])
@@ -95,7 +90,7 @@ struct TicketCardView: View {
         VStack(alignment: .leading, spacing: 0) {
             if isLarge {
                 HStack(alignment: .top){
-                    Text(title)
+                    Text(ticket.name)
                         .fontStyle(.body1)
                         .foregroundStyle(.white)
                         .lineLimit(2)
@@ -105,25 +100,42 @@ struct TicketCardView: View {
                         .renderingMode(.template)
                         .foregroundStyle(.opacityWhite25)
                 }
-                .padding(.bottom, 48)
+                .padding(.bottom, 24)
                 
-                Text("\(date.toInquiryDateString()) • \(location)")
+                Text("#\(ticket.count)번째 관람")
+                    .foregroundStyle(.opacityWhite5)
+                    .font(.caption1)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.opacityWhite75, lineWidth: 1)
+                    )
+                    .padding(.bottom, 8)
+                
+                Text("\(ticket.time.toInquiryDateString()) • \(ticket.place)")
                     .fontStyle(.caption1)
                     .foregroundStyle(.opacityWhite15)
                     .lineLimit(1)
             } else {
-                Text(date.toInquiryDateString())
+                Text("#\(ticket.count)번째 관람")
+                    .foregroundStyle(.opacityWhite5)
                     .font(.caption1)
-                    .foregroundStyle(.opacityWhite25)
-                    .padding(.bottom, 8)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.opacityWhite75, lineWidth: 1)
+                    )
+                    .padding(.bottom, 12)
                 
-                Text(title)
+                Text(ticket.name)
                     .fontStyle(.body2)
                     .foregroundStyle(.white)
                     .lineLimit(2)
-                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 16)
     }
 }

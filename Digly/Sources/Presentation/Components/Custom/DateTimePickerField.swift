@@ -193,15 +193,3 @@ struct TimePickerSheet: View {
         }
     }
 }
-
-#Preview {
-    @State var date = "2021.04.03"
-    @State var time = "15:00"
-    
-    return DateTimePickerField(
-        selectedDate: $date,
-        selectedTime: $time
-    )
-    .padding()
-    .background(.neutral95)
-}

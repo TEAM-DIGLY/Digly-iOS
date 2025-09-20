@@ -26,7 +26,7 @@ struct TicketDTO: Codable {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: color,
+            color: EmotionColor.fromRawValues(color),
             feeling: feeling.map { Feeling(rawValue: $0) ?? .excited }
         )
     }

@@ -17,12 +17,12 @@ final class TicketRepository: TicketRepositoryProtocol {
         
         if let startAt = startAt {
             let formatter = ISO8601DateFormatter()
-            queryParams["startAt"] = formatter.string(from: startAt)
+            queryParams["startAt"] = String(formatter.string(from: startAt).prefix(19))
         }
         
         if let endAt = endAt {
             let formatter = ISO8601DateFormatter()
-            queryParams["endAt"] = formatter.string(from: endAt)
+            queryParams["endAt"] = String(formatter.string(from: endAt).prefix(19))
         }
         
         if let page = page {
