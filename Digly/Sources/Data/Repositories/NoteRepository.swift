@@ -14,18 +14,18 @@ final class NoteRepository: NoteRepositoryProtocol {
         )
     }
     
-    func getNote(noteId: Int64) async throws -> Note {
+    func getNote(noteId: Int) async throws -> Note {
         return try await networkAPI.request(NoteEndpoint.getNote(noteId))
     }
     
-    func updateNote(noteId: Int64, request: UpdateNoteRequest) async throws -> Note {
+    func updateNote(noteId: Int, request: UpdateNoteRequest) async throws -> Note {
         return try await networkAPI.request(
             NoteEndpoint.putNote(noteId),
             parameters: request.toDictionary()
         )
     }
     
-    func getNotesByTicket(ticketId: Int64, page: Int?, size: Int?) async throws -> NotesResponse {
+    func getNotesByTicket(ticketId: Int, page: Int?, size: Int?) async throws -> NotesResponse {
         var queryParams: [String: String] = [:]
         
         if let page = page {

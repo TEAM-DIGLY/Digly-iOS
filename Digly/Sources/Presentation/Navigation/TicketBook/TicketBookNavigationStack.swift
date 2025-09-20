@@ -25,6 +25,10 @@ struct TicketBookNavigationStack: View {
                         //                            print("📋 TabBar hidden: \(route.hidesTabBar)")
                     }
             }
+            .navigationDestination(for: TicketFlowRoute.self) { route in
+                ticketFlowDestinationView(for: route)
+                    .swipeBackDisabled(route.disableSwipeBack)
+            }
         }
     }
     
@@ -35,10 +39,39 @@ struct TicketBookNavigationStack: View {
             TicketBookView()
         case .ticketDetail(let ticketId): 
             TicketDetailView(ticketId: ticketId)
-        case .addTicket:
+        case .ticketFlow:
+            TicketFlowNavigationStack(onFlowCompleted: {
+                router.pop() // Return to previous screen when ticket flow completes
+            })
+        }
+    }
+    
+    @ViewBuilder
+    private func ticketFlowDestinationView(for route: TicketFlowRoute) -> some View {
+        switch route {
+        case .addTicket: 
             AddTicketView()
-        case .createTicketForm:
+        case .ticketAutoInput:
+            TicketAutoInputView()
+        case .createTicketForm: 
             CreateTicketFormView()
+        case .endCreateTicket(let ticketData): 
+            EndCreateTicketView(
+                ticketData: ticketData,
+                onAddFeelingTapped: {
+                    router.path.append(TicketFlowRoute.addFeelingView)
+                },
+                onEditTicketTapped: {
+                    router.path.append(TicketFlowRoute.editTicketView)
+                },
+                onCompleteTapped: {
+                    router.pop() // Go back to TicketBookView
+                }
+            )
+        case .addFeelingView: 
+            PlaceholderView(title: "AddFeelingView", subtitle: "감정 입력 화면 (미구현)")
+        case .editTicketView: 
+            PlaceholderView(title: "EditTicketView", subtitle: "티켓 정보 수정 화면 (미구현)")
         }
     }
 } 

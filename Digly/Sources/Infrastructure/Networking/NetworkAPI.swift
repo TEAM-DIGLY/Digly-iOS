@@ -8,9 +8,9 @@ final class NetworkAPI {
               let memberId = getCurrentMemberId() else {
             throw APIError.unauthorized
         }
-        
-        let _request = ReissueRequest(memberId: memberId)
-        let response: ReissueResponse = try await request(AuthEndpoint.postReissue(refreshToken), parameters: _request.toDictionary())
+        // Spec: reissue uses Authorization header with refreshToken only (no body)
+        _ = memberId // kept in case of future use
+        let response: ReissueResponse = try await request(AuthEndpoint.postReissue(refreshToken))
         
         KeychainManager.shared.saveTokens(response.accessToken, response.refreshToken)
         
@@ -105,6 +105,8 @@ final class NetworkAPI {
             let decoder = JSONDecoder.diglyDecoder
             return try decoder.decode(T.self, from: data)
         } catch {
+            print(error)
+            
             if let apiError = error as? APIError {
                 if apiError.isAutoHandled {
                     if case AuthEndpoint.postLogin = endpoint, apiError == .unauthorized {
@@ -136,7 +138,7 @@ final class NetworkAPI {
         }
     }
     
-    private func getCurrentMemberId() -> Int64? {
-        return UserDefaults.standard.object(forKey: "currentMemberId") as? Int64
+    private func getCurrentMemberId() -> Int? {
+        return UserDefaults.standard.object(forKey: "currentMemberId") as? Int
     }
 }

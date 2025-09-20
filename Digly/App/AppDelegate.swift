@@ -19,7 +19,7 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
         instance?.serviceUrlScheme = "com.teamDigly.digly"
         instance?.consumerKey = "KYrhYmtD1DwAEGFO7sK7"
         instance?.consumerSecret = "JKi6hWMPnP"
-        instance?.appName = "Digly"  // 애플리케이션 이름
+        instance?.appName = "Digly"
         
         return true
     }

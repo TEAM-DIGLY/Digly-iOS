@@ -14,7 +14,6 @@ class HomeViewModel: ObservableObject {
     
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
-    private var cancellables = Set<AnyCancellable>()
     
     var focusedTicket: Ticket? {
         tickets.isEmpty ? nil : tickets[safe: focusedTicketIndex]
@@ -24,19 +23,21 @@ class HomeViewModel: ObservableObject {
          noteUseCase: NoteUseCase = NoteUseCase(noteRepository: NoteRepository())) {
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
-        loadTickets()
+        
+        fetchTickets()
+        
     }
     
-    func loadTickets() {
+    private func fetchTickets() {
         Task {
             isLoading = true
             do {
                 let response = try await ticketUseCase.getAllTickets()
-                tickets = response.data.tickets
+                tickets = response.tickets.map { $0.toDomain() }
                 
                 if !tickets.isEmpty {
                     focusedTicketIndex = 0
-                    await loadNotesForFocusedTicket()
+//                    await loadNotesForFocusedTicket()
                 }
             } catch {
                 print("Failed to load tickets: \(error)")
@@ -46,27 +47,27 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func loadNotesForFocusedTicket() async {
-        guard let focusedTicket = focusedTicket else {
-            ticketNotes = []
-            return
-        }
-        
-        do {
-            let response = try await noteUseCase.getNotesByTicket(ticketId: focusedTicket.id)
-            ticketNotes = response.notes
-        } catch {
-            print("Failed to load notes for ticket \(focusedTicket.id): \(error)")
-            ticketNotes = []
-        }
-    }
+//    func loadNotesForFocusedTicket() async {
+//        guard let focusedTicket = focusedTicket else {
+//            ticketNotes = []
+//            return
+//        }
+//        
+//        do {
+//            let response = try await noteUseCase.getNotesByTicket(ticketId: focusedTicket.id)
+//            ticketNotes = response.notes
+//        } catch {
+//            print("Failed to load notes for ticket \(focusedTicket.id): \(error)")
+//            ticketNotes = []
+//        }
+//    }
     
     func updateFocusedTicket(index: Int) {
         guard index != focusedTicketIndex && index >= 0 && index < tickets.count else { return }
         focusedTicketIndex = index
         
         Task {
-            await loadNotesForFocusedTicket()
+//            await loadNotesForFocusedTicket()
         }
     }
     
@@ -79,7 +80,7 @@ class HomeViewModel: ObservableObject {
     func daysUntilPerformance(for ticket: Ticket) -> Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let performanceDay = calendar.startOfDay(for: ticket.performanceTime)
+        let performanceDay = calendar.startOfDay(for: ticket.time)
         
         let components = calendar.dateComponents([.day], from: today, to: performanceDay)
         return components.day ?? 0
@@ -88,6 +89,6 @@ class HomeViewModel: ObservableObject {
     // Check if performance is today
     func isPerformanceToday(for ticket: Ticket) -> Bool {
         let calendar = Calendar.current
-        return calendar.isDate(ticket.performanceTime, inSameDayAs: Date())
+        return calendar.isDate(ticket.time, inSameDayAs: Date())
     }
 }

@@ -3,8 +3,8 @@ import Foundation
 enum TicketEndpoint: APIEndpoint {
     case getTickets
     case postTicket
-    case getTicket(Int64)
-    case putTicket(Int64)
+    case getTicket(Int)
+    case putTicket(Int)
     
     var path: String {
         switch self {

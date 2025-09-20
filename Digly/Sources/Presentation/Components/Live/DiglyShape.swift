@@ -10,7 +10,6 @@ struct DiglyShape: View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
             
-            // 클수록, 검정영역 더 넓어짐
             ForEach([0, 1.6, 2.0, 2.6, 3.0, 3.2], id: \.self) { rate in
                 SubtractedShape(
                     rate: rate,
@@ -67,4 +66,11 @@ struct SubtractedShape: Shape {
         
         return path.subtracting(circlePath)
     }
+}
+
+#Preview {
+    DiglyShape(upperGradientColors: [.red.opacity(0.1),.blue.opacity(0.1)],
+               bottomGradientColors: [.blue.opacity(0.1),.green.opacity(0.1)],
+               offsets: [0,1,2,3]
+    )
 }

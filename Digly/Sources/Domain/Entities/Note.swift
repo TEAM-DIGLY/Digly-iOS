@@ -1,13 +1,13 @@
 import Foundation
 
 struct Note: Codable, Identifiable {
-    let id: Int64
+    let id: Int
     let title: String
     let content: String
 }
 
 struct CreateNoteRequest: Codable {
-    let ticketId: Int64
+    let ticketId: Int
     let title: String
     let content: String
 }

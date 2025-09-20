@@ -26,15 +26,17 @@ class CreateAccountViewModel: ObservableObject {
     
     private let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9_]{3,20}$")
     private let authUseCase: AuthUseCase
+    private let memberUseCase: MemberUseCase
     private let accessToken: String
     private let refreshToken: String
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(accessToken: String, refreshToken: String, authUseCase: AuthUseCase = AuthUseCase()) {
+    init(accessToken: String, refreshToken: String, authUseCase: AuthUseCase = AuthUseCase(), memberUseCase: MemberUseCase = MemberUseCase(memberRepository: MemberRepository())) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.authUseCase = authUseCase
+        self.memberUseCase = memberUseCase
     }
     
     func performSignUp(onSuccess: @escaping (SignUpResponse) -> Void) {
@@ -117,8 +119,21 @@ class CreateAccountViewModel: ObservableObject {
     }
     
     func checkUsername(){
-        // TODO: 서버로 부터 닉네임 중복여부 확인
-        isUsernameValid = true
+        Task {
+            do {
+                isLoading = true
+                try await memberUseCase.checkDuplicateNameOnServer(username)
+                isUsernameValid = true
+                errorText = ""
+            } catch let error as APIError {
+                isUsernameValid = false
+                errorText = error.localizedDescription
+            } catch {
+                isUsernameValid = false
+                errorText = "닉네임 확인 중 오류가 발생했습니다."
+            }
+            isLoading = false
+        }
     }
     
     func signUp() {

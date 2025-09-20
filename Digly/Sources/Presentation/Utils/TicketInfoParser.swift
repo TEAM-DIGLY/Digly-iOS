@@ -26,34 +26,28 @@ struct TicketInfoParser {
         
         var ticketData = CreateTicketFormData()
         
-        // 극 제목 추출
         if let showName = extractShowName(from: text) {
             ticketData.showName = showName
         }
         
-        // 관람 일시 추출
         if let (date, time) = extractDateTime(from: text) {
-            ticketData.performanceDate = date
-            ticketData.performanceTime = time
+            ticketData.date = date
+            ticketData.time = time
         }
         
-        // 관람 장소 추출
         if let venue = extractVenue(from: text) {
-            ticketData.venueName = venue
+            ticketData.place = venue
         }
         
-        // 좌석 정보 추출
         if let seatInfo = extractSeatInfo(from: text) {
-            ticketData.seatLocation = seatInfo
+            ticketData.seatNumber = seatInfo
         }
         
-        // 티켓 가격 추출
         if let price = extractPrice(from: text) {
-            ticketData.ticketPrice = price
+            ticketData.price = price
         }
         
-        // 필수 정보 검증
-        guard !ticketData.showName.isEmpty || ticketData.performanceDate != nil || !ticketData.venueName.isEmpty else {
+        guard !ticketData.showName.isEmpty || ticketData.date != nil || !ticketData.place.isEmpty else {
             return .failure(.missingRequiredFields)
         }
         
@@ -118,17 +112,28 @@ private extension TicketInfoParser {
         return extractFirstMatch(from: text, patterns: patterns)
     }
     
-    func extractPrice(from text: String) -> String? {
+    func extractPrice(from text: String) -> Int? {
+        // 금액 숫자만 추출해서 Int로 변환
         let patterns = [
-            // 가격, 금액 패턴
+            // 가격, 금액, 요금 형태
             "(?:가격|금액|요금)\\s*[:：]?\\s*([\\d,]+)\\s*원?",
-            // 단순 금액 패턴
+            // 단순 금액 + 원
             "([\\d,]+)원",
-            // KRW 패턴
+            // KRW 표기
             "([\\d,]+)\\s*KRW"
         ]
-        
-        return extractFirstMatch(from: text, patterns: patterns)
+
+        if let matched = extractFirstMatch(from: text, patterns: patterns) {
+            let cleaned = matched.replacingOccurrences(of: ",", with: "")
+            if let value = Int(cleaned) { return value }
+        }
+
+        // '무료' 표기 처리 (가격 0원)
+        if text.range(of: "무료", options: .caseInsensitive) != nil {
+            return 0
+        }
+
+        return nil
     }
     
     func extractFirstMatch(from text: String, patterns: [String]) -> String? {

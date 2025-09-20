@@ -21,6 +21,10 @@ final class MemberUseCase {
         return try await memberRepository.deleteMember(request: request)
     }
     
+    func checkDuplicateNameOnServer(_ name: String) async throws {
+        try await memberRepository.validateDuplicateName(name: name)
+    }
+    
     func validateMemberName(_ name: String) -> Bool {
         return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
                name.count >= 2 && name.count <= 10

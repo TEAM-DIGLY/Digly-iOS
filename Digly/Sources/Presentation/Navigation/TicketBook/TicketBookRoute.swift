@@ -2,9 +2,8 @@ import Foundation
 
 enum TicketBookRoute: BaseRoute {
     case ticketBook
-    case ticketDetail(String)
-    case addTicket
-    case createTicketForm
+    case ticketDetail(Int)
+    case ticketFlow
     
     var id: String {
         switch self {

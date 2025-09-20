@@ -1,7 +1,7 @@
 import Foundation
 
 struct Member: Codable, Identifiable {
-    let id: Int64
+    let id: Int
     let name: String
     let platformId: String?
     let platformType: PlatformType
@@ -11,7 +11,7 @@ struct Member: Codable, Identifiable {
 }
 
 struct MemberResponse: Codable {
-    let id: Int64
+    let id: Int
     let name: String
     let platformType: PlatformType
     let memberType: MemberType

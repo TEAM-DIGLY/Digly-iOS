@@ -34,7 +34,9 @@ enum TicketCreationType {
 
 struct AddTicketView: View {
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject private var router: HomeRouter
+    // Use a generic navigation approach
+    @State private var shouldNavigateToCreateTicket = false
+    @State private var shouldNavigateToAutoInput = false
     @State private var selectedType: TicketCreationType?
     
     var body: some View {
@@ -68,6 +70,16 @@ struct AddTicketView: View {
                     handleNextButton()
                 }
                 .padding(.horizontal, 24)
+                
+            NavigationLink(
+                destination: TicketAutoInputView(),
+                isActive: $shouldNavigateToAutoInput
+            ) { EmptyView() }
+            
+            NavigationLink(
+                destination: CreateTicketFormView(),
+                isActive: $shouldNavigateToCreateTicket  
+            ) { EmptyView() }
         }
     }
     
@@ -76,9 +88,9 @@ struct AddTicketView: View {
         
         switch selectedType {
         case .copyTicket:
-            router.push(to: .ticketAutoInput)
+            shouldNavigateToAutoInput = true
         case .createTicket:
-            router.push(to: .createTicketForm)
+            shouldNavigateToCreateTicket = true
         }
     }
 }

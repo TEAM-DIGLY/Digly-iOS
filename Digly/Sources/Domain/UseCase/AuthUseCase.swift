@@ -12,17 +12,13 @@ final class AuthUseCase {
         self.keychainManager = keychainManager
     }
     
-    func signIn(platform: PlatformType, socialToken: String) async throws -> SignInResponse {
-        let response = try await authRepository.signIn(platform: platform, socialToken: socialToken)
-        
-        return response.data
+    func signIn(platform: PlatformType, socialToken: String) async throws -> APIResponse<SignInResponse> {
+        return try await authRepository.signIn(platform: platform, socialToken: socialToken)
     }
     
     func signUp(name: String, diglyType: DiglyType, accessToken: String) async throws -> SignUpResponse {
         let request = SignUpRequest(name: name, diglyType: diglyType)
-        let response = try await authRepository.signUp(request: request, accessToken: accessToken)
-        
-        return response.data
+        return try await authRepository.signUp(request: request, accessToken: accessToken)
     }
     
     func reissueToken() async throws -> ReissueResponse {
@@ -31,10 +27,8 @@ final class AuthUseCase {
         }
         
         let response = try await authRepository.reissue(refreshToken: refreshToken)
-        
-        keychainManager.saveTokens(response.data.accessToken, response.data.refreshToken)
-        
-        return response.data
+        keychainManager.saveTokens(response.accessToken, response.refreshToken)
+        return response
     }
     
     func logout() async {

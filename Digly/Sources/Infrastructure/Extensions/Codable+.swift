@@ -3,10 +3,8 @@ import Foundation
 extension Encodable {
     func toDictionary() -> [String: Any] {
         let encoder = JSONEncoder()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-        encoder.dateEncodingStrategy = .formatted(dateFormatter)
+        // Match OpenAPI date-time (ISO8601 with timezone)
+        encoder.dateEncodingStrategy = .iso8601
         guard let data = try? encoder.encode(self),
               let dictionary = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any] else {
             return [:]

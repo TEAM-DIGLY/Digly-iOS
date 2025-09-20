@@ -96,7 +96,7 @@ struct HomeView: View {
                         .frame(width: 300, height: 300)
                     
                     Button(action: {
-                        router.push(to: .addTicket)
+                        router.path.append(TicketFlowRoute.addTicket)
                     }) {
                         Text("관람 예정 티켓 추가하기")
                             .fontStyle(.headline1)
@@ -160,12 +160,12 @@ struct HomeView: View {
                         .lineLimit(1)
                         .padding(.bottom, 12)
                     
-                    Text(ticket.performanceTime.toTicketDateString())
+                    Text(ticket.time.toTicketDateString())
                         .fontStyle(.smallLine)
                         .foregroundStyle(.opacityCool35)
                         .padding(.bottom, 2)
                     
-                    Text(ticket.performanceTime.toTimeString())
+                    Text(ticket.time.toTimeString())
                         .fontStyle(.smallLine)
                         .foregroundStyle(.opacityCool35)
                         .padding(.bottom, 8)
@@ -180,7 +180,7 @@ struct HomeView: View {
                     HStack(spacing: 8) {
                         ForEach(Array(ticket.feeling.prefix(2).enumerated()), id: \.offset) { index, feeling in
                             if index < ticket.color.count {
-                                tagView(text: "#\(feeling)", color: ticket.color[index])
+                                tagView(text: "#\(feeling)", color: Color(hex: ticket.color[index]))
                             }
                         }
                         Spacer()
@@ -194,43 +194,18 @@ struct HomeView: View {
         }
     }
     
-    private func tagView(text: String, color: String) -> some View {
+    private func tagView(text: String, color: Color) -> some View {
         Text(text)
             .fontStyle(.caption2)
-            .foregroundStyle(Color(hex: color))
+            .foregroundStyle(color)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color(hex: color).opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
+            .background(color.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
     }
     
     private func getTagColor(index: Int) -> Color {
         let colors: [Color] = [.green, .orange, .blue, .purple, .red]
         return colors[index % colors.count]
-    }
-    
-    private func getGradientColors(for ticket: Ticket) -> [Color] {
-        // Convert color strings to actual colors
-        let colorMapping: [String: Color] = [
-            "blue": .blue,
-            "purple": .purple,
-            "green": .green,
-            "orange": .orange,
-            "red": .red,
-            "yellow": .yellow,
-            "pink": .pink
-        ]
-        
-        let colors = ticket.color.compactMap { colorString in
-            colorMapping[colorString.lowercased()]
-        }
-        
-        if colors.count >= 2 {
-            return [colors[0].opacity(0.8), colors[1].opacity(0.6)]
-        } else if colors.count == 1 {
-            return [colors[0].opacity(0.8), colors[0].opacity(0.6)]
-        } else {
-            return [.blue.opacity(0.8), .purple.opacity(0.6)]
-        }
     }
 }
 

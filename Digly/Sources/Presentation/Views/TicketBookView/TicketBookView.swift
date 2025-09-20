@@ -4,28 +4,19 @@ struct TicketBookView: View {
     @StateObject private var viewModel = TicketBookViewModel()
     @EnvironmentObject private var router: TicketBookRouter
     
-    // MARK: - Body
+    @State private var showSortBottomSheet = false
+    
     var body: some View {
-        DGScreen(horizontalPadding: 0) {
-            ZStack {
-                Color.black.edgesIgnoringSafeArea(.all)
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                        headerView
-                        
-                        upperTicketList
-                        
-                        subHeader
-                        
-                        ticketGridView
-                    }
-                    .padding(.horizontal, 16)
+        DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 24) {
+                    headerView
+                    upperTicketList
+                    subHeader
+                    ticketGridView
                 }
+                .padding(.horizontal, 16)
             }
-        }
-        .onAppear {
-            viewModel.setRouter(router)
         }
     }
     
@@ -41,9 +32,9 @@ struct TicketBookView: View {
             Spacer()
             
             Button(action: {
-                viewModel.addTicketAction()
+                router.path.append(TicketFlowRoute.addTicket)
             }) {
-                VStack(spacing: 8) {
+                HStack(spacing: 8) {
                     Image("plus")
                         .resizable()
                         .frame(width: 16, height: 16)
@@ -66,17 +57,18 @@ struct TicketBookView: View {
     private var upperTicketList: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 16) {
-                ForEach(viewModel.tickets) { ticket in
-                    TicketCardView(
-                        title: ticket.title,
-                        date: ticket.date,
-                        location: ticket.location,
-                        ticketNumber: ticket.number,
-                        primaryColor: ticket.primaryColor,
-                        secondaryColor: ticket.secondaryColor
-                    )
-                    .onTapGesture {
-                        navigateToTicketDetail(ticketId: ticket.id.uuidString)
+                ForEach(viewModel.bigTickets) { ticket in
+                    Button(action: {
+                        router.push(to: .ticketDetail(ticket.id))
+                    }) {
+                        TicketCardView(
+                            title: ticket.name,
+                            date: ticket.time,
+                            location: ticket.place,
+                            ticketNumber: ticket.seatNumber,
+                            cardType: .large,
+                            colors: ticket.color
+                        )
                     }
                 }
             }
@@ -89,21 +81,18 @@ struct TicketBookView: View {
                 .fontStyle(.heading2)
                 .foregroundStyle(.white)
             
-            Text("\(viewModel.totalTickets)")
+            Text("\(viewModel.totalCnt)")
                 .fontStyle(.heading2)
                 .foregroundStyle(.opacityWhite45)
-            
+
             Spacer()
             
             Image("filter")
                 .onTapGesture {
-                    viewModel.filterAction()
+                    showSortBottomSheet = true
                 }
             
             Image("search")
-                .onTapGesture {
-                    viewModel.searchAction()
-                }
         }
     }
     
@@ -113,32 +102,31 @@ struct TicketBookView: View {
             GridItem(.flexible(), spacing: 20)
         ], spacing: 20) {
             ForEach(viewModel.tickets) { ticket in
-                TicketCardView(
-                    title: ticket.title,
-                    date: ticket.date,
-                    location: ticket.location,
-                    ticketNumber: ticket.number,
-                    cardType: .small,
-                    primaryColor: ticket.primaryColor,
-                    secondaryColor: ticket.secondaryColor
-                )
-                .onTapGesture {
-                    navigateToTicketDetail(ticketId: ticket.id.uuidString)
+                Button(action: {
+                    router.push(to: .ticketDetail(ticket.id))
+                }) {
+                    TicketCardView(
+                        title: ticket.name,
+                        date: ticket.time,
+                        location: ticket.place,
+                        ticketNumber: ticket.seatNumber,
+                        cardType: .small,
+                        colors: ticket.color
+                    )
                 }
             }
         }
-    }
-    
-    // MARK: - Navigation
-    private func navigateToTicketDetail(ticketId: String) {
-        router.path.append(TicketBookRoute.ticketDetail(ticketId))
+        .sheet(isPresented: $showSortBottomSheet) {
+            SortBottomSheet(
+                startedDate: $viewModel.startedDate,
+                endDate: $viewModel.endDate
+            )
+        }
     }
 }
 
 // MARK: - Preview
-struct TicketBookView_Previews: PreviewProvider {
-    static var previews: some View {
-        TicketBookView()
-            .environmentObject(TicketBookRouter())
-    }
+#Preview {
+    TicketBookView()
+        .environmentObject(TicketBookRouter())
 }

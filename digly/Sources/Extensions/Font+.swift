@@ -8,6 +8,7 @@ extension Font {
     static let title3 = Font.custom("Pretendard-SemiBold", size: 24)
     static let heading1 = Font.custom("Pretendard-SemiBold", size: 22)
     static let heading2 = Font.custom("Pretendard-SemiBold", size: 20)
+    static let heading3 = Font.custom("Pretendard-SemiBold", size: 18)
     static let headline1 = Font.custom("Pretendard-SemiBold", size: 18)
     static let headline2 = Font.custom("Pretendard-SemiBold", size: 17)
     static let body1 = Font.custom("Pretendard-SemiBold", size: 16)
@@ -34,6 +35,8 @@ extension Font {
             return 30 - 22
         case .heading2:
             return 28 - 20
+        case .heading3:
+            return 26 - 18
         case .headline1:
             return 28 - 18
         case .headline2:

@@ -1,44 +1,19 @@
 import SwiftUI
 
 struct TicketDetailView: View {
-    @StateObject private var viewModel: TicketDetailViewModel
+    @StateObject var viewModel: TicketDetailViewModel = TicketDetailViewModel()
     
-    init(ticketId: String) {
-        self._viewModel = StateObject(wrappedValue: TicketDetailViewModel(ticketId: ticketId))
-    }
-    
-    private var ticketDetail: (title: String, userName: String, watchDate: String, watchNumber: Int, venue: String, seatInfo: String, price: String)? {
-        return viewModel.getTicketDetail()
-    }
+    let ticketId: Int
     
     var body: some View {
         DGScreen(horizontalPadding: 0, isLoading: viewModel.isLoading) {
-            Group {
-                if let ticketDetail = ticketDetail {
-                    ticketDetailContent(ticketDetail: ticketDetail)
-                } else if !viewModel.isLoading {
-                    errorView(message: "티켓 정보를 불러올 수 없습니다.")
-                }
-            }
+//            ticketDetailContent(ticketDetail: ticketDetail)
+        }
+        .onAppear {
+            viewModel.getTicketDetail(id: ticketId)
         }
     }
     
-    
-    private func errorView(message: String) -> some View {
-        VStack(spacing: 16) {
-            Image("alert")
-                .resizable()
-                .frame(width: 48, height: 48)
-                .foregroundColor(.error)
-            
-            Text(message)
-                .font(.body1)
-                .foregroundColor(.common100)
-                .multilineTextAlignment(.center)
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.black)
-    }
     
     private func ticketDetailContent(ticketDetail: (title: String, userName: String, watchDate: String, watchNumber: Int, venue: String, seatInfo: String, price: String)) -> some View {
         ScrollView {
@@ -46,13 +21,13 @@ struct TicketDetailView: View {
                 BackNavWithTitle(title:"티켓 상세보기"){
                     HStack(spacing: 0) {
                         Button(action: {
-                            viewModel.downloadTicket()
+//                            viewModel.downloadTicket()
                         }) {
                             Image("download")
                         }
                         
                         Button(action: {
-                            viewModel.showTicketDetail()
+//                            viewModel.showTicketDetail()
                         }) {
                             Image("detail")
                         }
@@ -91,7 +66,7 @@ struct TicketDetailView: View {
                 .blur(radius: 6)
             
             VStack {
-                Text("@\(ticketDetail?.userName ?? "")")
+//                Text("@\(ticketDetail?.userName ?? "")")
                 
                 Spacer()
                 
@@ -125,12 +100,12 @@ struct TicketDetailView: View {
                 .padding(.leading, 18)
             
             VStack(spacing: 16) {
-                if let ticketDetail = ticketDetail {
-                    infoRow(title: "관람일", content: ticketDetail.watchDate, subtitle: "#\(ticketDetail.watchNumber)번째 관람")
-                    infoRow(title: "장소", content: ticketDetail.venue)
-                    infoRow(title: "좌석", content: ticketDetail.seatInfo)
-                    infoRow(title: "가격", content: ticketDetail.price)
-                }
+//                if let ticketDetail {
+//                    infoRow(title: "관람일", content: ticketDetail.watchDate, subtitle: "#\(ticketDetail.watchNumber)번째 관람")
+//                    infoRow(title: "장소", content: ticketDetail.venue)
+//                    infoRow(title: "좌석", content: ticketDetail.seatInfo)
+//                    infoRow(title: "가격", content: ticketDetail.price)
+//                }
             }
             .padding(.horizontal, 18)
             .padding(.vertical, 20)
@@ -175,15 +150,5 @@ struct TicketDetailView: View {
         }
         .padding(.horizontal, 24)
         .padding(.bottom, 34)
-    }
-}
-
-// MARK: - Preview
-struct TicketDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        let sampleTicket = TicketModel.sampleData[0]
-        
-        TicketDetailView(ticketId: sampleTicket.id.uuidString)
-            .preferredColorScheme(.dark)
     }
 }

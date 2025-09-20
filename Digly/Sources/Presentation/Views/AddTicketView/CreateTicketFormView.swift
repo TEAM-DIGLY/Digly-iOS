@@ -2,14 +2,25 @@ import SwiftUI
 
 struct CreateTicketFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel = CreateTicketViewModel()
+    @StateObject private var viewModel: CreateTicketViewModel
+    
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
     @State private var isTimeSelected: Bool = false
     @FocusState private var isFocused: Bool
     
+    @State private var shouldNavigateToEndTicket = false
+    @State private var completedTicketData: CreateTicketFormData?
+    
+    init() {
+        self._viewModel = StateObject(wrappedValue: CreateTicketViewModel())
+    }
+    
     var body: some View {
-        DGScreen(backgroundColor: .common0, onClick: { isFocused = false }) {
+        DGScreen(
+            backgroundColor: .common0,
+            onClick: { isFocused = false }
+        ) {
             BackNavWithProgress(
                 percentage: viewModel.progressPercentage,
                 title: "티켓 추가하기",
@@ -19,24 +30,55 @@ struct CreateTicketFormView: View {
                     } else {
                         viewModel.moveToPreviousStep()
                     }
-                }
+                },
+                onNextTapped: {
+                    viewModel.moveToNextStep()
+                },
+                isNextDisabled: !viewModel.isNextButtonEnabled
             )
             .padding(.bottom, 24)
             
             contentSection
+                .frame(maxWidth: .infinity,alignment: .leading)
                 .padding(.horizontal, 24)
             
             Spacer()
-            
-            nextButton
-                .padding(.horizontal, 24)
-                .padding(.bottom, 34)
         }
 
         .animation(.mediumSpring, value: viewModel.currentStep)
         .animation(.mediumSpring, value: isDateFocused)
         .animation(.mediumSpring, value: isTimeFocused)
         .animation(.mediumSpring, value: viewModel.dateTimeStep)
+        .onAppear {
+            viewModel.onTicketCreated = { ticketData in
+                completedTicketData = ticketData
+                shouldNavigateToEndTicket = true
+            }
+        }
+        .onChange(of: viewModel.formData.date) { _, newDate in
+            guard newDate != nil else { return }
+            isDateFocused = false
+            isTimeFocused = true
+            isTimeSelected = true
+            viewModel.dateTimeStep = .time
+        }
+        .background {
+            if let ticketData = completedTicketData {
+                NavigationLink(
+                    destination: EndCreateTicketView(
+                        ticketData: ticketData,
+                        onAddFeelingTapped: {},
+                        onEditTicketTapped: {},
+                        onCompleteTapped: {
+                            // Navigate back to root
+                        }
+                    ),
+                    isActive: $shouldNavigateToEndTicket
+                ) {
+                    EmptyView()
+                }
+            }
+        }
     }
 }
 
@@ -58,28 +100,26 @@ extension CreateTicketFormView {
     
     @ViewBuilder
     private var contentSection: some View {
-        VStack(alignment: .leading) {
+        switch viewModel.currentStep {
+        case .title:
             labelSection
-                .padding(.leading, 12)
-            
-            switch viewModel.currentStep {
-            case .title:
-                textFieldSection(for: .title)
-            case .dateTime:
-                dateTimeSection
-            case .venue:
-                textFieldSection(for: .venue)
-            case .ticketDetails:
-                ticketDetailsSection
-            }
+                .padding(12)
+            textFieldSection(for: .title)
+        case .dateTime:
+            labelSection
+                .padding(12)
+            dateTimeSection
+        case .venue:
+            labelSection
+                .padding(12)
+            textFieldSection(for: .venue)
+        case .ticketDetails:
+            ticketDetailsSection
         }
-        .frame(maxWidth: .infinity,alignment: .leading)
     }
     
     @ViewBuilder
     private func textFieldSection(for type: CreateTicketStep) -> some View {
-        let isExpanded = !viewModel.searchResults.isEmpty && isFocused
-        
         VStack(alignment: .leading, spacing: 12) {
             DGTextField(
                 text: viewModel.setFieldBinding(for: type),
@@ -89,21 +129,18 @@ extension CreateTicketFormView {
                 borderColor: .opacityWhite85,
                 cursorColor: .common100,
                 isFocused: $isFocused,
-                onClear: {
-                    viewModel.isSelected = false
-                }
+                onClear: {}
             )
             .focused($isFocused)
             .onAppear {
                 isFocused = true
             }
             
-            if isExpanded {
+            if !viewModel.searchResults.isEmpty && isFocused {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 0) {
                         ForEach(viewModel.searchResults, id: \.self) { searchResult in
                             Button(action: {
-                                viewModel.isSelected = true
                                 isFocused = false
                                 viewModel.updateValueOf(type, searchResult)
                             }) {
@@ -140,11 +177,6 @@ extension CreateTicketFormView {
                 dateTimeField(.time)
             }
             
-            Text("선택한 날짜와 시간을 확인해주세요")
-                .fontStyle(.body2)
-                .foregroundStyle(.neutral45)
-                .padding(.leading, 8)
-            
             bottomPickerSection
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -155,48 +187,42 @@ extension CreateTicketFormView {
         let isFieldFocused = step == .date ? isDateFocused : isTimeFocused
         var value: String {
             if step == .date {
-                viewModel.formData.performanceDate?.toyyyyMMddString() ?? "관람 일자"
+                viewModel.formData.date?.toyyyyMMddString() ?? "관람 일자"
             } else {
                 if isTimeSelected {
-                    viewModel.formData.performanceTime?.toTimeString() ?? "관람 시간"
+                    viewModel.formData.time?.toTimeString() ?? "관람 시간"
                 } else {
                     "관람 시간"
                 }
             }
         }
         
-        VStack(alignment: .leading, spacing: 6) {
-            Text(step.labelText)
-                .fontStyle(.body1)
-                .foregroundStyle(.opacityWhite65)
-                .padding(.leading, 8)
-            
-            Button(action: {
-                if step == .time {
-                    isTimeSelected = true
-                }
-                isDateFocused = step == .date
-                isTimeFocused = step != .date
-                viewModel.dateTimeStep = step
-            }) {
-                HStack {
-                    Text(value)
-                        .fontStyle(.headline1)
-                        .foregroundStyle(.neutral65)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                    if value.contains("관람") {
-                        Image(step.rawValue)
-                    }
-                }
-                .padding(.leading, 16)
-                .frame(height: 48)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(isFieldFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFieldFocused ? 1.5 : 1)
-                        .background(.opacityWhite95)
-                )
+        Button(action: {
+            if step == .time {
+                isTimeSelected = true
             }
+            isDateFocused = step == .date
+            isTimeFocused = step != .date
+            viewModel.dateTimeStep = step
+        }) {
+            HStack {
+                Text(value)
+                    .fontStyle(.headline1)
+                    .foregroundStyle(value.contains("관람") ? .opacityWhite65 : .neutral65)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                if value.contains("관람") {
+                    Image(step.rawValue)
+                }
+            }
+            .padding(.leading, 16)
+            .frame(height: 48)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isFieldFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFieldFocused ? 1.5 : 1)
+                    .background(.opacityWhite95)
+            )
         }
         .contentTransition(.numericText())
     }
@@ -215,6 +241,7 @@ extension CreateTicketFormView {
                     .tint(.neutral65)
                     .colorScheme(.dark)
                     .datePickerStyle(GraphicalDatePickerStyle())
+                    .frame(width: 320)
                 }
                 
                 if isTimeFocused {
@@ -227,6 +254,7 @@ extension CreateTicketFormView {
                     .datePickerStyle(.wheel)
                     .tint(.neutral65)
                     .colorScheme(.dark)
+                    .frame(width: 320)
                 }
             }
             .padding(.vertical, 8)
@@ -238,97 +266,96 @@ extension CreateTicketFormView {
     }
     
     private var ticketDetailsSection: some View {
-        VStack(spacing: 34) {
-            formFieldView(
-                label: "극 제목",
-                value: viewModel.formData.showName,
-                isRequired: true
-            )
-            
-            HStack(spacing: 20) {
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 32) {
                 formFieldView(
-                    label: "관람 일시",
-                    value: viewModel.formData.performanceDate?.toyyyyMMddString() ?? "관람 일자",
+                    label: "극 제목",
+                    value: viewModel.formData.showName,
                     isRequired: true
                 )
                 
+                HStack(spacing: 20) {
+                    formFieldView(
+                        label: "관람 일시",
+                        value: viewModel.formData.date?.toyyyyMMddString() ?? "관람 일자",
+                        isRequired: true
+                    )
+                    
+                    formFieldView(
+                        label: "",
+                        value: viewModel.formData.time?.toTimeString() ?? "관람 시간",
+                        isRequired: false
+                    )
+                }
+                
                 formFieldView(
-                    label: "",
-                    value: viewModel.formData.performanceTime?.toTimeString() ?? "관람 시간",
-                    isRequired: false
+                    label: "관람 장소",
+                    value: viewModel.formData.place,
+                    isRequired: true
                 )
-            }
-            
-            // Venue info - 관람 장소
-            formFieldView(
-                label: "관람 장소",
-                value: viewModel.formData.venueName,
-                isRequired: true
-            )
-            
-            // Additional details
-            VStack(spacing: 34) {
-                // Seat counter - 관람 횟수
-                VStack(alignment: .leading, spacing: 12) {
-                    HStack(spacing: 4) {
-                        Text("(선택) 관람 횟수")
+                
+                VStack(spacing: 34) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        HStack(spacing: 4) {
+                            Text("(선택) 관람 횟수")
+                                .fontStyle(.label2)
+                                .foregroundStyle(.neutral65)
+                        }
+                        
+                        HStack(spacing: 12) {
+                            minusButton
+                            seatCounterTextField
+                            plusButton
+                        }
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("(선택) 좌석 번호")
                             .fontStyle(.label2)
                             .foregroundStyle(.neutral65)
+                        
+                        TextField("ex) a열 j 32번", text: Binding(
+                            get: { viewModel.formData.seatNumber },
+                            set: { viewModel.updateSeatLocation($0) }
+                        ))
+                        .focused($isFocused)
+                        .fontStyle(.headline1)
+                        .foregroundStyle(viewModel.formData.seatNumber.isEmpty ? .neutral55 : .neutral85)
+                        .padding(.horizontal, 16)
+                        .frame(height: 57)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(.neutral5.opacity(0.05))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                                )
+                        )
                     }
-                    
-                    HStack(spacing: 12) {
-                        minusButton
-                        seatCounterTextField
-                        plusButton
+                
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("(선택) 티켓 가격")
+                            .fontStyle(.label2)
+                            .foregroundStyle(.neutral65)
+                        
+                        TextField("", text: Binding(
+                            get: { String(viewModel.formData.price) },
+                            set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
+                        ))
+                        .focused($isFocused)
+                        .keyboardType(.numberPad)
+                        .fontStyle(.headline1)
+                        .padding(.horizontal, 16)
+                        .frame(height: 57)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14)
+                                .fill(.neutral5.opacity(0.05))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 14)
+                                        .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                                )
+                        )
                     }
-                }
-                
-                // Seat location - 좌석 번호
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("(선택) 좌석 번호")
-                        .fontStyle(.label2)
-                        .foregroundStyle(.neutral65)
-                    
-                    TextField("ex) a열 j 32번", text: Binding(
-                        get: { viewModel.formData.seatLocation },
-                        set: { viewModel.updateSeatLocation($0) }
-                    ))
-                    .fontStyle(.headline1)
-                    .foregroundStyle(viewModel.formData.seatLocation.isEmpty ? .neutral55 : .neutral85)
-                    .padding(.horizontal, 16)
-                    .frame(height: 57)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(.neutral5.opacity(0.05))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
-                            )
-                    )
-                }
-                
-                // Ticket price - 티켓 가격
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("(선택) 티켓 가격")
-                        .fontStyle(.label2)
-                        .foregroundStyle(.neutral65)
-                    
-                    TextField("ex) 00,000", text: Binding(
-                        get: { viewModel.formData.ticketPrice },
-                        set: { viewModel.updateTicketPrice($0) }
-                    ))
-                    .fontStyle(.headline1)
-                    .foregroundStyle(viewModel.formData.ticketPrice.isEmpty ? .neutral55 : .neutral85)
-                    .padding(.horizontal, 16)
-                    .frame(height: 57)
-                    .background(
-                        RoundedRectangle(cornerRadius: 14)
-                            .fill(.neutral5.opacity(0.05))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 14)
-                                    .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
-                            )
-                    )
                 }
             }
         }
@@ -420,15 +447,6 @@ extension CreateTicketFormView {
         )
     }
     
-    private var nextButton: some View {
-        DGButton(
-            text: viewModel.currentStep == .ticketDetails ? "완료" : "다음으로",
-            type: .primaryDark,
-            disabled: !viewModel.isNextButtonEnabled
-        ) {
-            viewModel.moveToNextStep()
-        }
-    }
 }
 
 

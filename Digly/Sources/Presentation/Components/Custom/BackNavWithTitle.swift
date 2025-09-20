@@ -88,6 +88,8 @@ struct BackNavWithProgress: View {
     let percentage: Double
     let title: String
     let onBackTapped: () -> Void
+    let onNextTapped: () -> Void
+    let isNextDisabled: Bool
     
     var body: some View {
         VStack(spacing: 16) {
@@ -101,12 +103,14 @@ struct BackNavWithProgress: View {
                     
                     Spacer()
                     
-                    Text("다음")
-                        .fontStyle(.body1)
-                        .foregroundStyle(.neutral45)
+                    Button(action: onNextTapped) {
+                        Text("다음")
+                            .fontStyle(.body1)
+                            .foregroundStyle(isNextDisabled ? .opacityWhite45 : .common100)
+                    }
+                    .disabled(isNextDisabled)
                 }
                 .frame(height: 44)
-                
                 
                 Text(title)
                     .font(.headline2)

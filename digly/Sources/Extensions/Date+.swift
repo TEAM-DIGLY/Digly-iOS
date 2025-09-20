@@ -10,11 +10,11 @@ extension Date {
         return formatter.string(from: self)
     }
     
-    /// Date를 "yyyy. MM. dd  HH:mm" 형식으로 포맷팅 (문의 날짜용)
+    /// Date를 "yyyy.MM.dd" 형식으로 포맷팅 (문의 날짜용)
     /// - Returns: "2025. 06. 09  18:45" 형식의 문자열
     func toInquiryDateString() -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy. MM. dd  HH:mm"
+        formatter.dateFormat = "yyyy.MM.dd"
         return formatter.string(from: self)
     }
     

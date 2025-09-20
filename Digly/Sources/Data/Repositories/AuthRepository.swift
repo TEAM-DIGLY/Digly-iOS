@@ -13,7 +13,7 @@ final class AuthRepository: AuthRepositoryProtocol {
         return try await networkAPI.request(AuthEndpoint.postLogin(socialToken), parameters: params)
     }
     
-    func signUp(request: SignUpRequest, accessToken: String) async throws -> APIResponse<SignUpResponse> {
+    func signUp(request: SignUpRequest, accessToken: String) async throws -> SignUpResponse {
         let params = [
             "name": request.name,
             "memberType": request.diglyType.rawValue
@@ -25,7 +25,7 @@ final class AuthRepository: AuthRepositoryProtocol {
         )
     }
     
-    func reissue(refreshToken: String) async throws -> APIResponse<ReissueResponse> {
+    func reissue(refreshToken: String) async throws -> ReissueResponse {
         return try await networkAPI.request(AuthEndpoint.postReissue(refreshToken))
     }
 }

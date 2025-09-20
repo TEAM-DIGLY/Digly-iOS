@@ -1,5 +1,6 @@
 import Foundation
 
 protocol CrawlingRepositoryProtocol {
-    func getTicketsTitleByTitle(title: String) async throws -> APIResponse<CrawlingTicketsTitleResponse>
+    func searchTicketTitle(_ value: String) async throws -> APIResponse<CrawlingTicketsTitleResponse>
+    func searchTicketPlace(_ value: String) async throws -> APIResponse<CrawlingTicketsPlaceResponse>
 }

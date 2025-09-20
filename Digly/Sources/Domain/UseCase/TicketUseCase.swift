@@ -2,33 +2,43 @@ import Foundation
 import Combine
 
 final class TicketUseCase {
-    private let ticketRepository: TicketRepositoryProtocol
+    private let ticketRepository: TicketRepository
     
-    init(ticketRepository: TicketRepositoryProtocol) {
+    init(ticketRepository: TicketRepository = TicketRepository()) {
         self.ticketRepository = ticketRepository
     }
     
-    func getAllTickets(startDate: Date? = nil, endDate: Date? = nil, page: Int = 0, size: Int = 20) async throws -> APIResponse<TicketsResponse> {
-        return try await ticketRepository.getTickets(startAt: startDate, endAt: endDate, page: page, size: size)
+    func getBigTickets() async throws -> [Ticket] {
+        let response: [TicketDTO] = try await ticketRepository.getTickets(size: 5).data.tickets
+        return response.map{ $0.toDomain() }
     }
     
-    func getTicketDetail(ticketId: Int64) async throws -> Ticket {
-        return try await ticketRepository.getTicket(ticketId: ticketId)
+    func getAllTickets(
+        startDate: Date? = nil,
+        endDate: Date? = nil,
+        page: Int = 0
+    ) async throws -> TicketsResponse {
+        return try await ticketRepository.getTickets(startAt: startDate,endAt: endDate, page: page).data
+    }
+    
+    func getTicketDetail(ticketId: Int) async throws -> Ticket {
+        let response: APIResponse<TicketDTO> = try await ticketRepository.getTicket(ticketId: ticketId)
+        return response.data.toDomain()
     }
     
     func createTicket(
         name: String,
-        performanceTime: Date,
+        time: Date,
         place: String,
-        count: Int32,
+        count: Int,
         seatNumber: String? = nil,
-        price: Int32? = nil,
+        price: Int? = nil,
         colors: [String],
         feelings: [String]
-    ) async throws -> Ticket {
+    ) async throws -> Bool {
         let request = CreateTicketRequest(
             name: name,
-            performanceTime: performanceTime,
+            time: time,
             place: place,
             count: count,
             seatNumber: seatNumber,
@@ -37,23 +47,24 @@ final class TicketUseCase {
             feeling: feelings
         )
         
-        return try await ticketRepository.createTicket(request: request)
+        let response: APIResponse<TicketDTO> = try await ticketRepository.createTicket(request: request)
+        return response.status == 201
     }
     
     func updateTicket(
-        ticketId: Int64,
+        ticketId: Int,
         name: String,
-        performanceTime: Date,
+        time: Date,
         place: String,
         count: Int32,
         seatNumber: String? = nil,
         price: Int32? = nil,
         colors: [String],
         feelings: [String]
-    ) async throws -> Ticket {
+    ) async throws -> Bool {
         let request = UpdateTicketRequest(
             name: name,
-            performanceTime: performanceTime,
+            time: time,
             place: place,
             count: count,
             seatNumber: seatNumber,
@@ -61,21 +72,15 @@ final class TicketUseCase {
             color: colors,
             feeling: feelings
         )
-        
-        return try await ticketRepository.updateTicket(ticketId: ticketId, request: request)
+        let response: APIResponse<TicketDTO> = try await ticketRepository.updateTicket(ticketId: ticketId, request: request)
+        return response.status == 200
     }
+    //
+    //    func getUpcomingTickets() async throws -> TicketsResponse {
+    //        return try await ticketRepository.getTickets(startAt: Date(), endAt: nil, page: 0, size: 10)
+    //    }
     
-    func getUpcomingTickets() async throws -> APIResponse<TicketsResponse> {
-        return try await ticketRepository.getTickets(startAt: Date(), endAt: nil, page: 0, size: 10)
-    }
-    
-    func getPastTickets() async throws -> APIResponse<TicketsResponse> {
-        return try await ticketRepository.getTickets(startAt: nil, endAt: Date(), page: 0, size: 20)
-    }
-    
-    func validateTicketData(name: String, place: String, performanceTime: Date) -> Bool {
-        return !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        !place.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
-        performanceTime > Date()
-    }
+    //    func getPastTickets() async throws -> TicketsResponse {
+    //        return try await ticketRepository.getTickets(startAt: nil, endAt: Date(), page: 0, size: 20)
+    //    }
 }

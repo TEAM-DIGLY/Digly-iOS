@@ -7,7 +7,12 @@ final class TicketRepository: TicketRepositoryProtocol {
         self.networkAPI = networkAPI
     }
     
-    func getTickets(startAt: Date?, endAt: Date?, page: Int?, size: Int?) async throws -> APIResponse<TicketsResponse> {
+    func getTickets(
+        startAt: Date? = nil,
+        endAt: Date? = nil,
+        page: Int? = nil,
+        size: Int? = nil
+    ) async throws -> APIResponse<TicketsResponse> {
         var queryParams: [String: String] = [:]
         
         if let startAt = startAt {
@@ -28,27 +33,18 @@ final class TicketRepository: TicketRepositoryProtocol {
             queryParams["size"] = String(size)
         }
         
-        return try await networkAPI.request(
-            TicketEndpoint.getTickets,
-            queryParameters: queryParams
-        )
+        return try await networkAPI.request(TicketEndpoint.getTickets, queryParameters: queryParams)
     }
     
-    func getTicket(ticketId: Int64) async throws -> Ticket {
+    func getTicket(ticketId: Int) async throws -> APIResponse<TicketDTO> {
         return try await networkAPI.request(TicketEndpoint.getTicket(ticketId))
     }
     
-    func createTicket(request: CreateTicketRequest) async throws -> Ticket {
-        return try await networkAPI.request(
-            TicketEndpoint.postTicket,
-            parameters: request.toDictionary()
-        )
+    func createTicket(request: CreateTicketRequest) async throws -> APIResponse<TicketDTO> {
+        return try await networkAPI.request(TicketEndpoint.postTicket, parameters: request.toDictionary())
     }
     
-    func updateTicket(ticketId: Int64, request: UpdateTicketRequest) async throws -> Ticket {
-        return try await networkAPI.request(
-            TicketEndpoint.putTicket(ticketId),
-            parameters: request.toDictionary()
-        )
+    func updateTicket(ticketId: Int, request: UpdateTicketRequest) async throws -> APIResponse<TicketDTO> {
+        return try await networkAPI.request(TicketEndpoint.putTicket(ticketId),parameters: request.toDictionary())
     }
 }

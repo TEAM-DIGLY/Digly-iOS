@@ -2,9 +2,9 @@ import Foundation
 
 enum NoteEndpoint: APIEndpoint {
     case postNote
-    case getNote(Int64)
-    case putNote(Int64)
-    case getNotesByTicket(Int64)
+    case getNote(Int)
+    case putNote(Int)
+    case getNotesByTicket(Int)
     
     var path: String {
         switch self {

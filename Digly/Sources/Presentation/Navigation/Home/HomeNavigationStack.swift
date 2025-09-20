@@ -22,6 +22,10 @@ struct HomeNavigationStack: View {
                     .onAppear {
                     }
             }
+            .navigationDestination(for: TicketFlowRoute.self) { route in
+                ticketFlowDestinationView(for: route)
+                    .swipeBackDisabled(route.disableSwipeBack)
+            }
         }
     }
     
@@ -30,9 +34,39 @@ struct HomeNavigationStack: View {
         switch route {
         case .alarmList: AlarmListView()
         case .myPage: MyPageView()
-        case .addTicket: AddTicketView()
-        case .ticketAutoInput: TicketAutoInputView()
-        case .createTicketForm: CreateTicketFormView()
+        case .ticketFlow: 
+            TicketFlowNavigationStack(onFlowCompleted: {
+                router.pop() // Return to previous screen when ticket flow completes
+            })
+        }
+    }
+    
+    @ViewBuilder
+    private func ticketFlowDestinationView(for route: TicketFlowRoute) -> some View {
+        switch route {
+        case .addTicket: 
+            AddTicketView()
+        case .ticketAutoInput:
+            TicketAutoInputView()
+        case .createTicketForm: 
+            CreateTicketFormView()
+        case .endCreateTicket(let ticketData): 
+            EndCreateTicketView(
+                ticketData: ticketData,
+                onAddFeelingTapped: {
+                    router.path.append(TicketFlowRoute.addFeelingView)
+                },
+                onEditTicketTapped: {
+                    router.path.append(TicketFlowRoute.editTicketView)
+                },
+                onCompleteTapped: {
+                    router.pop() // Go back to HomeView
+                }
+            )
+        case .addFeelingView: 
+            PlaceholderView(title: "AddFeelingView", subtitle: "감정 입력 화면 (미구현)")
+        case .editTicketView: 
+            PlaceholderView(title: "EditTicketView", subtitle: "티켓 정보 수정 화면 (미구현)")
         }
     }
 } 

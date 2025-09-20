@@ -24,6 +24,13 @@ final class MemberRepository: MemberRepositoryProtocol {
             parameters: request.toDictionary()
         )
     }
+
+    func validateDuplicateName(name: String) async throws {
+        let _: EmptyResponse = try await networkAPI.request(
+            MemberEndpoint.validateName,
+            queryParameters: ["name": name]
+        )
+    }
 }
 
 struct EmptyResponse: Codable {}

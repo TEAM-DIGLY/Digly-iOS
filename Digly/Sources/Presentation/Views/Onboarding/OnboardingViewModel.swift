@@ -8,7 +8,6 @@ class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     
     @Published  var isPopupPresented: Bool = false
-    
     @Published var isFirstChecked = false
     @Published var isSecondChecked = false
     @Published var isThirdChecked = false
@@ -20,8 +19,6 @@ class OnboardingViewModel: ObservableObject {
     init(authUseCase: AuthUseCase = AuthUseCase()) {
         self.authUseCase = authUseCase
     }
-    
-    private var cancellables = Set<AnyCancellable>()
     
     func handleSocialLogin(_ provider: String) {
         Task {
@@ -56,7 +53,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response)
+            handleLoginSuccess(response.data)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "카카오")
@@ -70,7 +67,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response)
+            handleLoginSuccess(response.data)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "네이버")
@@ -84,7 +81,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .apple, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response)
+            handleLoginSuccess(response.data)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "애플")

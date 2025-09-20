@@ -2,152 +2,100 @@ import Foundation
 import Combine
 import SwiftUI
 
-// MARK: - Ticket Model
-struct TicketModel: Identifiable {
-    let id = UUID()
-    let title: String
-    let subtitle: String?
-    let date: String
-    let location: String
-    let number: Int
-    let primaryColor: Color
-    let secondaryColor: Color
-    
-    // 상세 정보
-    let userName: String
-    let watchDate: String
-    let watchNumber: Int
-    let venue: String
-    let seatInfo: String
-    let price: String
-    
-    // 샘플 데이터
-    static let sampleData: [TicketModel] = [
-        TicketModel(
-            title: "ALADDIN",
-            subtitle: "The Musical",
-            date: "2024.01.19",
-            location: "샤롯데씨어터",
-            number: 1,
-            primaryColor: .green,
-            secondaryColor: .orange,
-            userName: "Username",
-            watchDate: "2024년 01월 19일 (금) 19:30",
-            watchNumber: 1,
-            venue: "샤롯데씨어터",
-            seatInfo: "1층 15열 8번",
-            price: "132,000원"
-        ),
-        TicketModel(
-            title: "시라노",
-            subtitle: nil,
-            date: "2023.10.04",
-            location: "예술의전당",
-            number: 3,
-            primaryColor: .blue,
-            secondaryColor: .purple,
-            userName: "Username",
-            watchDate: "2023년 10월 04일 (수) 20:00",
-            watchNumber: 3,
-            venue: "예술의전당",
-            seatInfo: "2층 8열 12번",
-            price: "88,000원"
-        ),
-        TicketModel(
-            title: "캣츠 내한공연",
-            subtitle: "50주년",
-            date: "2025.03.12",
-            location: "예술의전당",
-            number: 2,
-            primaryColor: .purple,
-            secondaryColor: .yellow,
-            userName: "Username",
-            watchDate: "2025년 03월 12일 (수) 19:30",
-            watchNumber: 2,
-            venue: "예술의전당",
-            seatInfo: "1층 20열 5번",
-            price: "156,000원"
-        ),
-        TicketModel(
-            title: "웃는남자",
-            subtitle: nil,
-            date: "2024.12.25",
-            location: "블루스퀘어",
-            number: 4,
-            primaryColor: .blue,
-            secondaryColor: .indigo,
-            userName: "Username",
-            watchDate: "2024년 12월 25일 (수) 14:00",
-            watchNumber: 4,
-            venue: "블루스퀘어",
-            seatInfo: "1층 12열 23번",
-            price: "112,000원"
-        )
-    ]
-}
-
 @MainActor
 class TicketBookViewModel: ObservableObject {
-    @Published var username: String = "Username"
-    @Published var totalTickets: Int = 110
-    @Published var tickets: [TicketModel] = TicketModel.sampleData
+    @Published var bigTickets: [Ticket] = []
+    @Published var tickets: [Ticket] = []
     
-    private var cancellables = Set<AnyCancellable>()
-    private weak var router: TicketBookRouter?
+    @Published var startedDate: Date? = nil
+    @Published var endDate: Date? = nil
     
-    init(router: TicketBookRouter? = nil) {
-        self.router = router
-        setupBindings()
+    @Published var totalCnt: Int = 0
+    @Published var username: String = "username"
+    
+    @Published var currentPage: Int = 0
+    @Published var hasMorePages: Bool = true
+    
+    @Published var isLoading: Bool = false
+    @Published var isLoadingMore: Bool = false
+    
+    private let ticketUseCase: TicketUseCase
+    private let noteUseCase: NoteUseCase
+    
+    init(
+        ticketUseCase: TicketUseCase = TicketUseCase(),
+        noteUseCase: NoteUseCase = NoteUseCase()
+    ) {
+        self.ticketUseCase = ticketUseCase
+        self.noteUseCase = noteUseCase
+        initializeFetch()
+        fetchBigTickets()
     }
     
-    private func setupBindings() {
-        // 티켓 개수 자동 업데이트
-        $tickets
-            .map { $0.count }
-            .assign(to: \.totalTickets, on: self)
-            .store(in: &cancellables)
+    func changeSort() {
+        print("정렬 방식 변경 후, 티켓 조회 api 재호출")
     }
     
-    // MARK: - Ticket Management
-    func addTicket(_ ticket: TicketModel) {
-        tickets.append(ticket)
+    func initializeFetch() {
+        currentPage = 0
+        tickets = []
+        hasMorePages = true
+        
+        Task {
+            do {
+                isLoading = true
+                tickets = try await fetchTickets()
+                isLoading = false
+            } catch {
+                isLoading = false
+                ToastManager.shared.show(.errorStringWithTask("티켓 조회"))
+            }
+        }
     }
     
-    func removeTicket(at indexSet: IndexSet) {
-        tickets.remove(atOffsets: indexSet)
+    func loadNextPage() {
+        guard hasMorePages && !isLoadingMore else { return }
+        currentPage += 1
+        
+        Task {
+            do {
+                isLoadingMore = true
+                let newTickets = try await fetchTickets()
+                tickets.append(contentsOf: newTickets)
+                isLoadingMore = false
+            } catch {
+                isLoadingMore = false
+                ToastManager.shared.show(.errorWithMessage("추가 캠페인을 불러오는 중 오류가 발생했습니다."))
+                currentPage -= 1
+            }
+        }
+    }
+}
+
+extension TicketBookViewModel {
+    private func fetchBigTickets() {
+        Task {
+            do {
+                isLoading = true
+                bigTickets = try await ticketUseCase.getBigTickets()
+                isLoading = false
+                
+            } catch {
+                isLoading = false
+                ToastManager.shared.show(.errorStringWithTask("티켓 로딩"))
+            }
+        }
     }
     
-    // MARK: - Actions
-    func addTicketAction() {
-        router?.push(to: .addTicket)
-    }
-    
-    func setRouter(_ router: TicketBookRouter) {
-        self.router = router
-    }
-    
-    func filterAction() {
-        // 필터 액션
-        print("필터 액션")
-    }
-    
-    func searchAction() {
-        // 검색 액션
-        print("검색 액션")
-    }
-    
-    func downloadTicket() {
-        // 티켓 다운로드 액션
-        print("티켓 다운로드")
-    }
-    
-    func showTicketDetail() {
-        // 티켓 상세보기 액션
-        print("티켓 상세보기")
-    }
-    
-    func goToDiggingNote() {
-        // 디깅노트로 이동 액션
-        print("디깅노트로 이동")
+    private func fetchTickets() async throws -> [Ticket] {
+        let response = try await ticketUseCase.getAllTickets(
+            startDate: startedDate,
+            endDate: endDate,
+            page: currentPage
+        )
+        totalCnt = response.pageInfo.totalElements
+        hasMorePages = response.pageInfo.totalPages > currentPage + 1
+        
+        return response.tickets.map { $0.toDomain() }
     }
 }

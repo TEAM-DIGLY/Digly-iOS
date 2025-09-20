@@ -136,7 +136,7 @@ struct TicketScrollView: View {
     private func daysUntilPerformance(for ticket: Ticket) -> Int {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
-        let performanceDay = calendar.startOfDay(for: ticket.performanceTime)
+        let performanceDay = calendar.startOfDay(for: ticket.time)
         
         let components = calendar.dateComponents([.day], from: today, to: performanceDay)
         return components.day ?? 0

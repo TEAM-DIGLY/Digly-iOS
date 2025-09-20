@@ -1,14 +1,5 @@
-//
-//  AnimatedSubtractedShape.swift
-//  digly
-//
-//  Created by Neoself on 4/13/25.
-//
-
-
 import SwiftUI
 
-// Shape 프로토콜을 사용한 애니메이션 구현
 struct AnimatedSubtractedShape: View {
     @State private var isAnimating = false
     @State private var phase: CGFloat = 0
@@ -66,7 +57,7 @@ struct AnimatedSubtractedShape: View {
                 topTrailingRadius: 24
             )
         )
-        .shadow(color: .common0.opacity(0.4), radius: 8)
+        .shadow(color: Color("000000").opacity(0.4), radius: 8)
     }
 }
 
@@ -110,4 +101,5 @@ struct AnimatableShape: Shape {
 
 #Preview {
     AnimatedSubtractedShape()
+        .frame(width: 240, height: 340)
 }

@@ -1,60 +1,24 @@
 import SwiftUI
 import Foundation
 
-struct Ticket: Codable {
-    let id: Int64?
+struct Ticket: Identifiable, Codable {
+    let id: Int
     let name: String
-    let performanceTime: Date
+    let time: Date
     let place: String
-    let count: Int32
+    let count: Int
     let seatNumber: String?
-    let price: Int32?
+    let price: Int?
     let color: [String]
-    let feeling: [String]
-    
-    enum CodingKeys: String, CodingKey {
-        case id, name, performanceTime, place, count, seatNumber, price, color, feeling
-    }
+    let feeling: [Feeling]
 }
 
-struct CreateTicketRequest: Codable {
-    let name: String
-    let performanceTime: Date
-    let place: String
-    let count: Int32
-    let seatNumber: String?
-    let price: Int32?
-    let color: [String]
-    let feeling: [String]
-}
-
-struct UpdateTicketRequest: Codable {
-    let name: String
-    let performanceTime: Date
-    let place: String
-    let count: Int32
-    let seatNumber: String?
-    let price: Int32?
-    let color: [String]
-    let feeling: [String]
-}
 
 struct PageInfo: Codable {
     let pageNum: Int32
     let pageSize: Int32
-    let totalElements: Int64
-    let totalPages: Int64
-}
-
-struct TicketsResponse: Codable {
-    let tickets: [Ticket]
-    let pageInfo: PageInfo
-}
-
-
-struct NotesResponse: Codable {
-    let notes: [Note]
-    let pageInfo: PageInfo
+    let totalElements: Int
+    let totalPages: Int
 }
 
 public enum TicketStatus {

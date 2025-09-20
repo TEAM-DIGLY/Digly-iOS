@@ -28,7 +28,7 @@ struct SignUpResponse: Codable {
 }
 
 struct ReissueRequest: Codable {
-    let memberId: Int64
+    let memberId: Int
 }
 
 struct ReissueResponse: Codable {
@@ -36,6 +36,3 @@ struct ReissueResponse: Codable {
     let refreshToken: String
 }
 
-struct CrawlingTicketsTitleResponse: Codable {
-    let titleList: [String]
-}

@@ -2,12 +2,12 @@ import Foundation
 
 struct CreateTicketFormData {
     var showName: String = ""
-    var performanceDate: Date? = nil
-    var performanceTime: Date? = nil
-    var venueName: String = ""
-    var seatNumber: String = "1"
-    var seatLocation: String = ""
-    var ticketPrice: String = ""
+    var date: Date? = nil
+    var time: Date? = nil
+    var place: String = ""
+    var count: Int = 0
+    var seatNumber: String = ""
+    var price: Int = 0
     
     func value(for field: CreateTicketStep) -> String {
         switch field {
@@ -16,7 +16,7 @@ struct CreateTicketFormData {
         case .dateTime:
             ""
         case .venue:
-            venueName
+            place
         case .ticketDetails:
             ""
         }
@@ -29,30 +29,32 @@ struct CreateTicketFormData {
         case .dateTime:
             break // Date/time는 별도 메서드로 처리
         case .venue:
-            venueName = value
+            place = value
         case .ticketDetails:
             break // 최종 단계는 별도 처리
         }
     }
     
     mutating func setPerformanceDateTime(_ dateTime: Date) {
-        performanceDate = dateTime
-        performanceTime = dateTime
+        date = dateTime
+        time = dateTime
     }
     
-    mutating func updateDateComponent(from date: Date) {
-        performanceDate = date
-        // 시간이 설정되지 않았다면 기본 시간(현재 시간)으로 설정
-        if performanceTime == nil {
-            performanceTime = Date()
+    mutating func updateDate(from _date: Date) {
+        date = _date
+        if time == nil {
+            var components = Calendar.current.dateComponents([.year, .month, .day], from: _date)
+            components.hour = 15
+            components.minute = 0
+            time = Calendar.current.date(from: components)
         }
     }
     
-    mutating func updateTimeComponent(from time: Date) {
-        performanceTime = time
+    mutating func updateTime(from _time: Date) {
+        time = _time
         // 날짜가 설정되지 않았다면 기본 날짜(오늘)로 설정
-        if performanceDate == nil {
-            performanceDate = Date()
+        if date == nil {
+            date = Date()
         }
     }
     
@@ -60,24 +62,24 @@ struct CreateTicketFormData {
         seatNumber = number
     }
     
-    mutating func setSeatLocation(_ location: String) {
-        seatLocation = location
+    mutating func setCount(_ number: Int) {
+        count = number
     }
     
-    mutating func setTicketPrice(_ price: String) {
-        ticketPrice = price
+    mutating func setTicketPrice(_ _price: Int) {
+        price = _price
     }
     
     var isBasicInfoComplete: Bool {
         !showName.isEmpty &&
-        !venueName.isEmpty &&
-        performanceDate != nil &&
-        performanceTime != nil
+        !place.isEmpty &&
+        date != nil &&
+        time != nil
     }
     
     /// API 호출시 사용할 수 있도록 날짜와 시간을 합친 Date 객체
     var combinedPerformanceDateTime: Date? {
-        guard let date = performanceDate, let time = performanceTime else {
+        guard let date = date, let time = time else {
             return nil
         }
         
