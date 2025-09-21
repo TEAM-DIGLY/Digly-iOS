@@ -6,149 +6,200 @@ struct TicketDetailView: View {
     let ticketId: Int
     
     var body: some View {
-        DGScreen(horizontalPadding: 0, isLoading: viewModel.isLoading) {
-//            ticketDetailContent(ticketDetail: ticketDetail)
+        DGScreen(
+            horizontalPadding: 0,
+            backgroundColor: .common0,
+            isLoading: viewModel.isLoading
+        ) {
+            if let ticket = viewModel.ticket {
+                ScrollView(.vertical, showsIndicators: false) {
+                    TitleBackNavBar(title: "티켓 상세보기") {
+                        HStack(spacing: 24) {
+                            Button(action: {
+                                // TODO: Download action
+                            }) {
+                                Image("download")
+                            }
+
+                            Button(action: {
+                                // TODO: More options
+                            }) {
+                                Image("detail")
+                            }
+                        }
+                    }
+                    .padding(.bottom, 32)
+                    
+                    Text(ticket.name)
+                        .fontStyle(.heading1)
+                        .foregroundStyle(.common100)
+                        .padding(.bottom, 12)
+                    
+                    ticketCard(ticket: ticket)
+                    
+                    basicInfoSection(ticket: ticket)
+                    
+                    Spacer().frame(height: 120)
+                }
+                .overlay(
+                    VStack {
+                        Spacer()
+                        DGButton(text: "작성한 디깅노트", type:.primaryDark){
+                            viewModel.goToDiggingNote()
+                        }
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 34)
+                    }
+                )
+            }
         }
         .onAppear {
             viewModel.getTicketDetail(id: ticketId)
         }
     }
     
-    
-    private func ticketDetailContent(ticketDetail: (title: String, userName: String, watchDate: String, watchNumber: Int, venue: String, seatInfo: String, price: String)) -> some View {
-        ScrollView {
-            VStack(spacing: 0) {
-                BackNavWithTitle(title:"티켓 상세보기"){
-                    HStack(spacing: 0) {
-                        Button(action: {
-//                            viewModel.downloadTicket()
-                        }) {
-                            Image("download")
-                        }
-                        
-                        Button(action: {
-//                            viewModel.showTicketDetail()
-                        }) {
-                            Image("detail")
+    private func ticketCard(ticket: Ticket) -> some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 24)
+                .fill(.neutral15)
+                .frame(height: 376)
+
+            HStack {
+                Circle()
+                    .fill(.common0)
+                    .frame(width: 28, height: 28)
+                    .offset(x: -14)
+
+                Spacer()
+
+                Circle()
+                    .fill(.common0)
+                    .frame(width: 28, height: 28)
+                    .offset(x: 14)
+            }
+            .frame(maxWidth: .infinity)
+
+            // Gradient background with ticket colors
+            if !ticket.color.isEmpty {
+                LinearGradient(
+                    colors: ticket.color.map { $0.color },
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+                .blur(radius: 6)
+                .clipShape(RoundedRectangle(cornerRadius: 24))
+                .padding(2)
+            }
+
+            VStack(spacing: 16) {
+                Text("@Yeji")
+                    .fontStyle(.title3)
+                    .foregroundStyle(.common100)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+
+                Spacer()
+
+                if viewModel.hasEmotions {
+                    // Show emotions
+                    VStack(spacing: 16) {
+                        Rectangle()
+                            .fill(.opacityWhite25)
+                            .frame(height: 1)
+
+                        HStack(spacing: 8) {
+                            ForEach(ticket.feeling.prefix(2), id: \.self) { emotion in
+                                Text("#\(emotion.rawValue)")
+                                    .fontStyle(.body1)
+                                    .foregroundStyle(.common100)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .stroke(.opacityWhite35, lineWidth: 1)
+                                    )
+                            }
+                            Spacer()
                         }
                     }
-                    .foregroundStyle(.common100)
+                } else {
+                    // Show emotion input prompt
+                    VStack(spacing: 16) {
+                        Text("관람 중에 느낀 나만의 감정을 남겨볼까요?")
+                            .fontStyle(.body2)
+                            .foregroundStyle(.opacityWhite25)
+                            .multilineTextAlignment(.center)
+
+                        Image(systemName: "chevron.down")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(.opacityWhite45)
+
+                        Text("감정 남기러 가기")
+                            .fontStyle(.title3)
+                            .foregroundStyle(.common100)
+                    }
                 }
-                
-                VStack(spacing: 24) {
-                    Text(ticketDetail.title)
-                        .font(.heading1)
-                        .foregroundColor(.common100)
-                    
-                    ticketCard
-                    
-                    basicInfoSection
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
-                
-                Spacer().frame(height: 120)
             }
+            .padding(24)
         }
-        .overlay(
-            VStack {
-                Spacer()
-                bottomButton
-            }
-        )
-    }
-    
-    private var ticketCard: some View {
-        ZStack {
-            Image("ticket_base")
-            
-            OverlappingCirclesShape.ticketDetailPattern()
-                .blur(radius: 6)
-            
-            VStack {
-//                Text("@\(ticketDetail?.userName ?? "")")
-                
-                Spacer()
-                
-                VStack(spacing: 0) {
-                    Text("관람 후에 느낀\n나만의 감정을 남겨볼까요?")
-                        .font(.label2)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.opacityWhite25)
-                    
-                    Image("chevron_down_sm")
-                        .padding(.bottom, 20)
-                    
-                    Text("감정 남기기 가기")
-                        .font(.headline2)
-                        .foregroundColor(.opacityWhite5)
-                        .frame(maxWidth: .infinity)
-                        .padding(.bottom, 12)
-                }
-            }
-            .padding(20)
-        }
+        .frame(width: 279, height: 376)
+        .padding(.horizontal, 48)
     }
 
     
-    private var basicInfoSection: some View {
+    private func basicInfoSection(ticket: Ticket) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("기본정보")
-                .font(.body1)
-                .foregroundColor(.common100)
-                .frame(maxWidth: .infinity,alignment: .leading)
-                .padding(.leading, 18)
-            
-            VStack(spacing: 16) {
-//                if let ticketDetail {
-//                    infoRow(title: "관람일", content: ticketDetail.watchDate, subtitle: "#\(ticketDetail.watchNumber)번째 관람")
-//                    infoRow(title: "장소", content: ticketDetail.venue)
-//                    infoRow(title: "좌석", content: ticketDetail.seatInfo)
-//                    infoRow(title: "가격", content: ticketDetail.price)
-//                }
+                .fontStyle(.heading2)
+                .foregroundStyle(.common100)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(spacing: 21) {
+                infoRow(title: "관람일", content: formatDate(ticket.time), subtitle: "#\(ticket.count)번째 관람")
+                infoRow(title: "장소", content: ticket.place)
+                if let seatNumber = ticket.seatNumber {
+                    infoRow(title: "좌석", content: seatNumber)
+                }
+                if let price = ticket.price {
+                    infoRow(title: "가격", content: "\(price.formatted())원")
+                }
             }
             .padding(.horizontal, 18)
-            .padding(.vertical, 20)
-            .overlay(
+            .padding(.vertical, 40)
+            .background(
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(.opacityWhite85, lineWidth: 1)
             )
         }
+        .padding(.horizontal, 24)
     }
     
     private func infoRow(title: String, content: String, subtitle: String? = nil) -> some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .top, spacing: 0) {
             Text(title)
-                .font(.label2)
-                .foregroundColor(.opacityWhite45)
-                .frame(width: 64, alignment: .leading)
-            
-            VStack(alignment: .leading, spacing: 8) {
+                .fontStyle(.body2)
+                .foregroundStyle(.opacityWhite45)
+                .frame(width: 66, alignment: .leading)
+
+            VStack(alignment: .leading, spacing: 6) {
                 Text(content)
-                    .font(.label2)
-                
+                    .fontStyle(.body2)
+                    .foregroundStyle(.common100)
+
                 if let subtitle = subtitle {
                     Text(subtitle)
-                        .font(.label2)
+                        .fontStyle(.body2)
+                        .foregroundStyle(.common100)
                 }
             }
-            
+
             Spacer()
         }
-        .foregroundStyle(.common100)
     }
-    
-    private var bottomButton: some View {
-        Button(action: {
-            viewModel.goToDiggingNote()
-        }) {
-            Text("작성한 디깅노트")
-                .font(.body2)
-                .foregroundColor(.common100)
-                .frame(maxWidth: .infinity, maxHeight: 56, alignment: .center)
-                .background(RoundedRectangle(cornerRadius: 12).fill(.pMid))
-        }
-        .padding(.horizontal, 24)
-        .padding(.bottom, 34)
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "yyyy년 MM월 dd일 (E) HH:mm"
+        return formatter.string(from: date)
     }
 }

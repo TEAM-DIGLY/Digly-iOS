@@ -59,7 +59,7 @@ struct FilterBottomSheet: View {
             }
             .padding(.horizontal, 24)
             .padding(.top, 32)
-            .padding(.bottom, 8)
+            .padding(.bottom, 24)
             
             HStack(spacing: 12) {
                 ForEach(FilterType.allCases, id: \.self) { filterType in

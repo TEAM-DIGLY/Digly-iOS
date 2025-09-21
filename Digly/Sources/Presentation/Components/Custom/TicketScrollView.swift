@@ -1,54 +1,44 @@
 import SwiftUI
 
 struct TicketScrollView: View {
-    let tickets: [Ticket]
-    @Binding var focusedIndex: Int
-    let onIndexChanged: (Int) -> Void
-    
     @StateObject private var authManager = AuthManager.shared
-    @State private var scrollOffset: CGFloat = 0
+    @Binding var focusedIndex: Int
     
-    private let ticketWidth: CGFloat = 300
-    private let spacing: CGFloat = 16
+    let onIndexChanged: (Int) -> Void
+    let tickets: [Ticket]
     
     var body: some View {
-        GeometryReader { geometry in
+        ScrollViewReader { proxy in
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: spacing) {
+                HStack(spacing: 16) {
                     ForEach(Array(tickets.enumerated()), id: \.element.id) { index, ticket in
                         ticketView(for: ticket, at: index)
-                            .frame(width: ticketWidth)
+                            .containerRelativeFrame(.horizontal, count: 1, spacing: 16)
+                            .scrollTransition { content, phase in
+                                content
+                                    .opacity(phase.isIdentity ? 1.0 : 0.8)
+                                    .scaleEffect(
+                                        x: phase.isIdentity ? 1.0 : 0.8,
+                                        y: phase.isIdentity ? 1.0 : 0.8
+                                    )
+                                    .offset(x: phase.isIdentity ? 0 : 50)
+                            }
+                            .id(index)
                     }
                 }
-                .padding(.horizontal, (geometry.size.width - ticketWidth) / 2)
-                .background(
-                    GeometryReader { scrollGeometry in
-                        Color.clear
-                            .preference(
-                                key: ScrollOffsetPreferenceKey.self,
-                                value: scrollGeometry.frame(in: .named("scroll")).minX
-                            )
-                    }
-                )
+                .scrollTargetLayout()
             }
-            .coordinateSpace(name: "scroll")
-            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                updateFocusedIndex(offset: value, viewWidth: geometry.size.width)
-            }
+            .contentMargins(16, for:.scrollContent)
+            .scrollTargetBehavior(.viewAligned)
+            .scrollPosition(id: .init(get: {
+                focusedIndex
+            }, set: { newPosition in
+                if let newIndex = newPosition, newIndex >= 0, newIndex < Digly.data.count {
+                    onIndexChanged(newIndex)
+                }
+            }))
         }
         .frame(height: 300)
-    }
-    
-    private func updateFocusedIndex(offset: CGFloat, viewWidth: CGFloat) {
-        let centerX = viewWidth / 2
-        let adjustedOffset = abs(offset) + centerX - (viewWidth - ticketWidth) / 2
-        let newIndex = Int(round(adjustedOffset / (ticketWidth + spacing)))
-        let clampedIndex = max(0, min(tickets.count - 1, newIndex))
-        
-        if clampedIndex != focusedIndex {
-            focusedIndex = clampedIndex
-            onIndexChanged(clampedIndex)
-        }
     }
     
     private func ticketView(for ticket: Ticket, at index: Int) -> some View {
@@ -171,11 +161,4 @@ struct TicketScrollView: View {
         }
     }
     
-}
-
-struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
 }

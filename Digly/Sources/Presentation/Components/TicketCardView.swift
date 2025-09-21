@@ -60,8 +60,8 @@ struct TicketCardView: View {
                 topTrailingRadius: cornerSize[0]
             )
         )
-        .shadow(color: .common100.opacity(0.2), radius: 16)
-        .padding(16)
+        .shadow(color: .common100.opacity(0.1), radius: 10)
+        .padding(10)
     }
 
     // MARK: - Gradient Colors Logic
@@ -80,6 +80,7 @@ struct TicketCardView: View {
             let bottomGrad = bottom.enumerated().map { i, c in c.opacity(i == 0 ? 0.2 : 0.1) }
             return (upperGrad, bottomGrad)
         }
+        
         return (
             [Color.neutral15.opacity(0.2), Color.neutral15.opacity(0.02)],
             [Color.neutral55.opacity(0.2), Color.neutral55.opacity(0.1)]

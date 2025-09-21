@@ -5,7 +5,8 @@ import SwiftUI
 class TicketDetailViewModel: ObservableObject {
     @Published var ticket: Ticket?
     @Published var isLoading: Bool = false
-    
+    @Published var hasEmotions: Bool = false
+
     let ticketUseCase: TicketUseCase
     
     init(
@@ -19,15 +20,20 @@ class TicketDetailViewModel: ObservableObject {
             do {
                 isLoading = true
                 ticket = try await ticketUseCase.getTicketDetail(ticketId: id)
+
+                // Check if ticket has emotions
+                if let ticket = ticket {
+                    hasEmotions = !ticket.feeling.isEmpty
+                }
+
                 isLoading = false
             } catch {
-                
+                isLoading = false
+                ToastManager.shared.show(.errorStringWithTask("티켓 상세 조회"))
             }
         }
-        
     }
     
     func goToDiggingNote() {
-        print("디깅노트로 이동 - TicketId: ")
     }
 } 

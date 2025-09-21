@@ -109,9 +109,9 @@ struct TicketBookView: View {
     
     private var ticketGridView: some View {
         LazyVGrid(columns: [
-            GridItem(.flexible(), spacing: 20),
-            GridItem(.flexible(), spacing: 20)
-        ], spacing: 20) {
+            GridItem(.flexible(), spacing: 0),
+            GridItem(.flexible(), spacing: 0)
+        ], spacing: 0) {
             ForEach(viewModel.tickets) { ticket in
                 Button(action: {
                     router.push(to: .ticketDetail(ticket.id))

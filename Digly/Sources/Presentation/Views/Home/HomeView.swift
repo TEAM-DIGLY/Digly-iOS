@@ -116,11 +116,11 @@ struct HomeView: View {
                 .frame(width: 300, height: 300)
             } else {
                 TicketScrollView(
-                    tickets: viewModel.tickets,
                     focusedIndex: $viewModel.focusedTicketIndex,
                     onIndexChanged: { index in
                         viewModel.updateFocusedTicket(index: index)
-                    }
+                    },
+                    tickets:viewModel.tickets
                 )
             }
         }

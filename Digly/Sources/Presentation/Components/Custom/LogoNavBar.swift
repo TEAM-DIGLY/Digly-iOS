@@ -40,30 +40,33 @@ struct BackNavBar: View {
 }
 
 // MARK: - 타이틀이 있는 뒤로가기 네비게이션 바
-struct TitleBackNavBar: View {
-    let title: String
+struct TitleBackNavBar<Content: View>: View {
     @Environment(\.dismiss) private var dismiss
+    let title: String
+    let rightContent: () -> Content
     
     var body: some View {
-        HStack {
-            Button(action: {
-                dismiss()
-            }) {
-                Image("arrow_left")
-                    .resizable()
-                    .frame(width: 24, height: 24)
+        ZStack {
+            HStack {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image("arrow_left")
+                        .resizable()
+                        .frame(width: 24, height: 24)
+                }
+                
+                Spacer()
+                
+                rightContent()
             }
             
-            Spacer()
-            
             Text(title)
-                .font(.system(size: 16, weight: .medium))
-            
-            Spacer()
+                .font(.headline2)
+                .foregroundStyle(.opacityWhite15)
         }
         .padding(.horizontal, 16)
         .frame(height: 48)
-        .background(Color.white)
     }
 }
 
@@ -133,7 +136,6 @@ struct NavBarPreview: View {
         VStack(spacing: 20) {
             LogoNavBar()
             BackNavBar()
-            TitleBackNavBar(title: "페이지명")
             DropdownNavBar()
             CloseNavBar(title: "페이지명")
         }
