@@ -75,12 +75,27 @@ final class TicketUseCase {
         let response: APIResponse<TicketDTO> = try await ticketRepository.updateTicket(ticketId: ticketId, request: request)
         return response.status == 200
     }
-    //
-    //    func getUpcomingTickets() async throws -> TicketsResponse {
-    //        return try await ticketRepository.getTickets(startAt: Date(), endAt: nil, page: 0, size: 10)
-    //    }
     
-    //    func getPastTickets() async throws -> TicketsResponse {
-    //        return try await ticketRepository.getTickets(startAt: nil, endAt: Date(), page: 0, size: 20)
-    //    }
+    func updateTicketEmotions(
+        ticketId: Int,
+        emotions: [EmotionColor]
+    ) async throws -> Bool {
+        // First get current ticket data
+        let currentTicket = try await getTicketDetail(ticketId: ticketId)
+
+        // Create update request with only emotions changed
+        let request = UpdateTicketRequest(
+            name: currentTicket.name,
+            time: currentTicket.time,
+            place: currentTicket.place,
+            count: Int32(currentTicket.count),
+            seatNumber: currentTicket.seatNumber,
+            price: currentTicket.price.map(Int32.init),
+            color: EmotionColor.toRawValues(emotions),
+            feeling: currentTicket.feeling.map { $0.rawValue }
+        )
+
+        let response: APIResponse<TicketDTO> = try await ticketRepository.updateTicket(ticketId: ticketId, request: request)
+        return response.status == 200
+    }
 }
