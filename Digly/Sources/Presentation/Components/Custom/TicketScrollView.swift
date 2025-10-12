@@ -8,40 +8,39 @@ struct TicketScrollView: View {
     let tickets: [Ticket]
     
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(Array(tickets.enumerated()), id: \.element.id) { index, ticket in
-                        ticketView(for: ticket, at: index)
-                            .containerRelativeFrame(.horizontal, count: 1, spacing: 16)
-                            .scrollTransition { content, phase in
-                                content
-                                    .opacity(phase.isIdentity ? 1.0 : 0.8)
-                                    .scaleEffect(
-                                        x: phase.isIdentity ? 1.0 : 0.8,
-                                        y: phase.isIdentity ? 1.0 : 0.8
-                                    )
-                                    .offset(x: phase.isIdentity ? 0 : 50)
-                            }
-                            .id(index)
+        GeometryReader { geometry in
+            let itemWidth: CGFloat = 264
+            let itemSpacing: CGFloat = 16
+            
+            ScrollViewReader { _ in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(Array(tickets.enumerated()), id: \.element.id) { index, ticket in
+                            ticketView(for: ticket, at: index, width: itemWidth)
+                                .scrollTransition { content, phase in
+                                    content.opacity(phase.isIdentity ? 1.0 : 0.8)
+                                }
+                                .id(index)
+                        }
                     }
+                    .scrollTargetLayout()
+                    .padding(.horizontal, (geometry.size.width - itemWidth) / 2)
                 }
-                .scrollTargetLayout()
+                .scrollTargetBehavior(.viewAligned)
+                .frame(height: 300)
+                .scrollPosition(id: .init(get: {
+                    focusedIndex
+                }, set: { newPosition in
+                    if let newIndex = newPosition, newIndex >= 0, newIndex < Digly.data.count {
+                        onIndexChanged(newIndex)
+                    }
+                }))
             }
-            .contentMargins(16, for:.scrollContent)
-            .scrollTargetBehavior(.viewAligned)
-            .scrollPosition(id: .init(get: {
-                focusedIndex
-            }, set: { newPosition in
-                if let newIndex = newPosition, newIndex >= 0, newIndex < Digly.data.count {
-                    onIndexChanged(newIndex)
-                }
-            }))
         }
         .frame(height: 300)
     }
     
-    private func ticketView(for ticket: Ticket, at index: Int) -> some View {
+    private func ticketView(for ticket: Ticket, at index: Int, width: CGFloat) -> some View {
         let daysUntil = daysUntilPerformance(for: ticket)
         let isFocused = index == focusedIndex
         
@@ -98,7 +97,7 @@ struct TicketScrollView: View {
             .padding(.horizontal, 16)
             .padding(.vertical, 24)
         }
-        .frame(width: 264, height: 280)
+        .frame(width: width, height: 280)
         .scaleEffect(isFocused ? 1.0 : 0.9)
         .animation(.spring, value: isFocused)
     }

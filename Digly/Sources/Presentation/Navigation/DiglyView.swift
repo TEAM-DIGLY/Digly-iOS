@@ -14,10 +14,8 @@ struct DiglyView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Main content
             VStack(spacing: 0) {
                 if viewModel.isInitializing {
-                    // Launch Screen
                     LaunchScreenView()
                 } else if authManager.isLoggedIn {
                     switch(viewModel.selectedTab) {
@@ -54,9 +52,6 @@ struct DiglyView: View {
                 authRouter.reset()
                 viewModel.selectedTab = 0
             }
-        }
-        .task {
-            await viewModel.initialize()
         }
     }
 }
