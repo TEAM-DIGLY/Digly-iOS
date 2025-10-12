@@ -1,9 +1,12 @@
 import SwiftUI
 
 struct DiggingNoteView: View {
+    @EnvironmentObject private var router: DiggingNoteRouter
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var viewModel = DiggingNoteViewModel()
     
+    @State private var selectedTicket: Ticket? = nil
+
     var body: some View {
         DGScreen(horizontalPadding: 0, backgroundColor: .bgDark) {
             ScrollView(.vertical, showsIndicators: false) {
@@ -14,11 +17,11 @@ struct DiggingNoteView: View {
                     
                     if viewModel.ticketsWithNotes.isEmpty {
                         VStack(spacing: 24) {
-                           Image("warning-digly")
-
+                            Image("warning-digly")
+                            
                             VStack(spacing: 12) {
                                 Text("아직 작성된 노트가 없어요.")
-
+                                
                                 Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
                                     .multilineTextAlignment(.center)
                             }
@@ -40,12 +43,14 @@ struct DiggingNoteView: View {
                                 )
                             }
                         }
+                        .animation(.fastSpring, value: viewModel.expandedTicketId)
                     }
                 }
             }
         }
+        
     }
-    
+
     private var header: some View {
         HStack {
             Text("\(authManager.nickname)'s\ndigging note")
@@ -55,6 +60,7 @@ struct DiggingNoteView: View {
             Spacer()
             
             Button(action: {
+                router.push(to: .ticketSelection)
             }) {
                 VStack(spacing: 4) {
                     Image("plus")

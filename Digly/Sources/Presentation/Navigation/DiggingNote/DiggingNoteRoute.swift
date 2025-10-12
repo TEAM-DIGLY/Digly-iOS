@@ -2,7 +2,8 @@ import Foundation
 
 enum DiggingNoteRoute: BaseRoute {
     case diggingNote
-    case writeDiggingNote
+    case ticketSelection
+    case writeNote(ticket: Ticket)
     
     var id: String {
         String(describing: self)
@@ -10,7 +11,7 @@ enum DiggingNoteRoute: BaseRoute {
     
     var disableSwipeBack: Bool {
         switch self {
-        case .writeDiggingNote: true
+        case .writeNote: true
         default: false
         }
     }

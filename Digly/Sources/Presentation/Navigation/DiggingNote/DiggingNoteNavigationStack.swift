@@ -28,11 +28,12 @@ struct DiggingNoteNavigationStack: View {
     @ViewBuilder
     private func destinationView(for route: DiggingNoteRoute) -> some View {
         switch route {
-        case .diggingNote: DiggingNoteView()
-        case .writeDiggingNote: WriteDiggingNoteView()
+        case .diggingNote:              DiggingNoteView()
+        case .ticketSelection:          NoteTicketSelectionView()
+        case .writeNote(let ticket):    WriteNoteView(ticket: ticket)
         }
     }
-} 
+}
 
 #Preview {
     DiggingNoteNavigationStack(selectedTab: .constant(1))
