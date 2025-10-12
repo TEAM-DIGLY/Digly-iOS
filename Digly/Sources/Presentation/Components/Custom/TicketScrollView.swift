@@ -10,7 +10,6 @@ struct TicketScrollView: View {
     var body: some View {
         GeometryReader { geometry in
             let itemWidth: CGFloat = 264
-            let itemSpacing: CGFloat = 16
             
             ScrollViewReader { _ in
                 ScrollView(.horizontal, showsIndicators: false) {

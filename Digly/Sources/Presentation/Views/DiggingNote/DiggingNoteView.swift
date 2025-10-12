@@ -5,10 +5,12 @@ struct DiggingNoteView: View {
     @StateObject private var viewModel = DiggingNoteViewModel()
     
     var body: some View {
-        DGScreen(horizontalPadding: 0) {
+        DGScreen(horizontalPadding: 0, backgroundColor: .bgDark) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 40){
                     header
+                        .padding(.horizontal, 24)
+                        .padding(.top, 32)
                     
                     if viewModel.ticketsWithNotes.isEmpty {
                         EmptyNoteView()
@@ -17,14 +19,15 @@ struct DiggingNoteView: View {
                             ForEach(viewModel.ticketsWithNotes) { ticketWithNotes in
                                 TicketNoteCardView(
                                     ticketWithNotes: ticketWithNotes,
-                                    isExpanded: viewModel.expandedTicketId == ticketWithNotes.ticket.id,
-                                    toggleExpand: {
-                                        viewModel.toggleExpanded(for: ticketWithNotes.ticket.id)
-                                    }
+                                    isExpanded: Binding(
+                                        get: { viewModel.expandedTicketId == ticketWithNotes.ticket.id },
+                                        set: { newValue in
+                                            viewModel.setExpandedState(for: ticketWithNotes.ticket.id, isExpanded: newValue)
+                                        }
+                                    )
                                 )
                             }
                         }
-                        .padding(.horizontal, 24)
                     }
                 }
             }
@@ -32,169 +35,33 @@ struct DiggingNoteView: View {
     }
     
     private var header: some View {
-            HStack {
-                Text("\(authManager.nickname)'s\ndigging note")
-                    .fontStyle(.title2)
-                    .foregroundStyle(.common100)
-                
-                Spacer()
-                
-                Button(action: {
-                }) {
-                    VStack(spacing: 4) {
-                        Image("plus")
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                        
-                        Text("노트 추가")
-                            .font(.label2)
-                            .foregroundColor(.opacityWhite15)
-                    }
-                    .padding(.horizontal, 16)
-                    .frame(height: 72)
-                    .background(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color.clear)
-                            .stroke(.opacityWhite75, lineWidth: 1)
-                    )
-                }
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 32)
-    }
-}
-
-struct TicketNoteCardView: View {
-    let ticketWithNotes: TicketWithNotes
-    let isExpanded: Bool
-    let toggleExpand: () -> Void
-
-    private var ticketGradient: LinearGradient {
-        let colors = ticketWithNotes.ticket.color.map { $0.color }
-        if colors.isEmpty {
-            return LinearGradient(colors: [.neutral15, .neutral25], startPoint: .topLeading, endPoint: .bottomTrailing)
-        } else if colors.count == 1 {
-            return LinearGradient(colors: [colors[0], colors[0].opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing)
-        } else {
-            return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
-        }
-    }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            if isExpanded {
-                expandedView
-            } else {
-                collapsedView
-            }
-        }
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(ticketGradient)
-        )
-        .onTapGesture {
-            toggleExpand()
-        }
-    }
-
-    private var expandedView: some View {
-        VStack(spacing: 0) {
-            // Header with gradient background
-            VStack(spacing: 0) {
-                HStack {
-                    Text(ticketWithNotes.ticket.name)
-                        .fontStyle(.heading2)
-                        .foregroundStyle(.common100)
-                        .multilineTextAlignment(.leading)
-
-                    Spacer()
-
-                    Button(action: toggleExpand) {
-                        Image(systemName: "chevron.up")
-                            .foregroundColor(.common100)
-                            .frame(width: 24, height: 24)
-                    }
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 24)
-
-                HStack {
-                    Image("digging_note")
+        HStack {
+            Text("\(authManager.nickname)'s\ndigging note")
+                .fontStyle(.title2)
+                .foregroundStyle(.common100)
+            
+            Spacer()
+            
+            Button(action: {
+            }) {
+                VStack(spacing: 4) {
+                    Image("plus")
                         .resizable()
-                        .frame(width: 12, height: 12)
-
-                    Text("\(ticketWithNotes.noteCount)개의 노트")
-                        .fontStyle(.caption1)
-                        .foregroundStyle(.common100)
-
-                    Spacer()
+                        .frame(width: 16, height: 16)
+                    
+                    Text("노트 추가")
+                        .font(.label2)
+                        .foregroundColor(.opacityWhite15)
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 16)
-            }
-
-            // Notes content
-            if !ticketWithNotes.notes.isEmpty {
-                VStack(spacing: 16) {
-                    ForEach(ticketWithNotes.notes) { note in
-                        NoteContentItem(note: note)
-                    }
-                }
-                .padding(.horizontal, 12)
-                .padding(.bottom, 16)
+                .padding(.horizontal, 16)
+                .frame(height: 72)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.clear)
+                        .stroke(.opacityWhite75, lineWidth: 1)
+                )
             }
         }
-    }
-
-    private var collapsedView: some View {
-        VStack(spacing: 12) {
-            HStack {
-                Text(ticketWithNotes.ticket.name)
-                    .fontStyle(.heading2)
-                    .foregroundStyle(.common100)
-                    .multilineTextAlignment(.leading)
-
-                Spacer()
-
-                Button(action: toggleExpand) {
-                    Image(systemName: "chevron.down")
-                        .foregroundColor(.common100)
-                        .frame(width: 24, height: 24)
-                }
-            }
-
-            HStack {
-                HStack(spacing: 8) {
-                    Image("digging_note")
-                        .resizable()
-                        .frame(width: 12, height: 12)
-
-                    Text("\(ticketWithNotes.noteCount)개의 노트")
-                        .fontStyle(.caption1)
-                        .foregroundStyle(.common100)
-                }
-
-                Spacer()
-
-                if !ticketWithNotes.formattedLastNoteDate.isEmpty {
-                    HStack(spacing: 4) {
-                        Text("최근 작성일")
-                            .fontStyle(.caption1)
-                            .foregroundStyle(.common100.opacity(0.7))
-
-                        Circle()
-                            .fill(.common100.opacity(0.7))
-                            .frame(width: 2, height: 2)
-
-                        Text(ticketWithNotes.formattedLastNoteDate)
-                            .fontStyle(.caption1)
-                            .foregroundStyle(.common100.opacity(0.7))
-                    }
-                }
-            }
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 24)
     }
 }
 
@@ -236,30 +103,30 @@ struct EmptyNoteView: View {
 struct NoteContentItem: View {
     let note: Note
 
-    private var relativeTimeString: String {
-        // This would typically calculate the relative time from note creation date
-        // For now, returning placeholder values
-        let timeOptions = ["어제", "3일 전", "7일 전", "2주 전", "1개월 전"]
-        return timeOptions.randomElement() ?? "최근"
+    private var relativeTimeText: String {
+        if let updatedAt = note.updatedAt {
+            return updatedAt.timeAgoString()
+        }
+        if let createdAt = note.createdAt {
+            return createdAt.timeAgoString()
+        }
+        return "최근"
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(relativeTimeString)
+            Text(relativeTimeText)
                 .fontStyle(.caption1)
                 .foregroundStyle(.neutral55)
 
             Text(note.content)
-                .fontStyle(.body2)
+                .fontStyle(.label2)
                 .foregroundStyle(.neutral25)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.common0.opacity(0.95))
-        )
+        .background(.opacityWhite55, in: RoundedRectangle(cornerRadius: 16))
     }
 }
 
