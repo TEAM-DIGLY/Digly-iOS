@@ -14,7 +14,7 @@ struct DiggingNoteNavigationStack: View {
         NavigationStack(path: $router.path) {
             ZStack(alignment: .bottom){
                 DiggingNoteView()
-                BottomTabView(selectedTab: $selectedTab)
+                DGBottomTab(selectedTab: $selectedTab)
             }
             .navigationDestination(for: DiggingNoteRoute.self) { route in
                 destinationView(for: route)

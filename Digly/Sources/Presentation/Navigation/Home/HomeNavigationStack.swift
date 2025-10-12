@@ -14,7 +14,7 @@ struct HomeNavigationStack: View {
         NavigationStack(path: $router.path) {
             ZStack(alignment: .bottom){
                 HomeView()
-                BottomTabView(selectedTab: $selectedTab)
+                DGBottomTab(selectedTab: $selectedTab)
             }
             .navigationDestination(for: HomeRoute.self) { route in
                 destinationView(for: route)

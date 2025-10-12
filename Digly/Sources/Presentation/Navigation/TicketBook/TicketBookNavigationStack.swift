@@ -14,7 +14,7 @@ struct TicketBookNavigationStack: View {
         NavigationStack(path: $router.path) {
             ZStack(alignment: .bottom){
                 TicketBookView()
-                BottomTabView(selectedTab: $selectedTab)
+                DGBottomTab(selectedTab: $selectedTab)
             }
             .navigationDestination(for: TicketBookRoute.self) { route in
                 destinationView(for: route)
