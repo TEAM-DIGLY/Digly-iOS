@@ -131,9 +131,7 @@ final class NetworkAPI {
             case .unauthorized:
                 AuthManager.shared.logout()
             default:
-                print(error)
-                // TODO: ToastManager 구현 후 주석 해제
-                // ToastManager.shared.show(.error(error))
+                 ToastManager.shared.show(.error(error))
             }
         }
     }
