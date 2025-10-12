@@ -100,37 +100,6 @@ struct EmptyNoteView: View {
     }
 }
 
-struct NoteContentItem: View {
-    let note: Note
-
-    private var relativeTimeText: String {
-        if let updatedAt = note.updatedAt {
-            return updatedAt.timeAgoString()
-        }
-        if let createdAt = note.createdAt {
-            return createdAt.timeAgoString()
-        }
-        return "최근"
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(relativeTimeText)
-                .fontStyle(.caption1)
-                .foregroundStyle(.neutral55)
-
-            Text(note.content)
-                .fontStyle(.label2)
-                .foregroundStyle(.neutral25)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(.opacityWhite55, in: RoundedRectangle(cornerRadius: 16))
-    }
-}
-
-
 #Preview {
     DiggingNoteView()
 }

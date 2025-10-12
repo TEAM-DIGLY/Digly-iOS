@@ -19,6 +19,7 @@ struct LogoNavBar: View {
 
 // MARK: - 뒤로가기 네비게이션 바
 struct BackNavBar: View {
+    let isDarkMode: Bool
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {
@@ -26,14 +27,15 @@ struct BackNavBar: View {
             Button(action: {
                 dismiss()
             }) {
-                Image("chevron_right")
-                    .resizable()
-                    .rotationEffect(Angle(degrees: 180.0))
-                    .frame(width: 32, height: 32)
+                Image("chevron_left")
+                    .renderingMode(.template)
+                    .foregroundStyle(isDarkMode ? .opacityWhite5 : .neutral5)
+//                    .resizable()
+//                    .frame(width: 32, height: 32)
             }
             Spacer()
         }
-//        .padding(.horizontal, 16)
+        .padding(.horizontal, 16)
         .frame(height: 48)
         .background(.white)
     }
@@ -43,6 +45,7 @@ struct BackNavBar: View {
 struct TitleBackNavBar<Content: View>: View {
     @Environment(\.dismiss) private var dismiss
     let title: String
+    let isDarkMode: Bool
     let rightContent: () -> Content
     
     var body: some View {
@@ -51,9 +54,9 @@ struct TitleBackNavBar<Content: View>: View {
                 Button(action: {
                     dismiss()
                 }) {
-                    Image("arrow_left")
-                        .resizable()
-                        .frame(width: 24, height: 24)
+                    Image("chevron_left")
+                        .renderingMode(.template)
+                        .foregroundStyle(isDarkMode ? .opacityWhite5 : .neutral5)
                 }
                 
                 Spacer()
@@ -128,20 +131,4 @@ struct CloseNavBar: View {
         .frame(height: 48)
         .background(Color.white)
     }
-}
-
-// MARK: - 네비게이션 바 미리보기
-struct NavBarPreview: View {
-    var body: some View {
-        VStack(spacing: 20) {
-            LogoNavBar()
-            BackNavBar()
-            DropdownNavBar()
-            CloseNavBar(title: "페이지명")
-        }
-    }
-}
-
-#Preview {
-    NavBarPreview()
 }

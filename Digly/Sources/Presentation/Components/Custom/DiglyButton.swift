@@ -25,9 +25,9 @@ struct DGButton: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: config.type.height)
                 .background(config.disabled ? config.type.disabledBackgroundColor : config.type.backgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: 16)
                         .stroke(config.type.strokeColor, lineWidth: 1)
                 )
         }

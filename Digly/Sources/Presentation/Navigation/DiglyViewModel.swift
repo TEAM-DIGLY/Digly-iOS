@@ -5,17 +5,21 @@ final class DiglyViewModel: ObservableObject {
     @Published private(set) var isInitializing = true
     @Published var selectedTab = 0
     
-    func initialize() async {
-        await handleAuthState()
-        isInitializing = false
+    init(){
+        initialize()
     }
     
-    private func handleAuthState() async {
-        let refreshSuccess = await TokenManager.shared.ensureValidToken()
-        if refreshSuccess {
-            AuthManager.shared.setLoggedIn(true)
-        } else {
-            AuthManager.shared.logout()
+    private func initialize() {
+        Task {
+            let refreshSuccess = await TokenManager.shared.ensureValidToken()
+            
+            if refreshSuccess {
+                AuthManager.shared.setLoggedIn(true)
+            } else {
+                AuthManager.shared.logout()
+            }
+            
+            isInitializing = false
         }
     }
 }

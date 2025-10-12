@@ -10,9 +10,9 @@ struct TicketNoteCardView: View {
         if colors.isEmpty {
             return LinearGradient(colors: [.neutral15, .neutral25], startPoint: .topLeading, endPoint: .bottomTrailing)
         } else if colors.count == 1 {
-            return LinearGradient(colors: [colors[0], colors[0].opacity(0.8)], startPoint: .topLeading, endPoint: .bottomTrailing)
+            return LinearGradient(colors: [colors[0].opacity(0.2), colors[0].opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing)
         } else {
-            return LinearGradient(colors: colors, startPoint: .topLeading, endPoint: .bottomTrailing)
+            return LinearGradient(colors: colors.map{ $0.opacity(0.2) }, startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
     
@@ -27,15 +27,13 @@ struct TicketNoteCardView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 24)
         .background(
-            Group {
-                UnevenRoundedRectangle(
-                     topLeadingRadius: 16,
-                     bottomLeadingRadius: 16,
-                     bottomTrailingRadius: isExpanded ? 16 : 56,
-                     topTrailingRadius: isExpanded ? 0 : 16
-                     )
-                     .fill(ticketGradient)
-            }
+            UnevenRoundedRectangle(
+                topLeadingRadius: 16,
+                bottomLeadingRadius: 16,
+                bottomTrailingRadius: isExpanded ? 16 : 56,
+                topTrailingRadius: isExpanded ? 0 : 16
+            )
+            .fill(ticketGradient)
         )
         .onTapGesture {
             isExpanded.toggle()
@@ -49,7 +47,7 @@ struct TicketNoteCardView: View {
             if !ticketWithNotes.notes.isEmpty {
                 VStack(spacing: 16) {
                     ForEach(ticketWithNotes.notes) { note in
-                        NoteContentItem(note: note)
+                        noteSection(note)
                     }
                 }
                 .padding(.top, 20)
@@ -74,6 +72,7 @@ struct TicketNoteCardView: View {
                         .rotationEffect(Angle(degrees: isExpanded ? 180 : 0))
                         .frame(width: 24, height: 24)
                 }
+                .padding(.trailing, isExpanded ? 40 : 16)
             }
             
             HStack(spacing: 12) {
@@ -115,5 +114,32 @@ struct TicketNoteCardView: View {
                 Spacer()
             }
         }
+    }
+    
+    @ViewBuilder
+    private func noteSection(_ note: Note) -> some View {
+        var relativeTimeText: String {
+            if let updatedAt = note.updatedAt {
+                return updatedAt.timeAgoString()
+            }
+            if let createdAt = note.createdAt {
+                return createdAt.timeAgoString()
+            }
+            return "최근"
+        }
+        
+        VStack(alignment: .leading, spacing: 8) {
+            Text(relativeTimeText)
+                .fontStyle(.caption1)
+                .foregroundStyle(.neutral55)
+            
+            Text(note.content)
+                .fontStyle(.label2)
+                .foregroundStyle(.neutral85)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(.opacityWhite95, in: RoundedRectangle(cornerRadius: 16))
     }
 }
