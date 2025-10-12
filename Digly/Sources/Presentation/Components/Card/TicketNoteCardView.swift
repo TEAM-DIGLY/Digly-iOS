@@ -30,10 +30,14 @@ struct TicketNoteCardView: View {
             UnevenRoundedRectangle(
                 topLeadingRadius: 16,
                 bottomLeadingRadius: 16,
-                bottomTrailingRadius: isExpanded ? 16 : 56,
+                bottomTrailingRadius: isExpanded ? 0 : 56,
                 topTrailingRadius: isExpanded ? 0 : 16
             )
-            .fill(ticketGradient)
+            .fill(isExpanded ? ticketGradient : LinearGradient(
+                colors: [.opacityWhite95, .opacityWhite95],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing)
+            )
         )
         .onTapGesture {
             isExpanded.toggle()
@@ -118,7 +122,7 @@ struct TicketNoteCardView: View {
     
     @ViewBuilder
     private func noteSection(_ note: Note) -> some View {
-        var relativeTimeText: String {
+        let relativeTimeText: String = {
             if let updatedAt = note.updatedAt {
                 return updatedAt.timeAgoString()
             }
@@ -126,7 +130,7 @@ struct TicketNoteCardView: View {
                 return createdAt.timeAgoString()
             }
             return "최근"
-        }
+        }()
         
         VStack(alignment: .leading, spacing: 8) {
             Text(relativeTimeText)

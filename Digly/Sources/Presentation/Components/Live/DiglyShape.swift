@@ -3,14 +3,14 @@ import SwiftUI
 struct DiglyShape: View {
     let upperGradientColors: [Color]
     let bottomGradientColors: [Color]
-    
+    let patterns: [CGFloat]
     let offsets: [CGFloat]
     
     var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
             
-            ForEach([0, 1.6, 2.0, 2.6, 3.0, 3.2], id: \.self) { rate in
+            ForEach(patterns, id: \.self) { rate in
                 SubtractedShape(
                     rate: rate,
                     isReversed: true,
@@ -69,8 +69,11 @@ struct SubtractedShape: Shape {
 }
 
 #Preview {
-    DiglyShape(upperGradientColors: [.red.opacity(0.1),.blue.opacity(0.1)],
-               bottomGradientColors: [.blue.opacity(0.1),.green.opacity(0.1)],
-               offsets: [0,1,2,3]
+    DiglyShape(
+        upperGradientColors: [.red.opacity(0.1),.blue.opacity(0.1)],
+               
+        bottomGradientColors: [.blue.opacity(0.1),.green.opacity(0.1)],
+        patterns: [0, 1.2, 1.6, 2.0, 2.6, 3.0, 3.2],
+        offsets: [0,1,2,3]
     )
 }

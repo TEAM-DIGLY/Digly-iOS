@@ -3,31 +3,28 @@ import SwiftUI
 enum TicketCardType {
     case large
     case small
+    case note_small
 }
 
 struct TicketCardView: View {
     let ticket: Ticket
     let cardType: TicketCardType
     
-    private var isLarge: Bool {
-        cardType == .large
-    }
-    
     private var shapeOffsets: [CGFloat] {
         switch cardType {
         case .large:
             return [-40, -40, -40, 56]
-        case .small:
-            return [-20, -20, -20, 20]
+        default:
+            return [0, -20, -5, 20]
         }
     }
     
-    private var shapeSize: [CGFloat] {
+    private var patterns: [CGFloat] {
         switch cardType {
         case .large:
-            return [200, 280]
+            [0, 1.2, 1.6, 2.0, 2.6, 3.0, 3.2]
         default:
-            return [153, 182]
+            [1.6, 2.1, 2.5, 2.8, 3.0, 2.9]
         }
     }
     
@@ -45,13 +42,16 @@ struct TicketCardView: View {
             DiglyShape(
                 upperGradientColors: gradientColors.upper,
                 bottomGradientColors: gradientColors.bottom,
+                patterns: patterns,
                 offsets: shapeOffsets
             )
             
             ticketInfo
                 .padding(.vertical, 20)
+                .padding(.horizontal, 16)
         }
-        .frame(width: shapeSize[0], height: shapeSize[1])
+        .frame(maxWidth: cardType == .large ? 200 : .infinity)
+        .frame(height: cardType == .large ? 200 : 185)
         .clipShape(
             UnevenRoundedRectangle(
                 topLeadingRadius: cornerSize[0],
@@ -60,7 +60,7 @@ struct TicketCardView: View {
                 topTrailingRadius: cornerSize[0]
             )
         )
-        .shadow(color: .common100.opacity(0.1), radius: 10)
+        .shadow(color: .common100.opacity(0.2), radius: 10)
         .padding(10)
     }
 
@@ -89,7 +89,8 @@ struct TicketCardView: View {
     
     private var ticketInfo: some View {
         VStack(alignment: .leading, spacing: 0) {
-            if isLarge {
+            switch cardType {
+            case .large:
                 HStack(alignment: .top){
                     Text(ticket.name)
                         .fontStyle(.body1)
@@ -118,7 +119,7 @@ struct TicketCardView: View {
                     .fontStyle(.caption1)
                     .foregroundStyle(.opacityWhite15)
                     .lineLimit(1)
-            } else {
+            case .small:
                 Text("#\(ticket.count)번째 관람")
                     .foregroundStyle(.opacityWhite5)
                     .font(.caption1)
@@ -134,9 +135,50 @@ struct TicketCardView: View {
                     .fontStyle(.body2)
                     .foregroundStyle(.white)
                     .lineLimit(2)
+            case .note_small:
+                HStack(spacing: 4){
+                    Text("관람일")
+                    
+                    Circle()
+                        .fill(.neutral45)
+                        .frame(width: 2, height: 2)
+                    
+                    Text(ticket.time.toInquiryDateString())
+                }
+                .fontStyle(.caption1)
+                .foregroundStyle(.neutral65)
+                .padding(.bottom, 8)
+                
+                Text(ticket.name)
+                    .fontStyle(.body2)
+                    .foregroundStyle(.neutral65)
+                    .lineLimit(2)
+                
+                Spacer()
+                
+                if let noteCnt = ticket.notes?.count {
+                    HStack(spacing: 4) {
+                        Image("digging_note")
+                            .renderingMode(.template)
+                            .resizable()
+                            .foregroundStyle(.neutral55)
+                            .frame(width: 12, height: 12)
+                        
+                        
+                        Text("\(noteCnt)개의 노트")
+                            .fontStyle(.caption1)
+                            .foregroundStyle(.opacityWhite5)
+                        
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(.opacityWhite85, lineWidth: 1)
+                    )
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 16)
     }
 }
