@@ -127,11 +127,13 @@ final class NetworkAPI {
     
     private func handleError(_ error: APIError) {
         Task { @MainActor in
+            ToastManager.shared.show(.error(error))
+            
             switch error {
             case .unauthorized:
                 AuthManager.shared.logout()
             default:
-                 ToastManager.shared.show(.error(error))
+                 print(error)
             }
         }
     }
