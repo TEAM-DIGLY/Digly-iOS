@@ -11,6 +11,22 @@ struct Ticket: Identifiable, Codable {
     let price: Int?
     let color: [EmotionColor]
     let feeling: [Feeling]
+    
+    let notes: [Note]?
+    
+    
+    init(id: Int, name: String, time: Date, place: String, count: Int, seatNumber: String?, price: Int?, color: [EmotionColor], feeling: [Feeling], notes: [Note]? = nil) {
+        self.id = id
+        self.name = name
+        self.time = time
+        self.place = place
+        self.count = count
+        self.seatNumber = seatNumber
+        self.price = price
+        self.color = color
+        self.feeling = feeling
+        self.notes = notes
+    }
 }
 
 
