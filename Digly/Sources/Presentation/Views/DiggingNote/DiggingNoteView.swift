@@ -13,7 +13,19 @@ struct DiggingNoteView: View {
                         .padding(.top, 32)
                     
                     if viewModel.ticketsWithNotes.isEmpty {
-                        EmptyNoteView()
+                        VStack(spacing: 24) {
+                           Image("warning-digly")
+
+                            VStack(spacing: 12) {
+                                Text("아직 작성된 노트가 없어요.")
+
+                                Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
+                                    .multilineTextAlignment(.center)
+                            }
+                            .fontStyle(.body2)
+                            .foregroundStyle(.common100)
+                        }
+                        .padding(.top, 160)
                     } else {
                         VStack(spacing: 32) {
                             ForEach(viewModel.ticketsWithNotes) { ticketWithNotes in
@@ -62,41 +74,6 @@ struct DiggingNoteView: View {
                 )
             }
         }
-    }
-}
-
-struct EmptyNoteView: View {
-    var body: some View {
-        VStack(spacing: 24) {
-            VStack(spacing: 16) {
-                Text("!")
-                    .font(.system(size: 32, weight: .bold))
-                    .foregroundStyle(.neutral55)
-
-                Circle()
-                    .fill(.neutral25)
-                    .frame(width: 48, height: 48)
-                    .overlay(
-                        Image(systemName: "note.text")
-                            .foregroundColor(.neutral55)
-                            .font(.system(size: 20))
-                    )
-            }
-
-            VStack(spacing: 8) {
-                Text("아직 작성된 노트가 없어요.")
-                    .fontStyle(.heading2)
-                    .foregroundStyle(.common100)
-
-                Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
-                    .fontStyle(.body2)
-                    .foregroundStyle(.neutral55)
-                    .multilineTextAlignment(.center)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.top, 80)
-        .padding(.horizontal, 24)
     }
 }
 
