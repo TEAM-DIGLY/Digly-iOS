@@ -2,8 +2,8 @@ import SwiftUI
 
 struct WriteNoteView: View {
     @StateObject private var viewModel: WriteNoteViewModel
-    @StateObject private var popupManager = PopupManager.shared
     @Environment(\.dismiss) private var dismiss
+    
     @State private var showQuestionBottomSheet = false
 
     init(ticket: Ticket) {
@@ -12,33 +12,26 @@ struct WriteNoteView: View {
 
     var body: some View {
         DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
-            VStack(spacing: 0) {
-                // Header
-                header
-                    .padding(.horizontal, 24)
-
-                Divider()
-                    .background(Color.opacityWhite75)
-
-                // Content
-                ScrollView(.vertical, showsIndicators: true) {
-                    VStack(spacing: 0) {
-                        // Ticket Info Section
-                        ticketInfoSection
-                            .padding(.horizontal, 24)
-                            .padding(.top, 24)
-
-                        // Content based on guide mode
-                        if viewModel.isGuideMode {
-                            guideContent
-                        } else {
-                            freeContent
-                        }
+            headerSection
+            
+            Divider()
+                .background(Color.opacityWhite75)
+            
+            ScrollView(.vertical, showsIndicators: true) {
+                VStack(spacing: 0) {
+                    ticketInfoSection
+                        .padding(.horizontal, 24)
+                        .padding(.top, 24)
+                    
+                    // Content based on guide mode
+                    if viewModel.isGuideMode {
+                        guideContent
+                    } else {
+                        freeContent
                     }
-                    .padding(.bottom, 100)
                 }
-
-                Spacer()
+                .padding(.bottom, 100)
+                
             }
         }
         .sheet(isPresented: $showQuestionBottomSheet) {
@@ -49,54 +42,39 @@ struct WriteNoteView: View {
                 }
             )
         }
-        .presentPopup(
-            isPresented: $popupManager.popupPresented,
-            data: popupManager.currentPopupData
-        )
     }
-
-    private var header: some View {
-        HStack {
-            Button(action: {
-                dismiss()
-            }) {
-                Image("chevron_left")
-                    .renderingMode(.template)
-                    .foregroundStyle(.common100)
-            }
-
-            Spacer()
-
+    
+    private var headerSection: some View {
+        BackNavBarWithContent(isDarkMode: true) {
             HStack(spacing: 8) {
+                Spacer()
+                
                 Text("작성 가이드")
                     .fontStyle(.body2)
                     .foregroundStyle(.common100)
-
+                
                 Toggle("", isOn: Binding(
                     get: { viewModel.isGuideMode },
                     set: { newValue in
-                        // 토글 전환 시 팝업 표시
                         let popupType: PopupType = viewModel.isGuideMode ? .toggleGuideOff : .toggleGuideOn
-                        popupManager.show(type: popupType) {
+                        PopupManager.shared.show(type: popupType) {
                             viewModel.toggleGuideMode()
                         }
                     }
                 ))
                 .toggleStyle(CustomToggleStyle())
-            }
-
-            Spacer()
-
-            Button(action: {
-                // TODO: 노트 저장
-                dismiss()
-            }) {
-                Text("완료")
-                    .fontStyle(.heading2)
-                    .foregroundStyle(.common100)
+                
+                Spacer()
+                
+                Button(action: {
+                    // TODO: 노트 저장
+                }) {
+                    Text("완료")
+                        .fontStyle(.heading2)
+                        .foregroundStyle(.common100)
+                }
             }
         }
-        .frame(height: 48)
     }
 
     private var ticketInfoSection: some View {
@@ -197,27 +175,29 @@ struct WriteNoteView: View {
     }
 }
 
-// Custom Toggle Style
 struct CustomToggleStyle: ToggleStyle {
     func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 4) {
-            Text(configuration.isOn ? "ON" : "OFF")
-                .font(.caption1)
-                .foregroundColor(.common0)
-
+        Button(action: {
+            configuration.isOn.toggle()
+        }){
             ZStack(alignment: configuration.isOn ? .trailing : .leading) {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(configuration.isOn ? Color.common100 : Color.opacityWhite25)
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(.opacityWhite25, lineWidth: 1)
                     .frame(width: 51, height: 24)
-
+                
                 Circle()
-                    .fill(Color.common0)
+                    .fill(.common100)
                     .frame(width: 16, height: 16)
                     .padding(4)
+                
+                Text(configuration.isOn ? "ON" : "OFF")
+                    .font(.caption1)
+                    .foregroundColor(.common100)
+                    .padding(.leading, 8)
+                    .padding(.trailing, 4)
+                    .frame(maxWidth: .infinity, alignment: configuration.isOn ? .leading : .trailing)
             }
-            .onTapGesture {
-                configuration.isOn.toggle()
-            }
+            .frame(width: 51, height: 24)
         }
     }
 }
@@ -244,7 +224,7 @@ struct ExpandableTextEditor: View {
                 .scrollContentBackground(.hidden)
                 .background(Color.clear)
                 .frame(minHeight: textHeight, maxHeight: .infinity)
-                .onChange(of: text) { _ in
+                .onChange(of: text) { _, _ in
                     updateHeight()
                 }
         }
@@ -270,7 +250,7 @@ struct ExpandableTextEditor: View {
 @MainActor
 class WriteNoteViewModel: ObservableObject {
     @Published var ticket: Ticket
-    @Published var isGuideMode: Bool = true
+    @Published var isGuideMode: Bool = false
     @Published var guideQuestions: [NoteGuideQuestion] = []
     @Published var freeText: String = ""
 

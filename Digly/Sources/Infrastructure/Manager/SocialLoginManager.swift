@@ -56,7 +56,9 @@ final class NaverLoginManager: NSObject, ObservableObject {
         
         return try await withCheckedThrowingContinuation { continuation in
             self.continuation = continuation
-            instance?.requestThirdPartyLogin()
+            Task {
+                await instance?.requestThirdPartyLogin()
+            }
         }
     }
 }
@@ -154,7 +156,7 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
                 continuation?.resume(throwing: SocialLoginError.unknownError)
             case .unknown:
                 continuation?.resume(throwing: SocialLoginError.unknownError)
-            @unknown default:
+            default:
                 continuation?.resume(throwing: SocialLoginError.unknownError)
             }
         } else {

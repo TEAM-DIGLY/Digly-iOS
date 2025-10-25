@@ -73,6 +73,29 @@ struct TitleBackNavBar<Content: View>: View {
     }
 }
 
+// MARK: - 타이틀이 있는 뒤로가기 네비게이션 바
+struct BackNavBarWithContent<Content: View>: View {
+    @Environment(\.dismiss) private var dismiss
+    let isDarkMode: Bool
+    let content: () -> Content
+    
+    var body: some View {
+        HStack {
+            Button(action: {
+                dismiss()
+            }) {
+                Image("chevron_left")
+                    .renderingMode(.template)
+                    .foregroundStyle(isDarkMode ? .opacityWhite5 : .neutral5)
+            }
+            
+            content()
+        }
+        .padding(.horizontal, 16)
+        .frame(height: 48)
+    }
+}
+
 // MARK: - 드롭다운이 있는 네비게이션 바
 struct DropdownNavBar: View {
     @State private var isDropdownOpen = false

@@ -231,24 +231,24 @@ extension DiggingNoteViewModel {
         ]
 
         return [
-//            TicketWithNotes(
-//                ticket: firstTicket,
-//                notes: firstNotes,
-//                noteCount: firstNotes.count,
-//                lastNoteDate: calendar.date(byAdding: .day, value: -1, to: now)
-//            ),
-//            TicketWithNotes(
-//                ticket: secondTicket,
-//                notes: secondNotes,
-//                noteCount: secondNotes.count,
-//                lastNoteDate: calendar.date(byAdding: .day, value: -5, to: now)
-//            ),
-//            TicketWithNotes(
-//                ticket: thirdTicket,
-//                notes: thirdNotes,
-//                noteCount: thirdNotes.count,
-//                lastNoteDate: calendar.date(byAdding: .day, value: -12, to: now)
-//            )
+            TicketWithNotes(
+                ticket: firstTicket,
+                notes: firstNotes,
+                noteCount: firstNotes.count,
+                lastNoteDate: calendar.date(byAdding: .day, value: -1, to: now)
+            ),
+            TicketWithNotes(
+                ticket: secondTicket,
+                notes: secondNotes,
+                noteCount: secondNotes.count,
+                lastNoteDate: calendar.date(byAdding: .day, value: -5, to: now)
+            ),
+            TicketWithNotes(
+                ticket: thirdTicket,
+                notes: thirdNotes,
+                noteCount: thirdNotes.count,
+                lastNoteDate: calendar.date(byAdding: .day, value: -12, to: now)
+            )
         ]
     }
 }
