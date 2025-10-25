@@ -105,32 +105,28 @@ struct WriteNoteView: View {
                 VStack(spacing: 0) {
                     if index > 0 {
                         Divider()
-                            .background(.opacityWhite800)
-                            .padding(.horizontal, 24)
+                            .background(.opacityWhite100)
+                            .padding(.horizontal, 32)
                     }
 
-                    HStack(alignment: .top) {
+                    HStack(alignment: .center) {
                         Text(question.question)
                             .fontStyle(.body2)
                             .foregroundStyle(.common100)
                             .lineLimit(2)
-
-                        Spacer()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 8)
 
                         Button(action: {
                             viewModel.removeGuideQuestion(id: question.id)
                         }) {
                             Image("chevron_down")
-                                .resizable()
                                 .renderingMode(.template)
                                 .foregroundColor(.opacityWhite700)
-                                .frame(width: 16, height: 16)
                                 .rotationEffect(.degrees(180))
-                                .frame(width: 44, height: 44)
                         }
                     }
-                    .padding(.horizontal, 36)
-                    .padding(.vertical, 12)
+                    .padding(.horizontal, 24)
 
                     ExpandableTextEditor(
                         text: Binding(
@@ -154,8 +150,7 @@ struct WriteNoteView: View {
                     .foregroundColor(.common100)
                     .frame(maxWidth: .infinity)
                     .frame(height: 62)
-                    .background(.opacityWhite850)
-                    .cornerRadius(12)
+                    .background(.opacityWhite100, in: RoundedRectangle(cornerRadius: 16))
             }
             .padding(.horizontal, 24)
             .padding(.top, 24)
@@ -168,7 +163,7 @@ struct WriteNoteView: View {
                 text: $viewModel.freeText,
                 placeholder: "여운을 마음껏 표현해보세요"
             )
-            .padding(.horizontal, 36)
+            .padding(.horizontal, 24)
             .padding(.top, 24)
         }
     }
@@ -205,6 +200,9 @@ struct ExpandableTextEditor: View {
     @Binding var text: String
     let placeholder: String
 
+    @FocusState private var isFocused: Bool
+    @State private var textHeight: CGFloat = 100
+
     var body: some View {
         ZStack(alignment: .topLeading) {
             if text.isEmpty {
@@ -213,30 +211,47 @@ struct ExpandableTextEditor: View {
                     .foregroundStyle(.opacityWhite400)
                     .padding(16)
             }
-            
+
             TextEditor(text: $text)
                 .fontStyle(.body1)
                 .foregroundColor(.common100)
                 .scrollContentBackground(.hidden)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
-            
-                .background(.opacityWhite700, in: RoundedRectangle(cornerRadius: 24))
+                .focused($isFocused)
+                .background(.opacityWhite50, in: RoundedRectangle(cornerRadius: 24))
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
-                        .stroke(.opacityWhite100, lineWidth: 1)
+                        .stroke(isFocused ? .opacityWhite600 : .opacityWhite100, lineWidth: 1)
                 )
-                .frame(minHeight: 100, maxHeight: .infinity)
+                .frame(minHeight: textHeight, maxHeight: isFocused ? .infinity : 278)
+                .onChange(of: text) { _, _ in
+                    updateHeight()
+                }
         }
+        .frame(height: isFocused ? nil : 278)
+        .animation(.mediumSpring, value: isFocused)
+    }
+
+    private func updateHeight() {
+        let size = CGSize(width: UIScreen.main.bounds.width - 72, height: .infinity)
+        let estimatedHeight = text.boundingRect(
+            with: size,
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: UIFont.systemFont(ofSize: 15)],
+            context: nil
+        ).height
+
+        textHeight = max(100, estimatedHeight + 40)
     }
 }
 
 @MainActor
 class WriteNoteViewModel: ObservableObject {
     @Published var ticket: Ticket
-    @Published var isGuideMode: Bool = false
+    @Published var isGuideMode: Bool = true
     @Published var guideQuestions: [NoteGuideQuestion] = []
-    @Published var freeText: String = ""
+    @Published var freeText: String = "asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;"
 
     init(ticket: Ticket) {
         self.ticket = ticket
@@ -274,68 +289,100 @@ struct QuestionSelectionBottomSheet: View {
     let presetQuestions: [PresetGuideQuestion]
     let onQuestionSelected: (String) -> Void
 
+    @State private var selectedQuestion: String?
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Handle
-            RoundedRectangle(cornerRadius: 2)
-                .fill(.opacityWhite200)
-                .frame(width: 133, height: 4)
-                .padding(.top, 16)
-
-            // Header
-            HStack {
-                Button(action: {
-                    dismiss()
-                }) {
-                    Image("arrow_left")
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.opacityWhite200)
-                        .frame(width: 20, height: 20)
-                        .frame(width: 44, height: 44)
-                }
-
-                Spacer()
-
-                Text("질문 선택하기")
-                    .fontStyle(.heading2)
-                    .foregroundStyle(.common100)
-
-                Spacer()
-
-                Color.clear
-                    .frame(width: 44, height: 44)
-            }
-            .padding(.horizontal, 24)
-            .padding(.top, 18)
-
-            // Questions List
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 16) {
-                    ForEach(presetQuestions) { preset in
+        ZStack(alignment: .bottom) {
+            VStack(spacing: 0) {
+                ZStack(alignment: .center) {
+                    HStack {
                         Button(action: {
-                            onQuestionSelected(preset.question)
                             dismiss()
                         }) {
-                            Text(preset.question)
-                                .fontStyle(.body2)
-                                .foregroundColor(.common100)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .frame(height: 62)
-                                .padding(.horizontal, 16)
-                                .background(.opacityWhite850)
-                                .cornerRadius(12)
+                            Image("chevron_left")
+                                .renderingMode(.template)
+                                .foregroundColor(.opacityWhite850)
                         }
+
+                        Spacer()
+                    }
+
+                    Text("질문 선택하기")
+                        .fontStyle(.headline2)
+                        .foregroundStyle(.opacityWhite800)
+                }
+                .padding(.top, 24)
+                .padding(.horizontal, 16)
+
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing: 16) {
+                        ForEach(presetQuestions) { preset in
+                            Button(action: {
+                                selectedQuestion = preset.question
+                            }) {
+                                Text(preset.question)
+                                    .fontStyle(.body2)
+                                    .foregroundColor(.common100)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .frame(height: 64)
+                                    .padding(.horizontal, 16)
+                                    .background(
+                                        selectedQuestion == preset.question
+                                            ? .opacityWhite100.opacity(0.1)
+                                            : .clear,
+                                        in: RoundedRectangle(cornerRadius: 16)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 16)
+                                            .stroke(
+                                                selectedQuestion == preset.question
+                                                    ? .common100
+                                                    : .opacityWhite100,
+                                                lineWidth: selectedQuestion == preset.question ? 1.5 : 1
+                                            )
+                                    )
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.top, 24)
+                    .padding(.bottom, 120)
+                }
+            }
+
+            // 다음 버튼
+            if selectedQuestion != nil {
+                DGButton(
+                    text: "다음",
+                    type: .primaryDark,
+                    disabled: false
+                ) {
+                    if let question = selectedQuestion {
+                        onQuestionSelected(question)
+                        dismiss()
                     }
                 }
                 .padding(.horizontal, 24)
-                .padding(.top, 24)
                 .padding(.bottom, 40)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            .bottomSheetBackground.opacity(0),
+                            .bottomSheetBackground
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 120)
+                    .offset(y: 40)
+                )
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+                .animation(.mediumSpring, value: selectedQuestion)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.common0)
-        .presentationDetents([.medium, .large])
+        .background(.bottomSheetBackground)
+        .presentationDetents([.height(550)])
         .presentationDragIndicator(.hidden)
     }
 }
