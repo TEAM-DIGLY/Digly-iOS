@@ -3,17 +3,17 @@ import SwiftUI
 struct CreateTicketFormView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: CreateTicketViewModel
-    
+
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
     @State private var isTimeSelected: Bool = false
     @FocusState private var isFocused: Bool
-    
-    @State private var shouldNavigateToEndTicket = false
-    @State private var completedTicketData: CreateTicketFormData?
-    
-    init() {
+
+    var onNavigateToEndTicket: ((CreateTicketFormData) -> Void)?
+
+    init(onNavigateToEndTicket: ((CreateTicketFormData) -> Void)? = nil) {
         self._viewModel = StateObject(wrappedValue: CreateTicketViewModel())
+        self.onNavigateToEndTicket = onNavigateToEndTicket
     }
     
     var body: some View {
@@ -51,8 +51,7 @@ struct CreateTicketFormView: View {
         .animation(.mediumSpring, value: viewModel.dateTimeStep)
         .onAppear {
             viewModel.onTicketCreated = { ticketData in
-                completedTicketData = ticketData
-                shouldNavigateToEndTicket = true
+                onNavigateToEndTicket?(ticketData)
             }
         }
         .onChange(of: viewModel.formData.date) { _, newDate in
@@ -61,23 +60,6 @@ struct CreateTicketFormView: View {
             isTimeFocused = true
             isTimeSelected = true
             viewModel.dateTimeStep = .time
-        }
-        .background {
-            if let ticketData = completedTicketData {
-                NavigationLink(
-                    destination: EndCreateTicketView(
-                        ticketData: ticketData,
-                        onAddFeelingTapped: {},
-                        onEditTicketTapped: {},
-                        onCompleteTapped: {
-                            // Navigate back to root
-                        }
-                    ),
-                    isActive: $shouldNavigateToEndTicket
-                ) {
-                    EmptyView()
-                }
-            }
         }
     }
 }

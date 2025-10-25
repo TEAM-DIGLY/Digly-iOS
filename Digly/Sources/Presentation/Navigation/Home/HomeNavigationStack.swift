@@ -44,13 +44,24 @@ struct HomeNavigationStack: View {
     @ViewBuilder
     private func ticketFlowDestinationView(for route: TicketFlowRoute) -> some View {
         switch route {
-        case .addTicket: 
-            AddTicketView()
+        case .addTicket:
+            AddTicketView(
+                onNavigateToAutoInput: {
+                    router.path.append(TicketFlowRoute.ticketAutoInput)
+                },
+                onNavigateToCreateTicket: {
+                    router.path.append(TicketFlowRoute.createTicketForm)
+                }
+            )
         case .ticketAutoInput:
             TicketAutoInputView()
-        case .createTicketForm: 
-            CreateTicketFormView()
-        case .endCreateTicket(let ticketData): 
+        case .createTicketForm:
+            CreateTicketFormView(
+                onNavigateToEndTicket: { ticketData in
+                    router.path.append(TicketFlowRoute.endCreateTicket(ticketData: ticketData))
+                }
+            )
+        case .endCreateTicket(let ticketData):
             EndCreateTicketView(
                 ticketData: ticketData,
                 onAddFeelingTapped: {
@@ -63,9 +74,9 @@ struct HomeNavigationStack: View {
                     router.pop() // Go back to HomeView
                 }
             )
-        case .addFeelingView: 
+        case .addFeelingView:
             PlaceholderView(title: "AddFeelingView", subtitle: "감정 입력 화면 (미구현)")
-        case .editTicketView: 
+        case .editTicketView:
             PlaceholderView(title: "EditTicketView", subtitle: "티켓 정보 수정 화면 (미구현)")
         }
     }

@@ -34,11 +34,19 @@ enum TicketCreationType {
 
 struct AddTicketView: View {
     @Environment(\.dismiss) private var dismiss
-    // Use a generic navigation approach
-    @State private var shouldNavigateToCreateTicket = false
-    @State private var shouldNavigateToAutoInput = false
     @State private var selectedType: TicketCreationType?
-    
+
+    var onNavigateToAutoInput: (() -> Void)?
+    var onNavigateToCreateTicket: (() -> Void)?
+
+    init(
+        onNavigateToAutoInput: (() -> Void)? = nil,
+        onNavigateToCreateTicket: (() -> Void)? = nil
+    ) {
+        self.onNavigateToAutoInput = onNavigateToAutoInput
+        self.onNavigateToCreateTicket = onNavigateToCreateTicket
+    }
+
     var body: some View {
         DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
             BackNavWithTitle(title: "티켓 추가하기", backgroundColor: .common0)
@@ -70,26 +78,17 @@ struct AddTicketView: View {
                     handleNextButton()
                 }
                 .padding(.horizontal, 24)
-            NavigationLink(
-                destination: TicketAutoInputView(),
-                isActive: $shouldNavigateToAutoInput
-            ) { EmptyView() }
-            
-            NavigationLink(
-                destination: CreateTicketFormView(),
-                isActive: $shouldNavigateToCreateTicket  
-            ) { EmptyView() }
         }
     }
-    
+
     private func handleNextButton() {
         guard let selectedType = selectedType else { return }
-        
+
         switch selectedType {
         case .copyTicket:
-            shouldNavigateToAutoInput = true
+            onNavigateToAutoInput?()
         case .createTicket:
-            shouldNavigateToCreateTicket = true
+            onNavigateToCreateTicket?()
         }
     }
 }
