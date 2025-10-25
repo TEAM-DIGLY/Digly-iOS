@@ -59,9 +59,7 @@ class NoteTicketSelectionViewModel: ObservableObject {
         tickets.first { $0.id == selectedTicketId }
     }
     
-    init() {
-        loadTickets()
-    }
+    init() { loadTickets() }
     
     func selectTicket(_ ticket: Ticket) {
         if selectedTicketId == ticket.id {

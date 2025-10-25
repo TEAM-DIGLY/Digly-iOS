@@ -25,20 +25,11 @@ final class NoteRepository: NoteRepositoryProtocol {
         )
     }
     
-    func getNotesByTicket(ticketId: Int, page: Int?, size: Int?) async throws -> NotesResponse {
-        var queryParams: [String: String] = [:]
+    func getNotesByTicket(ticketId: Int, size: Int) async throws -> APIResponse<NotesResponse> {
+        let query: [String: String] = [
+            "size": "\(size)"
+        ]
         
-        if let page = page {
-            queryParams["page"] = String(page)
-        }
-        
-        if let size = size {
-            queryParams["size"] = String(size)
-        }
-        
-        return try await networkAPI.request(
-            NoteEndpoint.getNotesByTicket(ticketId),
-            queryParameters: queryParams
-        )
+        return try await networkAPI.request(NoteEndpoint.getNotesByTicket(ticketId), queryParameters: query)
     }
 }

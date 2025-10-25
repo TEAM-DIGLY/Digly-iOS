@@ -44,5 +44,7 @@
 		<string>Pretendard-Bold.otf</string>
 		<string>Pretendard-Medium.otf</string>
 	</array>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>티켓 이미지를 사진 라이브러리에 저장하기 위해 권한이 필요합니다.</string>
 </dict>
 </plist>

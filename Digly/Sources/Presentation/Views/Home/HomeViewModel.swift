@@ -54,7 +54,7 @@ class HomeViewModel: ObservableObject {
 //        }
 //        
 //        do {
-//            let response = try await noteUseCase.getNotesByTicket(ticketId: focusedTicket.id)
+//            let response = try await noteUseCase.getNotesByTicketId(ticketId: focusedTicket.id)
 //            ticketNotes = response.notes
 //        } catch {
 //            print("Failed to load notes for ticket \(focusedTicket.id): \(error)")

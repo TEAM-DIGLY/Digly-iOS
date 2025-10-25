@@ -6,43 +6,61 @@ struct DGPopup: View {
     
     var body: some View {
         let popup = popupData.type
-        
+
         VStack(spacing: 0) {
-            Text(popup.title)
-                .font(.body2)
-                .foregroundColor(.opacityWhite15)
-                .padding(.bottom, 8)
-            
-            Text(popup.description)
-                .font(.label2)
-                .foregroundColor(.opacityWhite35)
-                .multilineTextAlignment(.center)
-                .padding(.bottom, 20)
-            
-            HStack(spacing: 0) {
-                buttonSection(popup.secondaryButtonText) {
-                    hidePopup()
+            // Icon
+            HStack {
+                Image(popup.image)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(.common100)
+                    .frame(width: 24, height: 24)
+
+                Spacer()
+            }
+            .padding(.bottom, 16)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Text(popup.title)
+                    .fontStyle(.heading2)
+                    .foregroundColor(.common100)
+
+                Text(popup.description)
+                    .fontStyle(.body2)
+                    .foregroundColor(.opacityWhite35)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.bottom, 24)
+
+            HStack(spacing: 12) {
+                if !popup.secondaryButtonText.isEmpty {
+                    buttonSection(popup.secondaryButtonText, isPrimary: false) {
+                        hidePopup()
+                    }
                 }
-                
-                buttonSection(popup.primaryButtonText) {
+
+                buttonSection(popup.primaryButtonText, isPrimary: true) {
                     popupData.action()
                     hidePopup()
                 }
             }
-            
         }
-        .padding(16)
-        .background(.common100, in: RoundedRectangle(cornerRadius: 14))
-        .padding(.horizontal, 48)
+        .padding(24)
+        .background(.common0, in: RoundedRectangle(cornerRadius: 16))
+        .padding(.horizontal, 24)
     }
     
-    private func buttonSection(_ text: String, isSub: Bool = false, action: @escaping ()-> Void)-> some View {
+    private func buttonSection(_ text: String, isPrimary: Bool, action: @escaping ()-> Void)-> some View {
         Button(action: action) {
             Text(text)
-                .font(.label2)
-                .foregroundStyle(.opacityWhite5)
+                .fontStyle(.body1)
+                .foregroundColor(isPrimary ? .common0 : .opacityWhite35)
+                .frame(maxWidth: .infinity)
+                .frame(height: 54)
+                .background(isPrimary ? Color.common100 : Color.opacityWhite5)
+                .cornerRadius(12)
         }
-        .frame(maxWidth: .infinity, maxHeight: 44)
     }
 }
 

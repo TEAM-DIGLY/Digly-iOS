@@ -74,17 +74,14 @@ struct DGBottomTab: View {
         .shadow(color: appearance.shadowColor, radius: 12, x: 0, y: 0)
         .padding(.horizontal, 24)
         .background(.clear)
+        
     }
     
     @ViewBuilder
     private func tabItem(_ tab: TabItem) -> some View {
         let isSelected = selectedTab == tab.rawValue
         
-        Button(action: {
-            withAnimation(.mediumSpring) {
-                selectedTab = tab.rawValue
-            }
-        }) {
+        Button(action: { selectedTab = tab.rawValue }) {
             VStack(spacing: 0) {
                 Image(tab.iconName)
                     .renderingMode(.template)

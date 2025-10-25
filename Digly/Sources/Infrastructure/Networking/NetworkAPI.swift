@@ -127,7 +127,7 @@ final class NetworkAPI {
     
     private func handleError(_ error: APIError) {
         Task { @MainActor in
-            ToastManager.shared.show(.error(error))
+            ToastManager.shared.show(.errorWithMessage(error.localizedDescription))
             
             switch error {
             case .unauthorized:
