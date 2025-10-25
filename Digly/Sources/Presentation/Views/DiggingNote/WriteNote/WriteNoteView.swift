@@ -78,7 +78,7 @@ struct WriteNoteView: View {
     }
 
     private var ticketInfoSection: some View {
-        VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .center, spacing: 4) {
             HStack(spacing: 4) {
                 Text("관람일")
                     .fontStyle(.caption1)
@@ -97,7 +97,6 @@ struct WriteNoteView: View {
                 .fontStyle(.heading2)
                 .foregroundStyle(.common100)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var guideContent: some View {
@@ -202,48 +201,33 @@ struct CustomToggleStyle: ToggleStyle {
     }
 }
 
-// Expandable Text Editor
 struct ExpandableTextEditor: View {
     @Binding var text: String
     let placeholder: String
-    @State private var textHeight: CGFloat = 100
 
     var body: some View {
         ZStack(alignment: .topLeading) {
             if text.isEmpty {
                 Text(placeholder)
-                    .fontStyle(.body2)
-                    .foregroundStyle(.opacityWhite15)
-                    .padding(.horizontal, 4)
-                    .padding(.vertical, 8)
+                    .fontStyle(.body1)
+                    .foregroundStyle(.opacityWhite55)
+                    .padding(16)
             }
-
+            
             TextEditor(text: $text)
-                .fontStyle(.body2)
+                .fontStyle(.body1)
                 .foregroundColor(.common100)
                 .scrollContentBackground(.hidden)
-                .background(Color.clear)
-                .frame(minHeight: textHeight, maxHeight: .infinity)
-                .onChange(of: text) { _, _ in
-                    updateHeight()
-                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+            
+                .background(.opacityWhite25, in: RoundedRectangle(cornerRadius: 24))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(.opacityWhite85, lineWidth: 1)
+                )
+                .frame(minHeight: 100, maxHeight: .infinity)
         }
-        .frame(minHeight: 100)
-        .onAppear {
-            updateHeight()
-        }
-    }
-
-    private func updateHeight() {
-        let size = CGSize(width: UIScreen.main.bounds.width - 72, height: .infinity)
-        let estimatedHeight = text.boundingRect(
-            with: size,
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: UIFont.systemFont(ofSize: 15)],
-            context: nil
-        ).height
-
-        textHeight = max(100, estimatedHeight + 40)
     }
 }
 
