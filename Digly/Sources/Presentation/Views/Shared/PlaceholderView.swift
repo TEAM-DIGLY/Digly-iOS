@@ -27,7 +27,7 @@ struct PlaceholderView: View {
                 VStack(spacing: 16) {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 48))
-                        .foregroundStyle(.neutral45)
+                        .foregroundStyle(.neutral500)
                     
                     Text(title)
                         .fontStyle(.heading2)
@@ -35,7 +35,7 @@ struct PlaceholderView: View {
                     
                     Text(subtitle)
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                         .multilineTextAlignment(.center)
                 }
                 

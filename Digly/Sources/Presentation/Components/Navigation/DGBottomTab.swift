@@ -37,17 +37,17 @@ private struct BottomTabAppearance {
     
     static let light = BottomTabAppearance(
         background: .common100,
-        icon: .neutral35,
-        text: .neutral25,
-        selectionBackground: .neutral85,
+        icon: .neutral600,
+        text: .neutral700,
+        selectionBackground: .neutral100,
         shadowColor: .common0.opacity(0.08)
     )
     
     static let dark = BottomTabAppearance(
         background: .bgDark,
-        icon: .neutral65,
-        text: .neutral85,
-        selectionBackground: .opacityWhite85,
+        icon: .neutral300,
+        text: .neutral100,
+        selectionBackground: .opacityWhite100,
         shadowColor: .common100.opacity(0.08)
     )
 }

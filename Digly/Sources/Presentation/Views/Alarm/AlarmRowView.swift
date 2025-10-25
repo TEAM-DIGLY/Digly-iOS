@@ -11,11 +11,11 @@ struct AlarmRow: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(alarm.title)
                         .font(.label1)
-                        .foregroundColor(.neutral15)
+                        .foregroundColor(.neutral800)
                     
                     Text(alarm.message)
                         .font(.label2)
-                        .foregroundColor(.neutral25)
+                        .foregroundColor(.neutral700)
                         .lineLimit(2)
                 }
                 .frame(maxWidth: .infinity,alignment: .leading)
@@ -23,7 +23,7 @@ struct AlarmRow: View {
             
             Text(alarm.date.timeAgoString())
                 .font(.caption1)
-                .foregroundColor(.neutral45)
+                .foregroundColor(.neutral500)
                 .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }

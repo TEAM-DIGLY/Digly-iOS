@@ -92,7 +92,7 @@ struct FilterBottomSheet: View {
         }) {
             Text(filterType.rawValue)
                 .fontStyle(.body2)
-                .foregroundStyle(selectedFilterType == filterType ? .common100 : .opacityWhite45)
+                .foregroundStyle(selectedFilterType == filterType ? .common100 : .opacityWhite500)
                 .frame(maxWidth: .infinity)
                 .frame(height: 52)
                 .background(
@@ -101,7 +101,7 @@ struct FilterBottomSheet: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(.opacityWhite85, lineWidth: 1)
+                        .stroke(.opacityWhite100, lineWidth: 1)
                 )
         }
     }
@@ -121,7 +121,7 @@ struct FilterBottomSheet: View {
         VStack(spacing: 16) {
             Text("월 선택")
                 .fontStyle(.label2)
-                .foregroundStyle(.neutral65)
+                .foregroundStyle(.neutral300)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
             HStack {
@@ -129,7 +129,7 @@ struct FilterBottomSheet: View {
                     ForEach(yearValues, id: \.self) { year in
                         Text("\(String(year))년")
                             .fontStyle(.headline1)
-                            .foregroundStyle(.neutral65)
+                            .foregroundStyle(.neutral300)
                             .tag(year)
                     }
                 }
@@ -142,7 +142,7 @@ struct FilterBottomSheet: View {
                     ForEach(monthValues, id: \.self) { month in
                         Text("\(month)월")
                             .fontStyle(.headline1)
-                            .foregroundStyle(.neutral65)
+                            .foregroundStyle(.neutral300)
                             .tag(month)
                     }
                 }
@@ -208,12 +208,12 @@ struct FilterBottomSheet: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(label)
                     .fontStyle(.label2)
-                    .foregroundStyle(.neutral65)
+                    .foregroundStyle(.neutral300)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 Text(date.toyyyyMMddString())
                     .fontStyle(.headline2)
-                    .foregroundStyle(.neutral65)
+                    .foregroundStyle(.neutral300)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.leading, 16)
@@ -221,8 +221,8 @@ struct FilterBottomSheet: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(isFieldFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFieldFocused ? 1.5 : 1)
-                    .background(.opacityWhite95)
+                    .stroke(isFieldFocused ? .opacityWhite600 : .opacityWhite100, lineWidth: isFieldFocused ? 1.5 : 1)
+                    .background(.opacityWhite50)
             )
         }
         .contentTransition(.numericText())
@@ -239,7 +239,7 @@ struct FilterBottomSheet: View {
                         displayedComponents: .date
                     )
                     .onTapGesture(count: 99){}
-                    .tint(.neutral65)
+                    .tint(.neutral300)
                     .colorScheme(.dark)
                     .datePickerStyle(.wheel)
                     .frame(width: 320, height: 200)
@@ -253,7 +253,7 @@ struct FilterBottomSheet: View {
                         displayedComponents: .date
                     )
                     .onTapGesture(count: 99){}
-                    .tint(.neutral65)
+                    .tint(.neutral300)
                     .colorScheme(.dark)
                     .datePickerStyle(.wheel)
                     .frame(width: 320, height: 200)

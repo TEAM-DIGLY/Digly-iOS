@@ -55,8 +55,8 @@ struct TicketScrollView: View {
                 
             default:
                 RoundedRectangle(cornerRadius: 28)
-                    .fill(.neutral95)
-                    .stroke(.neutral75, lineWidth: 1.5)
+                    .fill(.neutral50)
+                    .stroke(.neutral200, lineWidth: 1.5)
                     .padding(1)
             }
             
@@ -113,7 +113,7 @@ struct TicketScrollView: View {
     private func DDayForegroundColor(_ days: Int) -> Color {
         switch days {
         case 0:
-            return .neutral5
+            return .neutral900
         case 1...3:
             return .common100
         default:
@@ -135,14 +135,14 @@ struct TicketScrollView: View {
         case 0...3:
             return .common100
         default:
-            return .neutral5
+            return .neutral900
         }
     }
     
     private func backgroundColor(_ days: Int) -> Color {
         switch days {
         case 0...3:
-            return .opacityCool25
+            return .opacityCool700
         default:
             return authManager.digly.lightColor
         }
@@ -155,7 +155,7 @@ struct TicketScrollView: View {
         case 1...3:
             return authManager.digly.lightColor
         default:
-            return .neutral55
+            return .neutral400
         }
     }
     

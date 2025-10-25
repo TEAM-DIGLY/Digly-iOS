@@ -29,7 +29,7 @@ struct BackNavBar: View {
             }) {
                 Image("chevron_left")
                     .renderingMode(.template)
-                    .foregroundStyle(isDarkMode ? .opacityWhite5 : .neutral5)
+                    .foregroundStyle(isDarkMode ? .opacityWhite850 : .neutral900)
 //                    .resizable()
 //                    .frame(width: 32, height: 32)
             }
@@ -56,7 +56,7 @@ struct TitleBackNavBar<Content: View>: View {
                 }) {
                     Image("chevron_left")
                         .renderingMode(.template)
-                        .foregroundStyle(isDarkMode ? .opacityWhite5 : .neutral5)
+                        .foregroundStyle(isDarkMode ? .opacityWhite850 : .neutral900)
                 }
                 
                 Spacer()
@@ -66,7 +66,7 @@ struct TitleBackNavBar<Content: View>: View {
             
             Text(title)
                 .font(.headline2)
-                .foregroundStyle(.opacityWhite15)
+                .foregroundStyle(.opacityWhite800)
         }
         .padding(.horizontal, 16)
         .frame(height: 48)
@@ -86,7 +86,7 @@ struct BackNavBarWithContent<Content: View>: View {
             }) {
                 Image("chevron_left")
                     .renderingMode(.template)
-                    .foregroundStyle(isDarkMode ? .opacityWhite5 : .neutral5)
+                    .foregroundStyle(isDarkMode ? .opacityWhite850 : .neutral900)
             }
             
             content()
@@ -126,7 +126,7 @@ struct DropdownNavBar: View {
         }
         .padding(.horizontal, 16)
         .frame(height: 48)
-        .background(Color.white)
+        .background(.common100)
     }
 }
 
@@ -152,6 +152,6 @@ struct CloseNavBar: View {
         }
         .padding(.horizontal, 16)
         .frame(height: 48)
-        .background(Color.white)
+        .background(.common100)
     }
 }

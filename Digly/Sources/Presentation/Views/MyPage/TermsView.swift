@@ -12,14 +12,14 @@ struct TermsView: View {
                 }) {
                     Image("chevron_left")
                         .renderingMode(.template)
-                        .foregroundStyle(.neutral5)
+                        .foregroundStyle(.neutral900)
                 }
                 
                 Spacer()
                 
                 Text("이용약관")
                     .fontStyle(.headline2)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                 
                 Spacer()
                 
@@ -37,7 +37,7 @@ struct TermsView: View {
             
             Text("이용약관 화면")
                 .fontStyle(.heading2)
-                .foregroundStyle(.neutral35)
+                .foregroundStyle(.neutral600)
             
             Spacer()
         }

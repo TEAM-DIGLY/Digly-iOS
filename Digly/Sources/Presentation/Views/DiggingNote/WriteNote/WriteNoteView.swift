@@ -15,7 +15,7 @@ struct WriteNoteView: View {
             headerSection
             
             Divider()
-                .background(Color.opacityWhite75)
+                .background(.opacityWhite200)
             
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 0) {
@@ -82,15 +82,15 @@ struct WriteNoteView: View {
             HStack(spacing: 4) {
                 Text("관람일")
                     .fontStyle(.caption1)
-                    .foregroundStyle(.opacityWhite25)
+                    .foregroundStyle(.opacityWhite700)
 
                 Circle()
-                    .fill(Color.opacityWhite25)
+                    .fill(.opacityWhite700)
                     .frame(width: 2, height: 2)
 
                 Text(viewModel.ticket.time.toInquiryDateString())
                     .fontStyle(.caption1)
-                    .foregroundStyle(.opacityWhite25)
+                    .foregroundStyle(.opacityWhite700)
             }
 
             Text(viewModel.ticket.name)
@@ -105,7 +105,7 @@ struct WriteNoteView: View {
                 VStack(spacing: 0) {
                     if index > 0 {
                         Divider()
-                            .background(Color.opacityWhite15)
+                            .background(.opacityWhite800)
                             .padding(.horizontal, 24)
                     }
 
@@ -123,7 +123,7 @@ struct WriteNoteView: View {
                             Image("chevron_down")
                                 .resizable()
                                 .renderingMode(.template)
-                                .foregroundColor(.opacityWhite25)
+                                .foregroundColor(.opacityWhite700)
                                 .frame(width: 16, height: 16)
                                 .rotationEffect(.degrees(180))
                                 .frame(width: 44, height: 44)
@@ -154,7 +154,7 @@ struct WriteNoteView: View {
                     .foregroundColor(.common100)
                     .frame(maxWidth: .infinity)
                     .frame(height: 62)
-                    .background(Color.opacityWhite5)
+                    .background(.opacityWhite850)
                     .cornerRadius(12)
             }
             .padding(.horizontal, 24)
@@ -181,7 +181,7 @@ struct CustomToggleStyle: ToggleStyle {
         }){
             ZStack(alignment: configuration.isOn ? .trailing : .leading) {
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(.opacityWhite25, lineWidth: 1)
+                    .stroke(.opacityWhite700, lineWidth: 1)
                     .frame(width: 51, height: 24)
                 
                 Circle()
@@ -210,7 +210,7 @@ struct ExpandableTextEditor: View {
             if text.isEmpty {
                 Text(placeholder)
                     .fontStyle(.body1)
-                    .foregroundStyle(.opacityWhite55)
+                    .foregroundStyle(.opacityWhite400)
                     .padding(16)
             }
             
@@ -221,10 +221,10 @@ struct ExpandableTextEditor: View {
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
             
-                .background(.opacityWhite25, in: RoundedRectangle(cornerRadius: 24))
+                .background(.opacityWhite700, in: RoundedRectangle(cornerRadius: 24))
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
-                        .stroke(.opacityWhite85, lineWidth: 1)
+                        .stroke(.opacityWhite100, lineWidth: 1)
                 )
                 .frame(minHeight: 100, maxHeight: .infinity)
         }
@@ -278,7 +278,7 @@ struct QuestionSelectionBottomSheet: View {
         VStack(spacing: 0) {
             // Handle
             RoundedRectangle(cornerRadius: 2)
-                .fill(Color.opacityWhite75)
+                .fill(.opacityWhite200)
                 .frame(width: 133, height: 4)
                 .padding(.top, 16)
 
@@ -290,7 +290,7 @@ struct QuestionSelectionBottomSheet: View {
                     Image("arrow_left")
                         .resizable()
                         .renderingMode(.template)
-                        .foregroundColor(.opacityWhite75)
+                        .foregroundColor(.opacityWhite200)
                         .frame(width: 20, height: 20)
                         .frame(width: 44, height: 44)
                 }
@@ -323,7 +323,7 @@ struct QuestionSelectionBottomSheet: View {
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .frame(height: 62)
                                 .padding(.horizontal, 16)
-                                .background(Color.opacityWhite5)
+                                .background(.opacityWhite850)
                                 .cornerRadius(12)
                         }
                     }
@@ -334,7 +334,7 @@ struct QuestionSelectionBottomSheet: View {
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.common0)
+        .background(.common0)
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.hidden)
     }

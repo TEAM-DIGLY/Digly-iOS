@@ -26,12 +26,12 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("내가 수집한 티켓")
                             .fontStyle(.label1)
-                            .foregroundStyle(.neutral35)
+                            .foregroundStyle(.neutral600)
                         
                         HStack(spacing: 0) {
                             Text("\(viewModel.noteCount)")
                                 .fontStyle(.headline2)
-                                .foregroundStyle(.neutral15)
+                                .foregroundStyle(.neutral800)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                             
                             Image("chevron_right")
@@ -55,14 +55,14 @@ struct HomeView: View {
         }
         .padding(.bottom, 120)
         .frame(height: 360)
-        .background(.neutral85, in: UnevenRoundedRectangle(topLeadingRadius: 64))
+        .background(.neutral100, in: UnevenRoundedRectangle(topLeadingRadius: 64))
     }
     
     private var headerSection: some View {
         HStack (spacing: 4) {
             Text("\(authManager.nickname)의")
                 .fontStyle(.headline1)
-                .foregroundStyle(.neutral5)
+                .foregroundStyle(.neutral900)
             
             Image(authManager.logoImageName)
                 .resizable()
@@ -100,14 +100,14 @@ struct HomeView: View {
                     }) {
                         Text("관람 예정 티켓 추가하기")
                             .fontStyle(.headline1)
-                            .foregroundStyle(.neutral15)
+                            .foregroundStyle(.neutral800)
                             .padding(.vertical, 16)
                             .frame(maxWidth: .infinity)
                             .background(.common100, in: RoundedRectangle(cornerRadius: 16)
                             )
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.neutral75, lineWidth: 1.5)
+                                    .stroke(.neutral200, lineWidth: 1.5)
                             )
                     }
                     .padding(.horizontal, 16)
@@ -133,9 +133,9 @@ struct HomeView: View {
             Text("아직 등록한\n티켓이 없어요")
                 .fontStyle(.body1)
                 .multilineTextAlignment(.center)
-                .foregroundStyle(.neutral55)
+                .foregroundStyle(.neutral400)
                 .padding(24)
-                .background(.neutral84, in: RoundedRectangle(cornerRadius: 24))
+                .background(.neutral150, in: RoundedRectangle(cornerRadius: 24))
         } else if viewModel.tickets.count == 1 {
             ticketCard
         } else {
@@ -162,17 +162,17 @@ struct HomeView: View {
                     
                     Text(ticket.time.toTicketDateString())
                         .fontStyle(.smallLine)
-                        .foregroundStyle(.opacityCool35)
+                        .foregroundStyle(.opacityCool600)
                         .padding(.bottom, 2)
                     
                     Text(ticket.time.toTimeString())
                         .fontStyle(.smallLine)
-                        .foregroundStyle(.opacityCool35)
+                        .foregroundStyle(.opacityCool600)
                         .padding(.bottom, 8)
                     
                     Text(ticket.place)
                         .fontStyle(.smallLine)
-                        .foregroundStyle(.opacityCool35)
+                        .foregroundStyle(.opacityCool600)
                         .lineLimit(1)
                     
                     Spacer()

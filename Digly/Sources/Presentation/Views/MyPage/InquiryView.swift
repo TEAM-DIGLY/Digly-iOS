@@ -12,14 +12,14 @@ struct InquiryView: View {
                 }) {
                     Image("chevron_left")
                         .renderingMode(.template)
-                        .foregroundStyle(.neutral5)
+                        .foregroundStyle(.neutral900)
                 }
                 
                 Spacer()
                 
                 Text("1:1 문의")
                     .fontStyle(.headline2)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                 
                 Spacer()
                 
@@ -37,7 +37,7 @@ struct InquiryView: View {
             
             Text("1:1 문의 화면")
                 .fontStyle(.heading2)
-                .foregroundStyle(.neutral35)
+                .foregroundStyle(.neutral600)
             
             Spacer()
         }

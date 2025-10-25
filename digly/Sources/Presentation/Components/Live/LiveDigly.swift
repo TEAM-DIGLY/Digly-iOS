@@ -12,7 +12,7 @@ struct LiveDigly : View {
     var body : some View{
         ZStack {
             Circle()
-                .fill(.neutral5)
+                .fill(.neutral900)
                 .frame(width: 62, height: 62)
             
             HStack(spacing: 6) {

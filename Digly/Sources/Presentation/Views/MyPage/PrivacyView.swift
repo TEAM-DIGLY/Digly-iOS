@@ -11,14 +11,14 @@ struct PrivacyView: View {
                 }) {
                     Image("chevron_left")
                         .renderingMode(.template)
-                        .foregroundStyle(.neutral5)
+                        .foregroundStyle(.neutral900)
                 }
                 
                 Spacer()
                 
                 Text("개인정보 처리방침")
                     .fontStyle(.headline2)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                 
                 Spacer()
                 
@@ -35,7 +35,7 @@ struct PrivacyView: View {
             
             Text("개인정보 수집 및 이용 동의 내역 화면")
                 .fontStyle(.heading2)
-                .foregroundStyle(.neutral35)
+                .foregroundStyle(.neutral600)
                 .multilineTextAlignment(.center)
             
             Spacer()

@@ -19,13 +19,13 @@ struct DateTimePickerBottomSheet: View {
                     onClose()
                     dismiss()
                 }
-                .foregroundStyle(.neutral45)
+                .foregroundStyle(.neutral500)
                 
                 Spacer()
                 
                 Text(step.labelText)
                     .fontStyle(.headline1)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                 
                 Spacer()
                 
@@ -33,14 +33,14 @@ struct DateTimePickerBottomSheet: View {
                     updateSelectedValue()
                     onNext()
                 }
-                .foregroundStyle(.neutral5)
+                .foregroundStyle(.neutral900)
                 .fontWeight(.medium)
             }
             .padding(.horizontal, 24)
             .padding(.vertical, 16)
             
             Divider()
-                .background(.neutral85)
+                .background(.neutral100)
             
             // Picker content
             VStack(spacing: 24) {

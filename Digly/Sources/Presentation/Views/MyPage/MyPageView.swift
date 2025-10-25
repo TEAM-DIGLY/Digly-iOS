@@ -52,7 +52,7 @@ struct MyPageView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(authManager.diglyType.verb)
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral25)
+                        .foregroundStyle(.neutral700)
                     
                     Text(authManager.nickname)
                         .fontStyle(.heading2)
@@ -69,7 +69,7 @@ struct MyPageView: View {
                     
                     Text("프로필 설정")
                         .fontStyle(.label2)
-                        .foregroundStyle(.neutral15)
+                        .foregroundStyle(.neutral800)
                 }
                 .padding(12)
                 .frame(maxWidth: .infinity)
@@ -97,13 +97,13 @@ struct MyPageView: View {
             HStack {
                 Text(title)
                     .fontStyle(.body2)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                 
                 Spacer()
                 
                 Image("chevron_right")
                     .renderingMode(.template)
-                    .foregroundStyle(.neutral55)
+                    .foregroundStyle(.neutral400)
             }
             .padding(.horizontal, 32)
             .padding(.vertical, 20)
@@ -125,7 +125,7 @@ struct MyPageView: View {
                     .padding(.vertical, 16)
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(.opacityCool75, lineWidth: 1)
+                            .stroke(.opacityCool200, lineWidth: 1)
                     )
             }
             .padding(.bottom, 16)

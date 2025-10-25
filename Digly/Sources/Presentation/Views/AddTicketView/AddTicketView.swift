@@ -106,11 +106,11 @@ struct TicketOptionCard: View {
                 VStack(spacing: 8) {
                     Text(type.title)
                         .fontStyle(.headline1)
-                        .foregroundStyle(.neutral85)
+                        .foregroundStyle(.neutral100)
                     
                     Text(type.description)
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                         .multilineTextAlignment(.center)
                         .lineLimit(nil)
                 }
@@ -118,11 +118,11 @@ struct TicketOptionCard: View {
             .padding(.top, 32)
             .padding(.bottom, 24)
             .frame(maxWidth: .infinity)
-            .background(Color.neutral5.opacity(0.05), in: RoundedRectangle(cornerRadius: 24))
+            .background(.neutral900.opacity(0.05), in: RoundedRectangle(cornerRadius: 24))
             .overlay(
                 RoundedRectangle(cornerRadius: 24)
                     .stroke(
-                        isSelected ? Color.neutral85.opacity(0.65) : Color.neutral85.opacity(0.15),
+                        isSelected ? .neutral100.opacity(0.65) : .neutral100.opacity(0.15),
                         lineWidth: 1.5
                     )
             )

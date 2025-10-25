@@ -82,8 +82,8 @@ struct TicketCardView: View {
         }
         
         return (
-            [Color.neutral15.opacity(0.2), Color.neutral15.opacity(0.02)],
-            [Color.neutral55.opacity(0.2), Color.neutral55.opacity(0.1)]
+            [.neutral800.opacity(0.2), .neutral800.opacity(0.02)],
+            [.neutral400.opacity(0.2), .neutral400.opacity(0.1)]
         )
     }
     
@@ -100,34 +100,34 @@ struct TicketCardView: View {
                     
                     Image("chevron_right")
                         .renderingMode(.template)
-                        .foregroundStyle(.opacityWhite25)
+                        .foregroundStyle(.opacityWhite700)
                 }
                 .padding(.bottom, 24)
                 
                 Text("#\(ticket.count)번째 관람")
-                    .foregroundStyle(.opacityWhite5)
+                    .foregroundStyle(.opacityWhite850)
                     .font(.caption1)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(.opacityWhite75, lineWidth: 1)
+                            .stroke(.opacityWhite200, lineWidth: 1)
                     )
                     .padding(.bottom, 8)
                 
                 Text("\(ticket.time.toInquiryDateString()) • \(ticket.place)")
                     .fontStyle(.caption1)
-                    .foregroundStyle(.opacityWhite15)
+                    .foregroundStyle(.opacityWhite800)
                     .lineLimit(1)
             case .small:
                 Text("#\(ticket.count)번째 관람")
-                    .foregroundStyle(.opacityWhite5)
+                    .foregroundStyle(.opacityWhite850)
                     .font(.caption1)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(.opacityWhite75, lineWidth: 1)
+                            .stroke(.opacityWhite200, lineWidth: 1)
                     )
                     .padding(.bottom, 12)
                 
@@ -140,18 +140,18 @@ struct TicketCardView: View {
                     Text("관람일")
                     
                     Circle()
-                        .fill(.neutral45)
+                        .fill(.neutral500)
                         .frame(width: 2, height: 2)
                     
                     Text(ticket.time.toInquiryDateString())
                 }
                 .fontStyle(.caption1)
-                .foregroundStyle(.neutral65)
+                .foregroundStyle(.neutral300)
                 .padding(.bottom, 8)
                 
                 Text(ticket.name)
                     .fontStyle(.body2)
-                    .foregroundStyle(.neutral65)
+                    .foregroundStyle(.neutral300)
                     .lineLimit(2)
                 
                 Spacer()
@@ -161,20 +161,20 @@ struct TicketCardView: View {
                         Image("digging_note")
                             .renderingMode(.template)
                             .resizable()
-                            .foregroundStyle(.neutral55)
+                            .foregroundStyle(.neutral400)
                             .frame(width: 12, height: 12)
                         
                         
                         Text("\(noteCnt)개의 노트")
                             .fontStyle(.caption1)
-                            .foregroundStyle(.opacityWhite5)
+                            .foregroundStyle(.opacityWhite850)
                         
                     }
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .overlay(
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(.opacityWhite85, lineWidth: 1)
+                            .stroke(.opacityWhite100, lineWidth: 1)
                     )
                 }
             }

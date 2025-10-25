@@ -62,17 +62,17 @@ struct CreateAccountView: View {
             VStack(spacing: 16) {
                 Text("만나서 반가워요!")
                     .fontStyle(.title3)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                 
                 Text("앞으로 당신을\n어떻게 부를까요?")
                     .fontStyle(.title3)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
                     .multilineTextAlignment(.center)
             }
             .padding(.bottom,24)
             
             HStack(spacing: 0) {
-                TextField("", text: $viewModel.username, prompt: Text("이름").foregroundColor(.neutral65))
+                TextField("", text: $viewModel.username, prompt: Text("이름").foregroundColor(.neutral300))
                     .fontStyle(.title2)
                     .foregroundStyle(.common0)
                     .focused($isUsernameFocused)
@@ -92,8 +92,8 @@ struct CreateAccountView: View {
             .padding(.leading, 16)
             .background{
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(.neutral95)
-                    .stroke(.neutral75)
+                    .fill(.neutral50)
+                    .stroke(.neutral200)
             }
             
             statusText
@@ -136,7 +136,7 @@ struct CreateAccountView: View {
             HStack(spacing: 6) {
                 ForEach(Array(Digly.data.enumerated()), id: \.offset) { index, element in
                     Circle()
-                        .fill(viewModel.selectedIndex == index ? Digly.data[index].color : .neutral65)
+                        .fill(viewModel.selectedIndex == index ? Digly.data[index].color : .neutral300)
                         .frame(width: 8, height: 8)
                 }
             }
@@ -163,7 +163,7 @@ struct CreateAccountView: View {
                     .foregroundStyle(.common100)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .background(.neutral5)
+                    .background(.neutral900)
                     .cornerRadius(12)
             }
             .disabled(viewModel.isLoading)
@@ -234,7 +234,7 @@ struct CreateAccountView: View {
             Text(viewModel.isUsernameValid ? "사용 가능한 아이디입니다." : "*2-7자의 한글, 영문, 특수기호, 이모티콘 사용 가능")
                 .fontStyle(.label2)
                 .foregroundStyle(viewModel.isUsernameValid ? .success :
-                                    viewModel.username.isEmpty ? .neutral65 : .neutral25)
+                                    viewModel.username.isEmpty ? .neutral300 : .neutral700)
         } else {
             Text(viewModel.errorText)
                 .fontStyle(.label2)

@@ -70,7 +70,7 @@ extension CreateTicketFormView {
         HStack(spacing: 4) {
             Text(viewModel.currentStep.getFormattedTitle(with: viewModel.formData.showName))
                 .fontStyle(.label2)
-                .foregroundStyle(.neutral65)
+                .foregroundStyle(.neutral300)
             
             if viewModel.currentStep != .ticketDetails {
                 Text("*")
@@ -106,9 +106,9 @@ extension CreateTicketFormView {
             DGTextField(
                 text: viewModel.setFieldBinding(for: type),
                 placeholder: type.placeholderText,
-                placeholderColor: .opacityWhite65,
-                backgroundColor: .opacityWhite95,
-                borderColor: .opacityWhite85,
+                placeholderColor: .opacityWhite300,
+                backgroundColor: .opacityWhite50,
+                borderColor: .opacityWhite100,
                 cursorColor: .common100,
                 isFocused: $isFocused,
                 onClear: {}
@@ -128,14 +128,14 @@ extension CreateTicketFormView {
                             }) {
                                 Text(searchResult)
                                     .fontStyle(.body2)
-                                    .foregroundStyle(.opacityWhite5)
+                                    .foregroundStyle(.opacityWhite850)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .frame(height: 44)
                             }
                             
                             if searchResult != viewModel.searchResults.last {
                                 Divider()
-                                    .background(.opacityWhite65)
+                                    .background(.opacityWhite300)
                             }
                         }
                     }
@@ -144,10 +144,10 @@ extension CreateTicketFormView {
                 .frame(maxHeight: 200)
             }
         }
-        .background(.opacityWhite95, in: RoundedRectangle(cornerRadius: 14))
+        .background(.opacityWhite50, in: RoundedRectangle(cornerRadius: 14))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(isFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFocused ? 1.5 : 1)
+                .stroke(isFocused ? .opacityWhite600 : .opacityWhite100, lineWidth: isFocused ? 1.5 : 1)
         )
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -190,7 +190,7 @@ extension CreateTicketFormView {
             HStack {
                 Text(value)
                     .fontStyle(.headline1)
-                    .foregroundStyle(value.contains("관람") ? .opacityWhite65 : .neutral65)
+                    .foregroundStyle(value.contains("관람") ? .opacityWhite300 : .neutral300)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 if value.contains("관람") {
@@ -202,8 +202,8 @@ extension CreateTicketFormView {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(isFieldFocused ? .opacityWhite35 : .opacityWhite85, lineWidth: isFieldFocused ? 1.5 : 1)
-                    .background(.opacityWhite95)
+                    .stroke(isFieldFocused ? .opacityWhite600 : .opacityWhite100, lineWidth: isFieldFocused ? 1.5 : 1)
+                    .background(.opacityWhite50)
             )
         }
         .contentTransition(.numericText())
@@ -220,7 +220,7 @@ extension CreateTicketFormView {
                         displayedComponents: .date
                     )
                     .onTapGesture(count: 99){}
-                    .tint(.neutral65)
+                    .tint(.neutral300)
                     .colorScheme(.dark)
                     .datePickerStyle(GraphicalDatePickerStyle())
                     .frame(width: 320)
@@ -234,7 +234,7 @@ extension CreateTicketFormView {
                     )
                     .tint(.common100)
                     .datePickerStyle(.wheel)
-                    .tint(.neutral65)
+                    .tint(.neutral300)
                     .colorScheme(.dark)
                     .frame(width: 320)
                 }
@@ -242,7 +242,7 @@ extension CreateTicketFormView {
             .padding(.vertical, 8)
             .background(
                 RoundedRectangle(cornerRadius: 12)
-                    .stroke(.opacityWhite85, lineWidth: 1)
+                    .stroke(.opacityWhite100, lineWidth: 1)
             )
         }
     }
@@ -281,7 +281,7 @@ extension CreateTicketFormView {
                         HStack(spacing: 4) {
                             Text("(선택) 관람 횟수")
                                 .fontStyle(.label2)
-                                .foregroundStyle(.neutral65)
+                                .foregroundStyle(.neutral300)
                         }
                         
                         HStack(spacing: 12) {
@@ -294,7 +294,7 @@ extension CreateTicketFormView {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("(선택) 좌석 번호")
                             .fontStyle(.label2)
-                            .foregroundStyle(.neutral65)
+                            .foregroundStyle(.neutral300)
                         
                         TextField("ex) a열 j 32번", text: Binding(
                             get: { viewModel.formData.seatNumber },
@@ -302,15 +302,15 @@ extension CreateTicketFormView {
                         ))
                         .focused($isFocused)
                         .fontStyle(.headline1)
-                        .foregroundStyle(viewModel.formData.seatNumber.isEmpty ? .neutral55 : .neutral85)
+                        .foregroundStyle(viewModel.formData.seatNumber.isEmpty ? .neutral400 : .neutral100)
                         .padding(.horizontal, 16)
                         .frame(height: 57)
                         .background(
                             RoundedRectangle(cornerRadius: 14)
-                                .fill(.neutral5.opacity(0.05))
+                                .fill(.neutral900.opacity(0.05))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 14)
-                                        .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                                        .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
                                 )
                         )
                     }
@@ -318,7 +318,7 @@ extension CreateTicketFormView {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("(선택) 티켓 가격")
                             .fontStyle(.label2)
-                            .foregroundStyle(.neutral65)
+                            .foregroundStyle(.neutral300)
                         
                         TextField("", text: Binding(
                             get: { String(viewModel.formData.price) },
@@ -331,10 +331,10 @@ extension CreateTicketFormView {
                         .frame(height: 57)
                         .background(
                             RoundedRectangle(cornerRadius: 14)
-                                .fill(.neutral5.opacity(0.05))
+                                .fill(.neutral900.opacity(0.05))
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 14)
-                                        .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                                        .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
                                 )
                         )
                     }
@@ -351,7 +351,7 @@ extension CreateTicketFormView {
                 HStack(spacing: 4) {
                     Text(label)
                         .fontStyle(.label2)
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                     
                     if isRequired {
                         Text("*")
@@ -363,16 +363,16 @@ extension CreateTicketFormView {
             
             Text(value)
                 .fontStyle(.headline1)
-                .foregroundStyle(.neutral85)
+                .foregroundStyle(.neutral100)
                 .padding(.horizontal, 16)
                 .frame(height: 57)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(
                     RoundedRectangle(cornerRadius: 14)
-                        .fill(.neutral5.opacity(0.05))
+                        .fill(.neutral900.opacity(0.05))
                         .overlay(
                             RoundedRectangle(cornerRadius: 14)
-                                .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                                .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
                         )
                 )
         }
@@ -386,9 +386,9 @@ extension CreateTicketFormView {
         }) {
             Image(systemName: "minus")
                 .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(.neutral75)
+                .foregroundStyle(.neutral200)
                 .frame(width: 57, height: 57)
-                .background(.neutral85.opacity(0.15))
+                .background(.neutral100.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 14))
         }
         .buttonStyle(PlainButtonStyle())
@@ -402,9 +402,9 @@ extension CreateTicketFormView {
         }) {
             Image(systemName: "plus")
                 .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(.neutral75)
+                .foregroundStyle(.neutral200)
                 .frame(width: 57, height: 57)
-                .background(.neutral85.opacity(0.15))
+                .background(.neutral100.opacity(0.15))
                 .clipShape(RoundedRectangle(cornerRadius: 14))
         }
         .buttonStyle(PlainButtonStyle())
@@ -416,15 +416,15 @@ extension CreateTicketFormView {
             set: { viewModel.updateSeatNumber($0) }
         ))
         .fontStyle(.headline1)
-        .foregroundStyle(.neutral55)
+        .foregroundStyle(.neutral400)
         .multilineTextAlignment(.center)
         .frame(height: 57)
         .background(
             RoundedRectangle(cornerRadius: 14)
-                .fill(.neutral5.opacity(0.05))
+                .fill(.neutral900.opacity(0.05))
                 .overlay(
                     RoundedRectangle(cornerRadius: 14)
-                        .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                        .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
                 )
         )
     }

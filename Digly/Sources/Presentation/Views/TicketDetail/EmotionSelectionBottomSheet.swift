@@ -116,7 +116,7 @@ struct EmotionSelectionBottomSheet: View {
 
                 Text(emotion.displayName)
                     .fontStyle(.body2)
-                    .foregroundStyle(isSelected ? .common100 : .opacityWhite65)
+                    .foregroundStyle(isSelected ? .common100 : .opacityWhite300)
             }
         }
         .frame(height: 96)
@@ -129,7 +129,7 @@ struct EmotionSelectionBottomSheet: View {
                 HStack {
                     Text("선택된 감정")
                         .fontStyle(.body1)
-                        .foregroundStyle(.opacityWhite65)
+                        .foregroundStyle(.opacityWhite300)
 
                     Spacer()
                 }
@@ -154,7 +154,7 @@ struct EmotionSelectionBottomSheet: View {
                         .padding(.vertical, 8)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(.opacityWhite35, lineWidth: 1)
+                                .stroke(.opacityWhite600, lineWidth: 1)
                         )
                     }
                 }
@@ -182,12 +182,12 @@ struct EmotionSelectionBottomSheet: View {
 
             // Background circles for visual interest
             Circle()
-                .fill(.opacityWhite5)
+                .fill(.opacityWhite850)
                 .frame(width: 200, height: 200)
                 .offset(x: -100, y: -150)
 
             Circle()
-                .fill(.opacityWhite5)
+                .fill(.opacityWhite850)
                 .frame(width: 150, height: 150)
                 .offset(x: 120, y: 100)
         }

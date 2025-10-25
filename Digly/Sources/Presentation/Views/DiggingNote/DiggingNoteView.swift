@@ -69,14 +69,14 @@ struct DiggingNoteView: View {
                     
                     Text("노트 추가")
                         .font(.label2)
-                        .foregroundColor(.opacityWhite15)
+                        .foregroundColor(.opacityWhite800)
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 72)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(Color.clear)
-                        .stroke(.opacityWhite75, lineWidth: 1)
+                        .fill(.clear)
+                        .stroke(.opacityWhite200, lineWidth: 1)
                 )
             }
         }

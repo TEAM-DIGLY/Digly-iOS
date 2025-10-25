@@ -59,7 +59,7 @@ struct TicketBookView: View {
                 .padding(16)
                 .overlay(
                     RoundedRectangle(cornerRadius: 12)
-                        .stroke(.opacityWhite75, lineWidth: 1)
+                        .stroke(.opacityWhite200, lineWidth: 1)
                 )
             }
         }
@@ -92,7 +92,7 @@ struct TicketBookView: View {
             
             Text("\(viewModel.totalCnt)")
                 .fontStyle(.heading2)
-                .foregroundStyle(.opacityWhite45)
+                .foregroundStyle(.opacityWhite500)
 
             Spacer()
             

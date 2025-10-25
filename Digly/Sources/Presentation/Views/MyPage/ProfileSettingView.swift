@@ -57,14 +57,14 @@ struct ProfileSettingView: View {
             }) {
                 Image("chevron_left")
                     .renderingMode(.template)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
             }
             
             Spacer()
             
             Text("프로필 설정")
                 .fontStyle(.headline2)
-                .foregroundStyle(.neutral5)
+                .foregroundStyle(.neutral900)
             
             Spacer()
             
@@ -74,7 +74,7 @@ struct ProfileSettingView: View {
             }) {
                 Text("수정")
                     .fontStyle(.body2)
-                    .foregroundStyle(.neutral5)
+                    .foregroundStyle(.neutral900)
             }
         }
         .padding(.horizontal, 16)
@@ -86,7 +86,7 @@ struct ProfileSettingView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("닉네임")
                 .fontStyle(.body2)
-                .foregroundStyle(.neutral35)
+                .foregroundStyle(.neutral600)
             
             DGTextField(text: $nickname, placeholder: "")
         }
@@ -97,11 +97,11 @@ struct ProfileSettingView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("나의 캐릭터")
                 .fontStyle(.body2)
-                .foregroundStyle(.neutral35)
+                .foregroundStyle(.neutral600)
             
             Text("# \(characters[currentCharacterIndex].role)")
                 .fontStyle(.body2)
-                .foregroundStyle(.neutral15)
+                .foregroundStyle(.neutral800)
             
             // Character Selector
             characterSelector
@@ -120,7 +120,7 @@ struct ProfileSettingView: View {
             }) {
                 Image("chevron_left")
                     .renderingMode(.template)
-                    .foregroundStyle(.neutral45)
+                    .foregroundStyle(.neutral500)
                     .frame(width: 24, height: 24)
             }
             .padding(.leading, 20)
@@ -131,7 +131,7 @@ struct ProfileSettingView: View {
             VStack(spacing: 8) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
-                        .fill(.neutral85)
+                        .fill(.neutral100)
                         .frame(width: 120, height: 160)
                     
                     Image(characters[currentCharacterIndex].diglyType.profileImageName)
@@ -142,7 +142,7 @@ struct ProfileSettingView: View {
                 
                 Image("chevron_down_sm")
                     .renderingMode(.template)
-                    .foregroundStyle(.neutral55)
+                    .foregroundStyle(.neutral400)
             }
             
             Spacer()
@@ -155,7 +155,7 @@ struct ProfileSettingView: View {
             }) {
                 Image("chevron_right")
                     .renderingMode(.template)
-                    .foregroundStyle(.neutral45)
+                    .foregroundStyle(.neutral500)
                     .frame(width: 24, height: 24)
             }
             .padding(.trailing, 20)
@@ -167,19 +167,19 @@ struct ProfileSettingView: View {
         VStack(spacing: 16) {
             Text("\(getCurrentDateString()) 로그인")
                 .fontStyle(.caption2)
-                .foregroundStyle(.neutral55)
+                .foregroundStyle(.neutral400)
             
             Button(action: {
                 // Withdrawal action
             }) {
                 Text("회원 탈퇴")
                     .fontStyle(.body2)
-                    .foregroundStyle(.neutral35)
+                    .foregroundStyle(.neutral600)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
                     .background(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(.neutral75, lineWidth: 1)
+                            .stroke(.neutral200, lineWidth: 1)
                     )
             }
         }

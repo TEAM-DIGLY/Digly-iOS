@@ -33,7 +33,7 @@ struct BackNavWithTitle<Content: View>: View {
                 }) {
                     Image("chevron_left")
                         .renderingMode(.template)
-                        .foregroundStyle(backgroundColor == .common100 ? .neutral5  : .common100)
+                        .foregroundStyle(backgroundColor == .common100 ? .neutral900  : .common100)
                 }
                 
                 Spacer()
@@ -48,7 +48,7 @@ struct BackNavWithTitle<Content: View>: View {
             if let title {
                 Text(title)
                     .font(.headline2)
-                    .foregroundStyle(backgroundColor == .common100 ? .neutral5  : .common100)
+                    .foregroundStyle(backgroundColor == .common100 ? .neutral900  : .common100)
             }
         }
         .frame(height: 48)
@@ -107,7 +107,7 @@ struct BackNavWithProgress: View {
                     Button(action: onNextTapped) {
                         Text("다음")
                             .fontStyle(.body1)
-                            .foregroundStyle(isNextDisabled ? .opacityWhite45 : .common100)
+                            .foregroundStyle(isNextDisabled ? .opacityWhite500 : .common100)
                     }
                     .disabled(isNextDisabled)
                 }
@@ -121,11 +121,11 @@ struct BackNavWithProgress: View {
             GeometryReader { geometry in
                 ZStack(alignment: .leading) {
                     Rectangle()
-                        .fill(.neutral15)
+                        .fill(.neutral800)
                         .frame(height: 2)
                     
                     Rectangle()
-                        .fill(.neutral35)
+                        .fill(.neutral600)
                         .frame(width: geometry.size.width * percentage, height: 2)
                         .animation(.easeInOut(duration: 0.3), value: percentage)
                 }

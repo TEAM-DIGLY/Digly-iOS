@@ -47,7 +47,7 @@ extension TicketAutoInputView {
         VStack(spacing: 14) {
             Text("[안내] 한 번에 1개의 티켓 정보만 등록할 수 있어요.")
                 .fontStyle(.body2)
-                .foregroundStyle(.neutral65)
+                .foregroundStyle(.neutral300)
                 .multilineTextAlignment(.center)
             
             Button(action: {
@@ -56,12 +56,12 @@ extension TicketAutoInputView {
                 HStack(spacing: 5) {
                     Text("가이드 보기")
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                         .underline()
                     
                     Image(systemName: "chevron.right")
                         .font(.system(size: 8, weight: .medium))
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                 }
             }
         }
@@ -71,24 +71,24 @@ extension TicketAutoInputView {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topLeading) {
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(.neutral5.opacity(0.05))
+                    .fill(.neutral900.opacity(0.05))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
-                            .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                            .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
                     )
                     .frame(height: 417)
                 
                 if viewModel.ticketText.isEmpty {
                     Text("복사한 티켓 정보를 이곳에 붙여 넣어주세요.")
                         .fontStyle(.body1)
-                        .foregroundStyle(.neutral55)
+                        .foregroundStyle(.neutral400)
                         .padding(.top, 24)
                         .padding(.leading, 20)
                 }
                 
                 TextEditor(text: $viewModel.ticketText)
                     .fontStyle(.body1)
-                    .foregroundStyle(.neutral85)
+                    .foregroundStyle(.neutral100)
                     .scrollContentBackground(.hidden)
                     .background(Color.clear)
                     .padding(.top, 20)

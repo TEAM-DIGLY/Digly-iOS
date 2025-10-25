@@ -27,7 +27,7 @@ struct DGPopup: View {
 
                 Text(popup.description)
                     .fontStyle(.body2)
-                    .foregroundColor(.opacityWhite35)
+                    .foregroundColor(.opacityWhite600)
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -55,10 +55,10 @@ struct DGPopup: View {
         Button(action: action) {
             Text(text)
                 .fontStyle(.body1)
-                .foregroundColor(isPrimary ? .common0 : .opacityWhite35)
+                .foregroundColor(isPrimary ? .common0 : .opacityWhite600)
                 .frame(maxWidth: .infinity)
                 .frame(height: 54)
-                .background(isPrimary ? Color.common100 : Color.opacityWhite5)
+                .background(isPrimary ? .common100 : .opacityWhite850)
                 .cornerRadius(12)
         }
     }

@@ -32,20 +32,20 @@ struct DateTimePickerField: View {
                 HStack {
                     Text("관람 일자")
                         .font(.body1)
-                        .foregroundStyle(.neutral45)
+                        .foregroundStyle(.neutral500)
                     
                     Image(systemName: "calendar")
-                        .foregroundStyle(.neutral45)
+                        .foregroundStyle(.neutral500)
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 48)
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(.neutral95)
+                        .fill(.neutral50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(.neutral85, lineWidth: 1)
+                                .stroke(.neutral100, lineWidth: 1)
                         )
                 )
             }
@@ -58,20 +58,20 @@ struct DateTimePickerField: View {
                 HStack {
                     Text("관람 시간")
                         .font(.body1)
-                        .foregroundStyle(.neutral45)
+                        .foregroundStyle(.neutral500)
                     
                     Image(systemName: "clock")
-                        .foregroundStyle(.neutral45)
+                        .foregroundStyle(.neutral500)
                 }
                 .padding(.horizontal, 16)
                 .frame(height: 48)
                 .frame(maxWidth: .infinity)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(.neutral95)
+                        .fill(.neutral50)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(.neutral85, lineWidth: 1)
+                                .stroke(.neutral100, lineWidth: 1)
                         )
                 )
             }

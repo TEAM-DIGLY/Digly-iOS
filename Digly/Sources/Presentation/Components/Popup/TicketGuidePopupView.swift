@@ -37,10 +37,10 @@ struct TicketGuidePopupView: View {
                     bottomActionSection
                 }
                 .frame(width: 300, height: 465)
-                .background(.neutral5, in: RoundedRectangle(cornerRadius: 16))
+                .background(.neutral900, in: RoundedRectangle(cornerRadius: 16))
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(.neutral85.opacity(0.15), lineWidth: 1)
+                        .stroke(.neutral100.opacity(0.15), lineWidth: 1)
                 )
             }
         }
@@ -55,18 +55,18 @@ extension TicketGuidePopupView {
             VStack(spacing: 8) {
                 Text(guideSteps[currentStep].title)
                     .fontStyle(.headline1)
-                    .foregroundStyle(.neutral85)
+                    .foregroundStyle(.neutral100)
                     .multilineTextAlignment(.center)
                 
                 VStack(spacing: 4) {
                     Text(guideSteps[currentStep].description)
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                         .multilineTextAlignment(.center)
                     
                     Text(guideSteps[currentStep].subDescription)
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral55)
+                        .foregroundStyle(.neutral400)
                         .multilineTextAlignment(.center)
                 }
             }
@@ -76,21 +76,21 @@ extension TicketGuidePopupView {
             // Images
             HStack(spacing: 2) {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(.neutral15)
+                    .fill(.neutral800)
                     .frame(width: 133, height: 236)
                     .overlay {
                         // 실제 이미지로 교체 예정
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(.neutral25, lineWidth: 1)
+                            .stroke(.neutral700, lineWidth: 1)
                     }
                 
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(.neutral15)
+                    .fill(.neutral800)
                     .frame(width: 133, height: 236)
                     .overlay {
                         // 실제 이미지로 교체 예정
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(.neutral25, lineWidth: 1)
+                            .stroke(.neutral700, lineWidth: 1)
                     }
             }
             .padding(.top, 20)
@@ -112,13 +112,13 @@ extension TicketGuidePopupView {
             }) {
                 Text(currentStep == 0 ? "닫기" : "이전")
                     .fontStyle(.body1)
-                    .foregroundStyle(.neutral65)
+                    .foregroundStyle(.neutral300)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
             }
             
             Rectangle()
-                .fill(.neutral25)
+                .fill(.neutral700)
                 .frame(width: 0.5, height: 44)
             
             Button(action: {
@@ -132,16 +132,16 @@ extension TicketGuidePopupView {
             }) {
                 Text(currentStep == guideSteps.count - 1 ? "완료" : "다음")
                     .fontStyle(.body1)
-                    .foregroundStyle(.neutral75)
+                    .foregroundStyle(.neutral200)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
             }
         }
         .frame(height: 44)
-        .background(.neutral5)
+        .background(.neutral900)
         .overlay(
             Rectangle()
-                .fill(.neutral25)
+                .fill(.neutral700)
                 .frame(height: 0.5),
             alignment: .top
         )

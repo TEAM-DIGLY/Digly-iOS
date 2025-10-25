@@ -7,8 +7,8 @@ struct DGTextField<T>: View where T: Hashable {
     let placeholder: String
     var keyboardType: UIKeyboardType = .default
     var textColor: Color = .text100
-    var placeholderColor: Color = .opacityBlack55
-    var backgroundColor: Color = .opacityWhite15
+    var placeholderColor: Color = .opacityBlack400
+    var backgroundColor: Color = .opacityWhite800
     var borderColor: Color = .sbDefault
     var cursorColor: Color = .text100
     

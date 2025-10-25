@@ -89,13 +89,13 @@ struct TicketDetailView: View {
             VStack(alignment: .center, spacing: 0) {
                 Text("@username")
                     .fontStyle(.body2)
-                    .foregroundStyle(.opacityWhite65)
+                    .foregroundStyle(.opacityWhite300)
                     .padding(.top, 24)
 
                 if viewModel.hasEmotions {
                     VStack(spacing: 16) {
                         Rectangle()
-                            .fill(.opacityWhite25)
+                            .fill(.opacityWhite700)
                             .frame(height: 1)
 
                         HStack(spacing: 8) {
@@ -107,7 +107,7 @@ struct TicketDetailView: View {
                                     .padding(.vertical, 6)
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
-                                            .stroke(.opacityWhite35, lineWidth: 1)
+                                            .stroke(.opacityWhite600, lineWidth: 1)
                                     )
                             }
                             Spacer()
@@ -118,21 +118,21 @@ struct TicketDetailView: View {
                     
                     Text("관람 중에 느낀\n나만의 감정을 남겨볼까요?")
                         .fontStyle(.label2)
-                        .foregroundStyle(.opacityWhite25)
+                        .foregroundStyle(.opacityWhite700)
                         .multilineTextAlignment(.center)
                     
                     Image("chevron_down_sm")
                         .padding(.top, -12)
                     
                     Rectangle()
-                        .fill(.opacityWhite85)
+                        .fill(.opacityWhite100)
                         .frame(height: 2)
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal, 32)
                     
                     Text("감정 남기러 가기")
                         .fontStyle(.headline2)
-                        .foregroundStyle(.opacityWhite5)
+                        .foregroundStyle(.opacityWhite850)
                         .frame(height: 76, alignment: .center)
                         .onTapGesture {
                             showEmotionBottomSheet = true
@@ -150,7 +150,7 @@ struct TicketDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             Text("기본정보")
                 .fontStyle(.body1)
-                .foregroundStyle(.opacityWhite15)
+                .foregroundStyle(.opacityWhite800)
                 .padding(.leading, 12)
             
             VStack(spacing: 16) {
@@ -175,7 +175,7 @@ struct TicketDetailView: View {
                     bottomTrailingRadius: 24,
                     topTrailingRadius: 24
                 )
-                .stroke(.opacityWhite85, lineWidth: 1)
+                .stroke(.opacityWhite100, lineWidth: 1)
             )
         }
         .padding(.horizontal, 24)
@@ -185,7 +185,7 @@ struct TicketDetailView: View {
         HStack(alignment: .top, spacing: 0) {
             Text(title)
                 .fontStyle(.body2)
-                .foregroundStyle(.opacityWhite45)
+                .foregroundStyle(.opacityWhite500)
                 .frame(width: 66, alignment: .leading)
 
             VStack(alignment: .leading, spacing: 6) {

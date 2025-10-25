@@ -16,23 +16,23 @@ struct OnboardingView: View {
                     
                     Text("문화생활의 여운\n일상에서 누릴 수 있는\n디깅라이프의 시작.")
                         .fontStyle(.title2_)
-                        .foregroundStyle(.opacityCool55)
+                        .foregroundStyle(.opacityCool400)
                     
                     Text("디글리에 오신\n당신을 환영합니다")
                         .fontStyle(.title2_)
-                        .foregroundStyle(.neutral5)
+                        .foregroundStyle(.neutral900)
                 }
                 .frame(maxWidth: .infinity,alignment: .leading)
                 .padding(.bottom,52)
                 
                 HStack(spacing:18) {
-                    VStack { Divider().frame(maxWidth: 86).background(.neutral25) }
+                    VStack { Divider().frame(maxWidth: 86).background(.neutral700) }
                     
                     Text("SNS 계정으로 로그인")
-                        .foregroundColor(.neutral25)
+                        .foregroundColor(.neutral700)
                         .fontStyle(.caption1)
                     
-                    VStack { Divider().frame(maxWidth: 86).background(.neutral25) }
+                    VStack { Divider().frame(maxWidth: 86).background(.neutral700) }
                 }
                 .padding(.bottom,16)
                 

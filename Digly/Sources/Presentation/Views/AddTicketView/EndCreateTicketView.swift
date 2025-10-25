@@ -118,7 +118,7 @@ extension EndCreateTicketView {
             VStack(spacing: 0) {
                 // Divider line
                 Rectangle()
-                    .fill(.neutral25)
+                    .fill(.neutral700)
                     .frame(height: 1)
                 
                 // Button area
@@ -142,7 +142,7 @@ extension EndCreateTicketView {
         }
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(.neutral85.opacity(0.15), lineWidth: 1)
+                .stroke(.neutral100.opacity(0.15), lineWidth: 1)
         )
     }
     
@@ -203,10 +203,10 @@ extension EndCreateTicketView {
             .padding(24)
             .background(
                 RoundedRectangle(cornerRadius: 14)
-                    .fill(.neutral5.opacity(0.05))
+                    .fill(.neutral900.opacity(0.05))
                     .overlay(
                         RoundedRectangle(cornerRadius: 14)
-                            .stroke(.neutral85.opacity(0.15), lineWidth: 1.5)
+                            .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
                     )
             )
         }
@@ -217,7 +217,7 @@ extension EndCreateTicketView {
             if !label.isEmpty {
                 Text(label)
                     .fontStyle(.body2)
-                    .foregroundStyle(.neutral65)
+                    .foregroundStyle(.neutral300)
                     .frame(width: 66, alignment: .leading)
             } else {
                 Spacer()
@@ -237,10 +237,10 @@ extension EndCreateTicketView {
                 VStack(spacing: 4) {
                     Text("티켓의 정보가 다른가요?")
                         .fontStyle(.body2)
-                        .foregroundStyle(.neutral65)
+                        .foregroundStyle(.neutral300)
                     
                     Rectangle()
-                        .fill(.neutral35)
+                        .fill(.neutral600)
                         .frame(width: 133, height: 4)
                         .clipShape(RoundedRectangle(cornerRadius: 2))
                 }

@@ -26,7 +26,7 @@ struct OnboardingConfirmView: View {
                             .foregroundStyle(.common100)
                             .padding(.vertical, 16)
                             .padding(.horizontal, 24)
-                            .background(.neutral5)
+                            .background(.neutral900)
                             .cornerRadius(12)
                     }
                     .disabled(isLoading)
