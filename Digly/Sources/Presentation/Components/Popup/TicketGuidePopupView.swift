@@ -6,14 +6,14 @@ struct TicketGuidePopupView: View {
     
     private let guideSteps: [TicketGuideStep] = [
         TicketGuideStep(
-            title: "티켓 정보 붙여넣기 가이드",
-            description: "다른 앱에서 티켓 정보를 복사한 후\n붙여넣기 해주세요.",
-            subDescription: "정확한 정보 추출을 위해 전체 텍스트를\n복사해주시기 바랍니다."
+            title: "티켓 정보 붙여넣기 안내",
+            description: "예매한 티켓의 상세정보를 모두 복사해주세요.",
+            subDescription: "극 제목, 날짜와 시간, 장소, 좌석정보, 티켓 금액 정보 외에는 수집하지 않습니다."
         ),
         TicketGuideStep(
             title: "정보 추출 완료",
-            description: "붙여넣은 텍스트에서 필요한 정보를\n자동으로 추출했어요.",
-            subDescription: "추출된 정보를 확인하고 수정이 필요한 경우\n직접 편집할 수 있어요."
+            description: "복사한 정보를 붙여넣고 ‘티켓 정보 인식하기'를 클릭합니다.",
+            subDescription: ""
         )
     ]
     
@@ -35,52 +35,29 @@ struct TicketGuidePopupView: View {
 extension TicketGuidePopupView {
     private var contentSection: some View {
         VStack(spacing: 0) {
-            // Title and description
-            VStack(spacing: 8) {
-                Text(guideSteps[currentStep].title)
-                    .fontStyle(.headline1)
-                    .foregroundStyle(.neutral100)
-                    .multilineTextAlignment(.center)
-                
-                VStack(spacing: 4) {
-                    Text(guideSteps[currentStep].description)
-                        .fontStyle(.body2)
-                        .foregroundStyle(.neutral300)
-                        .multilineTextAlignment(.center)
-                    
-                    Text(guideSteps[currentStep].subDescription)
-                        .fontStyle(.body2)
-                        .foregroundStyle(.neutral400)
-                        .multilineTextAlignment(.center)
-                }
-            }
-            .padding(.top, 20)
-            .padding(.horizontal, 31)
+            Text(guideSteps[currentStep].title)
+                .fontStyle(.body2)
+                .foregroundStyle(.opacityWhite800)
+                .multilineTextAlignment(.center)
+                .padding(.bottom, 16)
             
-            // Images
-            HStack(spacing: 2) {
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.neutral800)
-                    .frame(width: 133, height: 236)
-                    .overlay {
-                        // 실제 이미지로 교체 예정
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(.neutral700, lineWidth: 1)
-                    }
-                
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(.neutral800)
-                    .frame(width: 133, height: 236)
-                    .overlay {
-                        // 실제 이미지로 교체 예정
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(.neutral700, lineWidth: 1)
-                    }
-            }
-            .padding(.top, 20)
-            .padding(.horizontal, 16)
+            Text("< Step \(currentStep+1) >")
+                .fontStyle(.headline2)
+                .foregroundStyle(.opacityWhite600)
+            
+            Text(guideSteps[currentStep].description)
+                .fontStyle(.label2)
+                .foregroundStyle(.opacityWhite850)
+                .multilineTextAlignment(.center)
+                .padding(.bottom, 8)
+            
+            Text(guideSteps[currentStep].subDescription)
+                .fontStyle(.smallBold)
+                .foregroundStyle(.error)
+                .multilineTextAlignment(.center)
+            
+            Image("step_\(currentStep + 1)")
         }
-        .frame(height: 421)
     }
     
     private var bottomActionSection: some View {
