@@ -99,59 +99,46 @@ struct WriteNoteView: View {
     private var guideContent: some View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.guideQuestions.enumerated()), id: \.element.question) { index, question in
-                VStack(spacing: 0) {
-                    if index > 0 {
-                        Divider()
-                            .background(.opacityWhite100)
-                            .padding(.horizontal, 32)
-                    }
-                    
-                    Button(action: {
-                            viewModel.toggleQuestionExpansion(id: question.question)
-                    }) {
-                        HStack(alignment: .center) {
-                            Text(question.question)
-                                .fontStyle(.body2)
-                                .foregroundStyle(.common100)
-                                .lineLimit(2)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.leading, 8)
-                            
-                            Image("chevron_down")
-                                .renderingMode(.template)
-                                .foregroundColor(.opacityWhite700)
-                                .rotationEffect(.degrees(viewModel.selectedQuestion == question.question ? 180 : 0))
-                        }
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 16)
-                    }
-                    
-                    if viewModel.selectedQuestion == question.question {
-                        ExpandableTextEditor(
                             text: Binding(
-                                get: { question.answer },
-                                set: { newValue in
-                                    viewModel.updateAnswer(for: question.question, answer: newValue)
-                                }
-                            ),
-                            placeholder: "글을 작성해보세요"
-                        )
-                        .padding(.horizontal, 36)
-                        .padding(.bottom, 16)
-                        .transition(.opacity.combined(with: .move(edge: .top)))
-                    }
+                if index > 0 {
+                    Divider()
+                        .background(.opacityWhite100)
+                        .padding(.horizontal, 32)
                 }
-                .swipeActions(edge: .leading, allowsFullSwipe: false) {
-                    Button(role: .destructive) {
-                        PopupManager.shared.show(type: .deleteGuideQuestion(question: question.question)) {
-                            withAnimation(.mediumSpring) {
-                                viewModel.removeGuideQuestion(id: question.question)
-                            }
-                        }
-                    } label: {
-                        Label("삭제", systemImage: "trash")
+                
+                Button(action: {
+                    viewModel.toggleQuestionExpansion(id: question.question)
+                }) {
+                    HStack(alignment: .center) {
+                        Text(question.question)
+                            .fontStyle(.body2)
+                            .foregroundStyle(.common100)
+                            .lineLimit(2)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.leading, 8)
+                        
+                        Image("chevron_down")
+                            .renderingMode(.template)
+                            .foregroundColor(.opacityWhite700)
+                            .rotationEffect(.degrees(viewModel.selectedQuestion == question.question ? 180 : 0))
                     }
-                    .tint(.red)
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 16)
+                }
+                
+                if viewModel.selectedQuestion == question.question {
+                    ExpandableTextEditor(
+                        text: Binding(
+                            get: { question.answer },
+                            set: { newValue in
+                                viewModel.updateAnswer(for: question.question, answer: newValue)
+                            }
+                        ),
+                        placeholder: "글을 작성해보세요"
+                    )
+                    .padding(.horizontal, 36)
+                    .padding(.bottom, 16)
+                    .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
 
