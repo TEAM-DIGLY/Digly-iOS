@@ -7,47 +7,39 @@ final class NoteRepository: NoteRepositoryProtocol {
         self.networkAPI = networkAPI
     }
 
-    func createNote(request: CreateNoteRequest) async throws -> Bool {
-        let requestDTO = CreateNoteRequestDTO(
-            ticketId: request.ticketId,
-            contents: request.contents
-        )
-
-        let response:  = try await networkAPI.request(
+    func createNote(ticketId: Int, contents: [String]) async throws -> Note {
+        let request = PostNoteRequest(ticketId: ticketId, contents: contents)
+        let response: PostNoteResponse = try await networkAPI.request(
             NoteEndpoint.postNote,
-            parameters: requestDTO.toDictionary()
+            parameters: request.toDictionary()
         )
-
-        return response.statusc
+        return response.toDomain()
     }
 
     func getNote(noteId: Int) async throws -> Note {
-        let dto: GetNoteDTO = try await networkAPI.request(NoteEndpoint.getNote(noteId))
-        return dto.toDomain()
+        let response: GetNoteResponse = try await networkAPI.request(NoteEndpoint.getNote(noteId))
+        return response.toDomain()
     }
 
-    func updateNote(noteId: Int, request: UpdateNoteRequest) async throws -> Note {
-        let requestDTO = UpdateNoteRequestDTO(contents: request.contents)
-
-        let dto: NoteDTO = try await networkAPI.request(
+    func updateNote(noteId: Int, contents: [String]) async throws -> Note {
+        let request = PutNoteRequest(contents: contents)
+        let response: PutNoteResponse = try await networkAPI.request(
             NoteEndpoint.putNote(noteId),
-            parameters: requestDTO.toDictionary()
+            parameters: request.toDictionary()
         )
-
-        return dto.toDomain()
+        return response.toDomain()
     }
 
-    func getNotesByTicket(ticketId: Int, page: Int, size: Int) async throws -> NotesResponse {
+    func getNotesByTicket(ticketId: Int, page: Int, size: Int) async throws -> NotesResult {
         let query: [String: String] = [
             "page": "\(page)",
             "size": "\(size)"
         ]
 
-        let dto: GetNotesResponseDTO = try await networkAPI.request(
+        let response: GetNotesByTicketResponse = try await networkAPI.request(
             NoteEndpoint.getNotesByTicket(ticketId),
             queryParameters: query
         )
-
-        return dto.toDomain()
+        return response.toDomain()
     }
 }
