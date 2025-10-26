@@ -21,11 +21,11 @@ class TicketDetailViewModel: ObservableObject {
             do {
                 isLoading = true
                 ticket = try await ticketUseCase.getTicketDetail(ticketId: id)
-
+                
                 if let ticket = ticket {
                     hasEmotions = !ticket.feeling.isEmpty
                 }
-
+                
                 isLoading = false
             } catch {
                 isLoading = false
@@ -36,39 +36,34 @@ class TicketDetailViewModel: ObservableObject {
     
     func goToDiggingNote() {
     }
-
+    
     func updateTicketEmotions(_ emotions: [EmotionColor]) {
         Task {
             do {
                 guard let currentTicket = ticket else { return }
-
+                
                 let success = try await ticketUseCase.updateTicketEmotions(
                     ticketId: currentTicket.id,
                     emotions: emotions
                 )
-
-                if success {
-                    ticket = Ticket(
-                        id: currentTicket.id,
-                        name: currentTicket.name,
-                        time: currentTicket.time,
-                        place: currentTicket.place,
-                        count: currentTicket.count,
-                        seatNumber: currentTicket.seatNumber,
-                        price: currentTicket.price,
-                        color: emotions,
-                        feeling: currentTicket.feeling
-                    )
-
-                    hasEmotions = !emotions.isEmpty
-                    ToastManager.shared.show(.success("감정이 성공적으로 등록되었습니다"))
-                } else {
-                    ToastManager.shared.show(.errorStringWithTask("감정 등록"))
-                }
+                
+                ticket = Ticket(
+                    id: currentTicket.id,
+                    name: currentTicket.name,
+                    time: currentTicket.time,
+                    place: currentTicket.place,
+                    count: currentTicket.count,
+                    seatNumber: currentTicket.seatNumber,
+                    price: currentTicket.price,
+                    color: emotions,
+                    feeling: currentTicket.feeling
+                )
+                
+                hasEmotions = !emotions.isEmpty
+                ToastManager.shared.show(.success("감정이 성공적으로 등록되었습니다"))
             } catch {
                 ToastManager.shared.show(.errorStringWithTask("감정 등록"))
             }
         }
     }
-    
 }

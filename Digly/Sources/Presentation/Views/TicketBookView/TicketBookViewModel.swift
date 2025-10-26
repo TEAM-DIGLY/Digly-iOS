@@ -109,6 +109,6 @@ extension TicketBookViewModel {
         totalCnt = response.pageInfo.totalElements
         hasMorePages = response.pageInfo.totalPages > currentPage + 1
         
-        return response.tickets.map { $0.toDomain() }
+        return response.tickets
     }
 }

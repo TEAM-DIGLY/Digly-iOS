@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct OnboardingConfirmView: View {
-    let signUpResponse: SignUpResponse
+    let signUpResponse: SignUpResult
     let accessToken: String
     let refreshToken: String
     let diglyType: DiglyType

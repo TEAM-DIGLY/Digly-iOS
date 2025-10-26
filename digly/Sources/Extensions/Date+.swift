@@ -78,4 +78,12 @@ extension Date {
         formatter.dateFormat = "HH:mm"
         return formatter.string(from: self)
     }
+
+    /// Date를 ISO8601 형식으로 포맷팅 (API 전송용)
+    /// - Returns: "2025-10-26T10:40:09.375Z" 형식의 문자열
+    func toISO8601String() -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.string(from: self)
+    }
 }

@@ -5,12 +5,13 @@ enum TicketEndpoint: APIEndpoint {
     case postTicket
     case getTicket(Int)
     case putTicket(Int)
+    case deleteTicket(Int)
     
     var path: String {
         switch self {
         case .getTickets, .postTicket:
             return "/api/v1/ticket"
-        case .getTicket(let ticketId), .putTicket(let ticketId):
+        case .getTicket(let ticketId), .putTicket(let ticketId), .deleteTicket(let ticketId):
             return "/api/v1/ticket/\(ticketId)"
         }
     }
@@ -23,13 +24,10 @@ enum TicketEndpoint: APIEndpoint {
             return .POST
         case .putTicket:
             return .PUT
+        case .deleteTicket:
+            return .DELETE
         }
     }
     
-    var tokenType: TokenType {
-        switch self {
-        case .getTickets, .postTicket, .getTicket, .putTicket:
-            return .accessToken
-        }
-    }
+    var tokenType: TokenType { .accessToken }
 }

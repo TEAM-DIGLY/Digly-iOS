@@ -48,7 +48,7 @@ final class TicketRepository: TicketRepositoryProtocol {
     func createTicket(ticket: Ticket) async throws -> Ticket {
         let request = PostTicketRequest(
             name: ticket.name,
-            performanceTime: ticket.time.toISOString(),
+            performanceTime: ticket.time.toISO8601String(),
             place: ticket.place,
             count: ticket.count,
             seatNumber: ticket.seatNumber,
@@ -67,7 +67,7 @@ final class TicketRepository: TicketRepositoryProtocol {
     func updateTicket(ticketId: Int, ticket: Ticket) async throws -> Ticket {
         let request = PutTicketRequest(
             name: ticket.name,
-            performanceTime: ticket.time.toISOString(),
+            performanceTime: ticket.time.toISO8601String(),
             place: ticket.place,
             count: ticket.count,
             seatNumber: ticket.seatNumber,

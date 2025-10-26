@@ -33,7 +33,7 @@ class HomeViewModel: ObservableObject {
             isLoading = true
             do {
                 let response = try await ticketUseCase.getAllTickets()
-                tickets = response.tickets.map { $0.toDomain() }
+                tickets = response.tickets
                 
                 if !tickets.isEmpty {
                     focusedTicketIndex = 0

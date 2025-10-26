@@ -198,24 +198,17 @@ struct EmotionSelectionBottomSheet: View {
         Task {
             do {
                 isLoading = true
-
+                
                 // Call API to update ticket emotions
                 let emotionsArray = Array(selectedEmotions)
                 let success = try await ticketUseCase.updateTicketEmotions(
                     ticketId: ticketId,
                     emotions: emotionsArray
                 )
-
-                if success {
-                    await MainActor.run {
-                        onEmotionsUpdated(emotionsArray)
-                        dismiss()
-                    }
-                } else {
-                    await MainActor.run {
-                        ToastManager.shared.show(.errorStringWithTask("감정 등록"))
-                        isLoading = false
-                    }
+                
+                await MainActor.run {
+                    onEmotionsUpdated(emotionsArray)
+                    dismiss()
                 }
             } catch {
                 await MainActor.run {

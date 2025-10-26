@@ -7,8 +7,11 @@ final class NoteRepository: NoteRepositoryProtocol {
         self.networkAPI = networkAPI
     }
 
-    func createNote(ticketId: Int, contents: [String]) async throws -> Note {
-        let request = PostNoteRequest(ticketId: ticketId, contents: contents)
+    func createNote(ticketId: Int, contents: [NoteContent]) async throws -> Note {
+        let contentDTOs = contents.map {
+            PostNoteRequest.NoteContentDTO(question: $0.question, answer: $0.answer)
+        }
+        let request = PostNoteRequest(ticketId: ticketId, contents: contentDTOs)
         let response: PostNoteResponse = try await networkAPI.request(
             NoteEndpoint.postNote,
             parameters: request.toDictionary()
@@ -21,8 +24,11 @@ final class NoteRepository: NoteRepositoryProtocol {
         return response.toDomain()
     }
 
-    func updateNote(noteId: Int, contents: [String]) async throws -> Note {
-        let request = PutNoteRequest(contents: contents)
+    func updateNote(noteId: Int, contents: [NoteContent]) async throws -> Note {
+        let contentDTOs = contents.map {
+            PutNoteRequest.NoteContentDTO(question: $0.question, answer: $0.answer)
+        }
+        let request = PutNoteRequest(contents: contentDTOs)
         let response: PutNoteResponse = try await networkAPI.request(
             NoteEndpoint.putNote(noteId),
             parameters: request.toDictionary()

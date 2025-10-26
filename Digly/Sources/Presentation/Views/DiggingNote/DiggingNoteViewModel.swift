@@ -36,19 +36,12 @@ class DiggingNoteViewModel: ObservableObject {
             do {
                 isLoading = true
 
-                // Fetch all tickets
-                let ticketResponse = try await ticketUseCase.getAllTickets(
-                    startDate: nil,
-                    endDate: nil,
-                    page: 0
-                )
+                let ticketResponse = try await ticketUseCase.getAllTickets(page: 0)
 
                 var ticketsWithNotesData: [TicketWithNotes] = []
                 var noteFetchFailed = false
 
-                for ticketDTO in ticketResponse.tickets {
-                    let ticket = ticketDTO.toDomain()
-
+                for ticket in ticketResponse.tickets {
                     do {
                         let notesResponse = try await noteUseCase.getNotesByTicketId(
                             ticketId: ticket.id,
@@ -56,12 +49,10 @@ class DiggingNoteViewModel: ObservableObject {
                         )
 
                         let sortedNotes = notesResponse.notes.sorted { lhs, rhs in
-                            let lhsDate = lhs.updatedAt ?? lhs.createdAt ?? .distantPast
-                            let rhsDate = rhs.updatedAt ?? rhs.createdAt ?? .distantPast
-                            return lhsDate > rhsDate
+                            return lhs.updatedAt > rhs.updatedAt
                         }
 
-                        let latestNoteDate = sortedNotes.first.flatMap { $0.updatedAt ?? $0.createdAt }
+                        let latestNoteDate = sortedNotes.first?.updatedAt
 
                         let ticketWithNotes = TicketWithNotes(
                             ticket: ticket,
@@ -183,70 +174,70 @@ extension DiggingNoteViewModel {
             color: [.relaxed],
             feeling: [.peaceful]
         )
-
-        let firstNotes = [
-            Note(
-                id: 100,
-                title: "첫 만남",
-                content: "오프닝부터 에너지가 넘쳤고 관객 반응이 정말 뜨거웠다.",
-                createdAt: calendar.date(byAdding: .hour, value: -6, to: now),
-                updatedAt: calendar.date(byAdding: .hour, value: -2, to: now)
-            ),
-            Note(
-                id: 101,
-                title: "앙코르",
-                content: "앙코르에서 불러준 곡이 완벽한 피날레였다.",
-                createdAt: calendar.date(byAdding: .day, value: -2, to: now)
-            )
-        ]
-
-        let secondNotes = [
-            Note(
-                id: 200,
-                title: "서사 최고",
-                content: "배우들의 연기가 너무 몰입감 있어서 울컥했다.",
-                createdAt: calendar.date(byAdding: .day, value: -5, to: now)
-            ),
-            Note(
-                id: 201,
-                title: "커튼콜",
-                content: "커튼콜에서 모두가 일어나서 환호했는데 잊지 못할 순간이다.",
-                createdAt: calendar.date(byAdding: .day, value: -6, to: now)
-            ),
-            Note(
-                id: 202,
-                title: "굿즈",
-                content: "굿즈가 빨리 품절돼서 아쉬웠지만 프로그램북은 꼭 챙겼다.",
-                createdAt: calendar.date(byAdding: .day, value: -7, to: now)
-            )
-        ]
-
-        let thirdNotes = [
-            Note(
-                id: 300,
-                title: "재즈 피아노",
-                content: "피아니스트의 즉흥연주가 너무 감미로웠다.",
-                createdAt: calendar.date(byAdding: .day, value: -12, to: now)
-            )
-        ]
+//
+//        let firstNotes = [
+//            Note(
+//                id: 100,
+//                title: "첫 만남",
+//                content: "오프닝부터 에너지가 넘쳤고 관객 반응이 정말 뜨거웠다.",
+//                createdAt: calendar.date(byAdding: .hour, value: -6, to: now),
+//                updatedAt: calendar.date(byAdding: .hour, value: -2, to: now)
+//            ),
+//            Note(
+//                id: 101,
+//                title: "앙코르",
+//                content: "앙코르에서 불러준 곡이 완벽한 피날레였다.",
+//                createdAt: calendar.date(byAdding: .day, value: -2, to: now)
+//            )
+//        ]
+//
+//        let secondNotes = [
+//            Note(
+//                id: 200,
+//                title: "서사 최고",
+//                content: "배우들의 연기가 너무 몰입감 있어서 울컥했다.",
+//                createdAt: calendar.date(byAdding: .day, value: -5, to: now)
+//            ),
+//            Note(
+//                id: 201,
+//                title: "커튼콜",
+//                content: "커튼콜에서 모두가 일어나서 환호했는데 잊지 못할 순간이다.",
+//                createdAt: calendar.date(byAdding: .day, value: -6, to: now)
+//            ),
+//            Note(
+//                id: 202,
+//                title: "굿즈",
+//                content: "굿즈가 빨리 품절돼서 아쉬웠지만 프로그램북은 꼭 챙겼다.",
+//                createdAt: calendar.date(byAdding: .day, value: -7, to: now)
+//            )
+//        ]
+//
+//        let thirdNotes = [
+//            Note(
+//                id: 300,
+//                title: "재즈 피아노",
+//                content: "피아니스트의 즉흥연주가 너무 감미로웠다.",
+//                createdAt: calendar.date(byAdding: .day, value: -12, to: now)
+//            )
+//        ]
 
         return [
             TicketWithNotes(
                 ticket: firstTicket,
-                notes: firstNotes,
-                noteCount: firstNotes.count,
+                notes: [],
+                noteCount: 4,
                 lastNoteDate: calendar.date(byAdding: .day, value: -1, to: now)
             ),
             TicketWithNotes(
                 ticket: secondTicket,
-                notes: secondNotes,
-                noteCount: secondNotes.count,
+                notes: [],
+                noteCount: 2,
                 lastNoteDate: calendar.date(byAdding: .day, value: -5, to: now)
             ),
             TicketWithNotes(
                 ticket: thirdTicket,
-                notes: thirdNotes,
-                noteCount: thirdNotes.count,
+                notes: [],
+                noteCount: 1,
                 lastNoteDate: calendar.date(byAdding: .day, value: -12, to: now)
             )
         ]

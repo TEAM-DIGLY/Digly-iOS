@@ -15,7 +15,7 @@ struct GetMemberResponse: BaseResponse {
             id: id,
             name: name,
             platformType: PlatformType(rawValue: platformType) ?? .kakao,
-            memberType: DiglyType(rawValue: memberType) ?? .collection
+            memberType: DiglyType(rawValue: memberType) ?? .collector
         )
     }
 }
@@ -44,7 +44,7 @@ struct PutMemberResponse: BaseResponse {
             id: id,
             name: name,
             platformType: PlatformType(rawValue: platformType) ?? .kakao,
-            memberType: DiglyType(rawValue: memberType) ?? .collection
+            memberType: DiglyType(rawValue: memberType) ?? .collector
         )
     }
 }

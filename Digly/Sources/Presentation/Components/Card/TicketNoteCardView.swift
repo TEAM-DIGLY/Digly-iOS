@@ -112,27 +112,16 @@ struct TicketNoteCardView: View {
         }
     }
     
-    @ViewBuilder
     private func noteSection(_ note: Note) -> some View {
-        let relativeTimeText: String = {
-            if let updatedAt = note.updatedAt {
-                return updatedAt.timeAgoString()
-            }
-            if let createdAt = note.createdAt {
-                return createdAt.timeAgoString()
-            }
-            return "최근"
-        }()
-        
         VStack(alignment: .leading, spacing: 8) {
-            Text(relativeTimeText)
+            Text(note.updatedAt.timeAgoString())
                 .fontStyle(.caption1)
                 .foregroundStyle(.neutral400)
             
-            Text(note.content)
-                .fontStyle(.label2)
-                .foregroundStyle(.neutral100)
-                .frame(maxWidth: .infinity, alignment: .leading)
+//            Text(note.content)
+//                .fontStyle(.label2)
+//                .foregroundStyle(.neutral100)
+//                .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)

@@ -35,7 +35,7 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    func handleLoginSuccess(_ response: SignInResponse) {
+    func handleLoginSuccess(_ response: SignInResult) {
         if let name = response.name, let diglyType = response.memberType {
             AuthManager.shared.login(response.accessToken, response.refreshToken, name, diglyType)
         } else {
@@ -53,7 +53,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response.data)
+            handleLoginSuccess(response)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "카카오")
@@ -67,7 +67,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response.data)
+            handleLoginSuccess(response)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "네이버")
@@ -81,7 +81,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .apple, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response.data)
+            handleLoginSuccess(response)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "애플")

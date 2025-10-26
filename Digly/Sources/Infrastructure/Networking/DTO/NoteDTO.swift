@@ -30,7 +30,7 @@ struct PostNoteResponse: BaseResponse {
         Note(
             id: id,
             contents: contents.map { $0.toDomain() },
-            updateAt: Date()
+            updatedAt: Date()
         )
     }
 }
@@ -42,7 +42,7 @@ struct GetNoteResponse: BaseResponse {
     let message: String?
     let id: Int
     let contents: [NoteContentDTO]
-    let updateAt: String
+    let updatedAt: String
 
     struct NoteContentDTO: Codable {
         let question: String
@@ -57,7 +57,7 @@ struct GetNoteResponse: BaseResponse {
         Note(
             id: id,
             contents: contents.map { $0.toDomain() },
-            updateAt: updateAt.toDate()
+            updatedAt: updatedAt.toDate()
         )
     }
 }
@@ -91,7 +91,7 @@ struct PutNoteResponse: BaseResponse {
         Note(
             id: id,
             contents: contents.map { $0.toDomain() },
-            updateAt: Date()
+            updatedAt: Date()
         )
     }
 }
@@ -107,7 +107,7 @@ struct GetNotesByTicketResponse: BaseResponse {
     struct NoteDTO: Codable {
         let id: Int
         let contents: [NoteContentDTO]
-        let updateAt: String
+        let updatedAt: String
 
         struct NoteContentDTO: Codable {
             let question: String
@@ -122,7 +122,7 @@ struct GetNotesByTicketResponse: BaseResponse {
             Note(
                 id: id,
                 contents: contents.map { $0.toDomain() },
-                updateAt: updateAt.toDate()
+                updatedAt: updatedAt.toDate()
             )
         }
     }

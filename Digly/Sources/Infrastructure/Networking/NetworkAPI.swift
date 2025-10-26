@@ -3,14 +3,14 @@ import Foundation
 final class NetworkAPI {
     private let session = URLSession.shared
     
-    func refreshToken() async throws -> ReissueResponse {
+    func refreshToken() async throws -> ReissueResult {
         guard let refreshToken = KeychainManager.shared.getRefreshToken(),
               let memberId = getCurrentMemberId() else {
             throw APIError.unauthorized
         }
         // Spec: reissue uses Authorization header with refreshToken only (no body)
         _ = memberId // kept in case of future use
-        let response: ReissueResponse = try await request(AuthEndpoint.postReissue(refreshToken))
+        let response: ReissueResult = try await request(AuthEndpoint.postReissue(refreshToken))
         
         KeychainManager.shared.saveTokens(response.accessToken, response.refreshToken)
         

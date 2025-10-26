@@ -3,7 +3,7 @@ import Foundation
 enum AuthRoute: BaseRoute {
     case createAccount(accessToken: String, refreshToken: String)
     case onboarding
-    case onboardingConfirm(signUpResponse: SignUpResponse, accessToken: String, refreshToken: String, diglyType: DiglyType)
+    case onboardingConfirm(signUpResponse: SignUpResult, accessToken: String, refreshToken: String, diglyType: DiglyType)
     
     var id: String {
         switch self {

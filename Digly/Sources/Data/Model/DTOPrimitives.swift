@@ -27,7 +27,7 @@ extension BaseResponse {
         guard isSuccess else {
             let code = statusCode ?? 500
             let msg = message ?? "Unknown error"
-            throw APIError.serverError(code, msg)
+            throw APIError.serverError(msg)
         }
     }
 }

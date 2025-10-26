@@ -10,11 +10,11 @@ final class CrawlingUseCase {
     
     func searchTicketTitles(query: String) async throws -> [String] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return [] }
-        return try await crawlingRepository.searchTicketTitle(query).data.titleList
+        return try await crawlingRepository.searchTicketTitle(query)
     }
     
     func searchTicketPlaces(query: String) async throws -> [String] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return [] }
-        return try await crawlingRepository.searchTicketPlace(query).data.placeList
+        return try await crawlingRepository.searchTicketPlace(query)
     }
 }

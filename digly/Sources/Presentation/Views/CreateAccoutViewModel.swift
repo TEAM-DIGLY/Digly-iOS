@@ -39,7 +39,7 @@ class CreateAccountViewModel: ObservableObject {
         self.memberUseCase = memberUseCase
     }
     
-    func performSignUp(onSuccess: @escaping (SignUpResponse) -> Void) {
+    func performSignUp(onSuccess: @escaping (SignUpResult) -> Void) {
         Task {
             do {
                 isLoading = true

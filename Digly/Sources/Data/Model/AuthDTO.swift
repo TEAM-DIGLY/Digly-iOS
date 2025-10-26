@@ -73,7 +73,7 @@ struct PostAuthReissueResponse: BaseResponse {
 }
 
 // MARK: - Domain Results
-struct SignInResult {
+struct SignInResult: Codable {
     let id: Int
     let name: String?
     let memberType: DiglyType?
@@ -81,13 +81,13 @@ struct SignInResult {
     let refreshToken: String
 }
 
-struct SignUpResult {
+struct SignUpResult: Codable {
     let id: Int
     let name: String
     let memberType: DiglyType
 }
 
-struct ReissueResult {
+struct ReissueResult: Codable {
     let accessToken: String
     let refreshToken: String
 }
