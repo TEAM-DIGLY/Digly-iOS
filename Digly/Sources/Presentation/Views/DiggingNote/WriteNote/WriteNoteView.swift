@@ -126,12 +126,7 @@ struct WriteNoteView: View {
                 
                 if viewModel.selectedQuestion == question.question {
                     ExpandableTextEditor(
-                        text: Binding(
-                            get: { question.answer },
-                            set: { newValue in
-                                viewModel.updateAnswer(for: question.question, answer: newValue)
-                            }
-                        ),
+                        text: viewModel.setAnswerBinding(for: question.question),
                         placeholder: "글을 작성해보세요"
                     )
                     .padding(.horizontal, 36)

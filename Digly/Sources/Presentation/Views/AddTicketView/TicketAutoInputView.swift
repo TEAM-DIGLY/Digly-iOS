@@ -1,39 +1,56 @@
 import SwiftUI
 
 struct TicketAutoInputView: View {
-    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = TicketAutoInputViewModel()
-    @State private var showGuidePopup: Bool = false
+    
+    @State private var isGuidePopupPresented: Bool = false
+    @State private var isAnimating: Bool = false
+    
     @FocusState private var isTextEditorFocused: Bool
     
     var body: some View {
         DGScreen(backgroundColor: .common0, onClick: { isTextEditorFocused = false }) {
-            BackNavWithTitle(
-                title: "티켓 추가하기",
-                backgroundColor: .common0
-            ) {
-                dismiss()
-            }
-            .padding(.horizontal, 16)
+            BackNavWithTitle(title: "티켓 추가하기",backgroundColor: .common0)
+                .padding(.horizontal, 16)
             
-            VStack(spacing: 0) {
-                guidanceSection
-                    .padding(.horizontal, 48.5)
-                    .padding(.top, 32)
-                
-                textEditorSection
-                    .padding(.horizontal, 24)
-                    .padding(.top, 20)
-                
-                Spacer()
-                
-                actionButton
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 34)
+            guidanceSection
+                .padding(.horizontal, 48)
+                .padding(.top, 32)
+            
+            textEditorSection
+                .padding(.horizontal, 24)
+                .padding(.top, 20)
+            
+            Spacer()
+            
+            actionButton
+                .padding(.horizontal, 24)
+                .padding(.bottom, 34)
+        }
+        .overlay {
+            if isGuidePopupPresented {
+                ZStack {
+                    Color.black
+                        .edgesIgnoringSafeArea(.all)
+                        .opacity(isAnimating ? 0.3 : 0.0)
+                        .onTapGesture {
+                            isGuidePopupPresented = false
+                            isAnimating = false
+                        }
+                        .animation(.spring(duration: 0.1), value: isAnimating)
+                    
+                    TicketGuidePopupView(){
+                        isGuidePopupPresented = false
+                        isAnimating = false
+                    }
+                    .opacity(isAnimating ? 1 : 0)
+                    .offset(y: isAnimating ? 0 : -80)
+                    .animation(.spring(duration: 0.3), value: isAnimating)
+                }
             }
         }
-        .sheet(isPresented: $showGuidePopup) {
-            TicketGuidePopupView()
+        .onChange(of: isGuidePopupPresented) { _, newValue in
+            isAnimating = newValue
         }
         .onAppear {
             isTextEditorFocused = true
@@ -51,7 +68,7 @@ extension TicketAutoInputView {
                 .multilineTextAlignment(.center)
             
             Button(action: {
-                showGuidePopup = true
+                isGuidePopupPresented = true
             }) {
                 HStack(spacing: 5) {
                     Text("가이드 보기")

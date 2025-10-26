@@ -52,4 +52,18 @@ class WriteNoteViewModel: ObservableObject {
             selectedQuestion = id
         }
     }
+
+    // MARK: - Binding Management
+    func setAnswerBinding(for question: String) -> Binding<String> {
+        Binding(
+            get: {
+                self.guideQuestions.first(where: { $0.question == question })?.answer ?? ""
+            },
+            set: { newValue in
+                if let index = self.guideQuestions.firstIndex(where: { $0.question == question }) {
+                    self.guideQuestions[index].answer = newValue
+                }
+            }
+        )
+    }
 }

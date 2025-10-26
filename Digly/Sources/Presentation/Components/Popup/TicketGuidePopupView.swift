@@ -1,49 +1,33 @@
 import SwiftUI
 
 struct TicketGuidePopupView: View {
-    @Environment(\.dismiss) private var dismiss
     @State private var currentStep: Int = 0
+    let hidePopup: () -> Void
     
     private let guideSteps: [TicketGuideStep] = [
         TicketGuideStep(
             title: "티켓 정보 붙여넣기 가이드",
             description: "다른 앱에서 티켓 정보를 복사한 후\n붙여넣기 해주세요.",
-            subDescription: "정확한 정보 추출을 위해 전체 텍스트를\n복사해주시기 바랍니다.",
-            leftImage: "guide_step1_1",
-            rightImage: "guide_step1_2"
+            subDescription: "정확한 정보 추출을 위해 전체 텍스트를\n복사해주시기 바랍니다."
         ),
         TicketGuideStep(
             title: "정보 추출 완료",
             description: "붙여넣은 텍스트에서 필요한 정보를\n자동으로 추출했어요.",
-            subDescription: "추출된 정보를 확인하고 수정이 필요한 경우\n직접 편집할 수 있어요.",
-            leftImage: "guide_step2_1",
-            rightImage: "guide_step2_2"
+            subDescription: "추출된 정보를 확인하고 수정이 필요한 경우\n직접 편집할 수 있어요."
         )
     ]
     
     var body: some View {
         VStack(spacing: 0) {
-            ZStack {
-                // Background overlay
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        dismiss()
-                    }
-                
-                // Popup content
-                VStack(spacing: 0) {
-                    contentSection
-                    bottomActionSection
-                }
-                .frame(width: 300, height: 465)
-                .background(.neutral900, in: RoundedRectangle(cornerRadius: 16))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(.neutral100.opacity(0.15), lineWidth: 1)
-                )
-            }
+            contentSection
+            bottomActionSection
         }
+        .frame(width: 300, height: 465)
+        .background(.neutral900, in: RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(.neutral100.opacity(0.15), lineWidth: 1)
+        )
     }
 }
 
@@ -107,7 +91,7 @@ extension TicketGuidePopupView {
                         currentStep -= 1
                     }
                 } else {
-                    dismiss()
+                    hidePopup()
                 }
             }) {
                 Text(currentStep == 0 ? "닫기" : "이전")
@@ -127,7 +111,7 @@ extension TicketGuidePopupView {
                         currentStep += 1
                     }
                 } else {
-                    dismiss()
+                    hidePopup()
                 }
             }) {
                 Text(currentStep == guideSteps.count - 1 ? "완료" : "다음")
@@ -153,10 +137,8 @@ struct TicketGuideStep {
     let title: String
     let description: String
     let subDescription: String
-    let leftImage: String
-    let rightImage: String
 }
 
 #Preview {
-    TicketGuidePopupView()
+    TicketGuidePopupView(hidePopup: {})
 }
