@@ -4,16 +4,12 @@ import SwiftUI
 class WriteNoteViewModel: ObservableObject {
     @Published var ticket: Ticket
     @Published var isGuideMode: Bool = true
-    @Published var guideQuestions: [NoteGuideQuestion] = [
-        NoteGuideQuestion(question: "이번 회차만의 특별한 에피소드가 있었나요?", answer: "asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkfls"),
-        NoteGuideQuestion(question: "이번 뮤지컬만의 인상 깊었던 연출이 있었나요?", answer: "asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjfdjflasdkfls"),
-    ]
+    @Published var guideQuestions: [NoteGuideQuestion] = []
     
+    
+    @Published var freeText: String = ""
+    @Published var selectedQuestion: String? = "이번 뮤지컬만의 인상 깊었던 연출이 있었나요?"
     @Published var isQuestionBottomSheetPresent: Bool = false
-    
-    @Published var freeText: String = "asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;"
-    
-    @Published var expandedQuestionID: String? = "이번 뮤지컬만의 인상 깊었던 연출이 있었나요?"
 
     init(ticket: Ticket) {
         self.ticket = ticket
@@ -27,7 +23,7 @@ class WriteNoteViewModel: ObservableObject {
         } else {
             guideQuestions = []
         }
-        expandedQuestionID = nil
+        selectedQuestion = nil
     }
 
     func addGuideQuestion(_ question: String) {
@@ -38,8 +34,8 @@ class WriteNoteViewModel: ObservableObject {
 
     func removeGuideQuestion(id: String) {
         guideQuestions.removeAll { $0.question == id }
-        if expandedQuestionID == id {
-            expandedQuestionID = nil
+        if selectedQuestion == id {
+            selectedQuestion = nil
         }
     }
 
@@ -50,10 +46,10 @@ class WriteNoteViewModel: ObservableObject {
     }
 
     func toggleQuestionExpansion(id: String) {
-        if expandedQuestionID == id {
-            expandedQuestionID = nil
+        if selectedQuestion == id {
+            selectedQuestion = nil
         } else {
-            expandedQuestionID = id
+            selectedQuestion = id
         }
     }
 }

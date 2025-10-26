@@ -117,8 +117,8 @@ struct WriteNoteView: View {
                         Image("chevron_down")
                             .renderingMode(.template)
                             .foregroundColor(.opacityWhite700)
-                            .rotationEffect(.degrees(viewModel.expandedQuestionID == question.question ? 180 : 0))
-                            .animation(.mediumSpring, value: viewModel.expandedQuestionID)
+                            .rotationEffect(.degrees(viewModel.selectedQuestion == question.question ? 180 : 0))
+                            .animation(.mediumSpring, value: viewModel.selectedQuestion)
                     }
                     .padding(.horizontal, 24)
                     .padding(.vertical, 16)
@@ -129,7 +129,7 @@ struct WriteNoteView: View {
                         }
                     }
                     
-                    if viewModel.expandedQuestionID == question.question {
+                    if viewModel.selectedQuestion == question.question {
                         ExpandableTextEditor(
                             text: Binding(
                                 get: { question.answer },
