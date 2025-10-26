@@ -20,8 +20,13 @@ struct TicketNoteCardView: View {
         VStack(spacing: 0) {
             upperSection
             
-            if isExpanded {
-                expandedView
+            if isExpanded, !ticketWithNotes.notes.isEmpty  {
+                VStack(spacing: 16) {
+                    ForEach(ticketWithNotes.notes) { note in
+                        noteSection(note)
+                    }
+                }
+                .padding(.top, 20)
             }
         }
         .padding(.horizontal, 20)
@@ -44,19 +49,6 @@ struct TicketNoteCardView: View {
         }
         .padding(.leading, 24)
         .padding(.trailing, isExpanded ? 0 : 24)
-    }
-    
-    private var expandedView: some View {
-        VStack(spacing: 0) {
-            if !ticketWithNotes.notes.isEmpty {
-                VStack(spacing: 16) {
-                    ForEach(ticketWithNotes.notes) { note in
-                        noteSection(note)
-                    }
-                }
-                .padding(.top, 20)
-            }
-        }
     }
     
     private var upperSection: some View {

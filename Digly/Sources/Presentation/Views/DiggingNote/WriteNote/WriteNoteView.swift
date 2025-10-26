@@ -2,9 +2,6 @@ import SwiftUI
 
 struct WriteNoteView: View {
     @StateObject private var viewModel: WriteNoteViewModel
-    @Environment(\.dismiss) private var dismiss
-    
-    @State private var showQuestionBottomSheet = false
 
     init(ticket: Ticket) {
         _viewModel = StateObject(wrappedValue: WriteNoteViewModel(ticket: ticket))
@@ -34,9 +31,9 @@ struct WriteNoteView: View {
                 
             }
         }
-        .sheet(isPresented: $showQuestionBottomSheet) {
+        .sheet(isPresented: $viewModel.isQuestionBottomSheetPresent) {
             QuestionSelectionBottomSheet(
-                presetQuestions: PresetGuideQuestion.presets,
+                selectedQuestions: viewModel.guideQuestions.map(\.question),
                 onQuestionSelected: { question in
                     viewModel.addGuideQuestion(question)
                 }
@@ -101,14 +98,14 @@ struct WriteNoteView: View {
 
     private var guideContent: some View {
         VStack(spacing: 0) {
-            ForEach(Array(viewModel.guideQuestions.enumerated()), id: \.element.id) { index, question in
+            ForEach(Array(viewModel.guideQuestions.enumerated()), id: \.element.question) { index, question in
                 VStack(spacing: 0) {
                     if index > 0 {
                         Divider()
                             .background(.opacityWhite100)
                             .padding(.horizontal, 32)
                     }
-
+                    
                     HStack(alignment: .center) {
                         Text(question.question)
                             .fontStyle(.body2)
@@ -116,34 +113,53 @@ struct WriteNoteView: View {
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 8)
-
-                        Button(action: {
-                            viewModel.removeGuideQuestion(id: question.id)
-                        }) {
-                            Image("chevron_down")
-                                .renderingMode(.template)
-                                .foregroundColor(.opacityWhite700)
-                                .rotationEffect(.degrees(180))
-                        }
+                        
+                        Image("chevron_down")
+                            .renderingMode(.template)
+                            .foregroundColor(.opacityWhite700)
+                            .rotationEffect(.degrees(viewModel.expandedQuestionID == question.question ? 180 : 0))
+                            .animation(.mediumSpring, value: viewModel.expandedQuestionID)
                     }
                     .padding(.horizontal, 24)
-
-                    ExpandableTextEditor(
-                        text: Binding(
-                            get: { question.answer },
-                            set: { newValue in
-                                viewModel.updateAnswer(for: question.id, answer: newValue)
+                    .padding(.vertical, 16)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        withAnimation(.mediumSpring) {
+                            viewModel.toggleQuestionExpansion(id: question.question)
+                        }
+                    }
+                    
+                    if viewModel.expandedQuestionID == question.question {
+                        ExpandableTextEditor(
+                            text: Binding(
+                                get: { question.answer },
+                                set: { newValue in
+                                    viewModel.updateAnswer(for: question.question, answer: newValue)
+                                }
+                            ),
+                            placeholder: "글을 작성해보세요"
+                        )
+                        .padding(.horizontal, 36)
+                        .padding(.bottom, 16)
+                        .transition(.opacity.combined(with: .move(edge: .top)))
+                    }
+                }
+                .swipeActions(edge: .leading, allowsFullSwipe: false) {
+                    Button(role: .destructive) {
+                        PopupManager.shared.show(type: .deleteGuideQuestion(question: question.question)) {
+                            withAnimation(.mediumSpring) {
+                                viewModel.removeGuideQuestion(id: question.question)
                             }
-                        ),
-                        placeholder: "글을 작성해보세요"
-                    )
-                    .padding(.horizontal, 36)
-                    .padding(.bottom, 16)
+                        }
+                    } label: {
+                        Label("삭제", systemImage: "trash")
+                    }
+                    .tint(.red)
                 }
             }
 
             Button(action: {
-                showQuestionBottomSheet = true
+                viewModel.isQuestionBottomSheetPresent = true
             }) {
                 Text("질문 추가하기")
                     .fontStyle(.body2)
@@ -246,47 +262,19 @@ struct ExpandableTextEditor: View {
     }
 }
 
-@MainActor
-class WriteNoteViewModel: ObservableObject {
-    @Published var ticket: Ticket
-    @Published var isGuideMode: Bool = true
-    @Published var guideQuestions: [NoteGuideQuestion] = []
-    @Published var freeText: String = "asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;asfd;ijdas;ajl;dsjflk;asdjflasdkflsda;jkfadsjfj;lsdakjflasdjf;klasdjfkldasjflasdjfklajsdklfjasdkl;fjlkasdjfkl;asdjfl;sdaijfl;axcvl;"
-
-    init(ticket: Ticket) {
-        self.ticket = ticket
-    }
-
-    func toggleGuideMode() {
-        isGuideMode.toggle()
-        // 모드 전환 시 내용 초기화
-        if isGuideMode {
-            freeText = ""
-        } else {
-            guideQuestions = []
-        }
-    }
-
-    func addGuideQuestion(_ question: String) {
-        let newQuestion = NoteGuideQuestion(question: question)
-        guideQuestions.append(newQuestion)
-    }
-
-    func removeGuideQuestion(id: String) {
-        guideQuestions.removeAll { $0.id == id }
-    }
-
-    func updateAnswer(for id: String, answer: String) {
-        if let index = guideQuestions.firstIndex(where: { $0.id == id }) {
-            guideQuestions[index].answer = answer
-        }
-    }
-}
-
 // Question Selection Bottom Sheet
 struct QuestionSelectionBottomSheet: View {
     @Environment(\.dismiss) private var dismiss
-    let presetQuestions: [PresetGuideQuestion]
+    
+    private let presetQuestions: [PresetGuideQuestion] = [
+        PresetGuideQuestion(question: "이번 회차만의 특별한 에피소드가 있었나요?"),
+        PresetGuideQuestion(question: "이번 뮤지컬만의 인상 깊었던 연출이 있었나요?"),
+        PresetGuideQuestion(question: "집 가는 길 내 귓가를 맴도는 넘버는 무엇이었나요?"),
+        PresetGuideQuestion(question: "이번 회차 배우들의 캐스트별 특징이 있었나요?"),
+        PresetGuideQuestion(question: "좋아하는 배우의 캐릭터 비주얼과 의상은 어땠나요?")
+    ]
+    
+    let selectedQuestions: [String]
     let onQuestionSelected: (String) -> Void
 
     @State private var selectedQuestion: String?
@@ -303,8 +291,20 @@ struct QuestionSelectionBottomSheet: View {
                                 .renderingMode(.template)
                                 .foregroundColor(.opacityWhite850)
                         }
-
+                        
                         Spacer()
+                        
+                        if let question = selectedQuestion {
+                            Button(action: {
+                                onQuestionSelected(question)
+                                dismiss()
+                            }){
+                                Text("다음")
+                                    .font(.headline2)
+                                    .foregroundStyle(.common100)
+                                    .padding(12)
+                            }
+                        }
                     }
 
                     Text("질문 선택하기")
@@ -317,6 +317,8 @@ struct QuestionSelectionBottomSheet: View {
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 16) {
                         ForEach(presetQuestions) { preset in
+                            let isAlreadySelected = selectedQuestions.contains(preset.question)
+
                             Button(action: {
                                 selectedQuestion = preset.question
                             }) {
@@ -342,42 +344,14 @@ struct QuestionSelectionBottomSheet: View {
                                             )
                                     )
                             }
+                            .disabled(isAlreadySelected)
+                            .opacity(isAlreadySelected ? 0.4 : 1)
                         }
                     }
                     .padding(.horizontal, 24)
                     .padding(.top, 24)
                     .padding(.bottom, 120)
                 }
-            }
-
-            // 다음 버튼
-            if selectedQuestion != nil {
-                DGButton(
-                    text: "다음",
-                    type: .primaryDark,
-                    disabled: false
-                ) {
-                    if let question = selectedQuestion {
-                        onQuestionSelected(question)
-                        dismiss()
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.bottom, 40)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            .bottomSheetBackground.opacity(0),
-                            .bottomSheetBackground
-                        ]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 120)
-                    .offset(y: 40)
-                )
-                .transition(.move(edge: .bottom).combined(with: .opacity))
-                .animation(.mediumSpring, value: selectedQuestion)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

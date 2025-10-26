@@ -8,6 +8,7 @@ enum PopupType: Equatable {
     case updateOptional
     case toggleGuideOff
     case toggleGuideOn
+    case deleteGuideQuestion(question: String)
 //    case acceptFriend(username: String)
 //    case loginRequired
 //    case logout
@@ -17,10 +18,10 @@ enum PopupType: Equatable {
         switch self {
         case .updateMandatory, .updateOptional:
             "celebrate"
-        case .toggleGuideOff, .toggleGuideOn:
+        case .toggleGuideOff, .toggleGuideOn, .deleteGuideQuestion:
             "alert"
-//        default:
-//            ""
+        default:
+            ""
         }
     }
     
@@ -28,6 +29,13 @@ enum PopupType: Equatable {
         switch self {
         case .updateMandatory: false
         default: true
+        }
+    }
+
+    var isDarkMode: Bool {
+        switch self {
+        case .updateMandatory, .updateOptional: true
+        default: false
         }
     }
     
@@ -39,10 +47,10 @@ enum PopupType: Equatable {
         switch self {
         case .updateOptional, .updateMandatory:
             "휴머니아 새 버전 출시!"
-        case .toggleGuideOff:
-            "작성 가이드를 끄시겠어요?"
-        case .toggleGuideOn:
-            "작성 가이드를 켜시겠어요?"
+        case .toggleGuideOff, .toggleGuideOn:
+            "가이드 설정"
+        case .deleteGuideQuestion:
+            "질문을 삭제할까요?"
         }
     }
 
@@ -51,9 +59,11 @@ enum PopupType: Equatable {
         case .updateOptional, .updateMandatory:
             "서비스를 이용하기 위해\n업데이트가 필요해요 "
         case .toggleGuideOff:
-            "가이드를 끄면 작성한 내용이 삭제되며,\n자유 작성 모드로 전환됩니다."
+            "가이드를 끄면 작성한 노트가\n초기화 됩니다. 가이드를 사용할까요?"
         case .toggleGuideOn:
-            "가이드를 켜면 작성한 내용이 삭제되며,\n가이드 모드로 전환됩니다."
+            "가이드를 사용할 시 작성한 노트가\n초기화 됩니다. 가이드를 사용할까요?"
+        case let .deleteGuideQuestion(question):
+            "'\(question)' 질문과 답변이 삭제돼요.\n정말 삭제하시겠어요?"
         }
     }
 
@@ -65,12 +75,14 @@ enum PopupType: Equatable {
             "끄기"
         case .toggleGuideOn:
             "사용"
+        case .deleteGuideQuestion:
+            "삭제"
         }
     }
 
     var secondaryButtonText: String {
         switch self {
-        case .updateOptional, .toggleGuideOff, .toggleGuideOn:
+        case .updateOptional, .toggleGuideOff, .toggleGuideOn, .deleteGuideQuestion:
             "취소"
         default:
             ""
