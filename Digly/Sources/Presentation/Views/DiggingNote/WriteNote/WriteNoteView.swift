@@ -20,7 +20,6 @@ struct WriteNoteView: View {
                         .padding(.horizontal, 24)
                         .padding(.top, 24)
                     
-                    // Content based on guide mode
                     if viewModel.isGuideMode {
                         guideContent
                     } else {
@@ -31,6 +30,7 @@ struct WriteNoteView: View {
                 
             }
         }
+        .animation(.mediumSpring, value: viewModel.selectedQuestion)
         .sheet(isPresented: $viewModel.isQuestionBottomSheetPresent) {
             QuestionSelectionBottomSheet(
                 selectedQuestions: viewModel.guideQuestions.map(\.question),
@@ -106,27 +106,24 @@ struct WriteNoteView: View {
                             .padding(.horizontal, 32)
                     }
                     
-                    HStack(alignment: .center) {
-                        Text(question.question)
-                            .fontStyle(.body2)
-                            .foregroundStyle(.common100)
-                            .lineLimit(2)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 8)
-                        
-                        Image("chevron_down")
-                            .renderingMode(.template)
-                            .foregroundColor(.opacityWhite700)
-                            .rotationEffect(.degrees(viewModel.selectedQuestion == question.question ? 180 : 0))
-                            .animation(.mediumSpring, value: viewModel.selectedQuestion)
-                    }
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 16)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        withAnimation(.mediumSpring) {
+                    Button(action: {
                             viewModel.toggleQuestionExpansion(id: question.question)
+                    }) {
+                        HStack(alignment: .center) {
+                            Text(question.question)
+                                .fontStyle(.body2)
+                                .foregroundStyle(.common100)
+                                .lineLimit(2)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(.leading, 8)
+                            
+                            Image("chevron_down")
+                                .renderingMode(.template)
+                                .foregroundColor(.opacityWhite700)
+                                .rotationEffect(.degrees(viewModel.selectedQuestion == question.question ? 180 : 0))
                         }
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 16)
                     }
                     
                     if viewModel.selectedQuestion == question.question {
