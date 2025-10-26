@@ -8,18 +8,11 @@ enum PopupType: Equatable {
     case updateOptional
     case toggleGuideOff
     case toggleGuideOn
-    case deleteGuideQuestion(question: String)
-//    case acceptFriend(username: String)
-//    case loginRequired
-//    case logout
-//    case deleteAccount
     
     var image: String {
         switch self {
         case .updateMandatory, .updateOptional:
             "celebrate"
-        case .toggleGuideOff, .toggleGuideOn, .deleteGuideQuestion:
-            "alert"
         default:
             ""
         }
@@ -34,8 +27,8 @@ enum PopupType: Equatable {
 
     var isDarkMode: Bool {
         switch self {
-        case .updateMandatory, .updateOptional: true
-        default: false
+        case .updateMandatory, .updateOptional: false
+        default: true
         }
     }
     
@@ -49,8 +42,6 @@ enum PopupType: Equatable {
             "휴머니아 새 버전 출시!"
         case .toggleGuideOff, .toggleGuideOn:
             "가이드 설정"
-        case .deleteGuideQuestion:
-            "질문을 삭제할까요?"
         }
     }
 
@@ -62,8 +53,6 @@ enum PopupType: Equatable {
             "가이드를 끄면 작성한 노트가\n초기화 됩니다. 가이드를 사용할까요?"
         case .toggleGuideOn:
             "가이드를 사용할 시 작성한 노트가\n초기화 됩니다. 가이드를 사용할까요?"
-        case let .deleteGuideQuestion(question):
-            "'\(question)' 질문과 답변이 삭제돼요.\n정말 삭제하시겠어요?"
         }
     }
 
@@ -75,14 +64,12 @@ enum PopupType: Equatable {
             "끄기"
         case .toggleGuideOn:
             "사용"
-        case .deleteGuideQuestion:
-            "삭제"
         }
     }
 
     var secondaryButtonText: String {
         switch self {
-        case .updateOptional, .toggleGuideOff, .toggleGuideOn, .deleteGuideQuestion:
+        case .updateOptional, .toggleGuideOff, .toggleGuideOn:
             "취소"
         default:
             ""

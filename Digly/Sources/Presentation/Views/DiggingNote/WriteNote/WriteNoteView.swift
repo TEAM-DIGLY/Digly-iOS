@@ -11,8 +11,7 @@ struct WriteNoteView: View {
         DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
             headerSection
             
-            Divider()
-                .background(.opacityWhite200)
+            Divider().background(.opacityWhite200)
             
             ScrollView(.vertical, showsIndicators: true) {
                 VStack(spacing: 0) {
@@ -99,7 +98,6 @@ struct WriteNoteView: View {
     private var guideContent: some View {
         VStack(spacing: 0) {
             ForEach(Array(viewModel.guideQuestions.enumerated()), id: \.element.question) { index, question in
-                            text: Binding(
                 if index > 0 {
                     Divider()
                         .background(.opacityWhite100)
@@ -138,7 +136,7 @@ struct WriteNoteView: View {
                     )
                     .padding(.horizontal, 36)
                     .padding(.bottom, 16)
-                    .transition(.opacity.combined(with: .move(edge: .top)))
+                    .transition(.opacity.animation(.mediumSpring))
                 }
             }
 
@@ -201,7 +199,7 @@ struct ExpandableTextEditor: View {
     let placeholder: String
 
     @FocusState private var isFocused: Bool
-    @State private var textHeight: CGFloat = 100
+    @State private var textHeight: CGFloat = 278
 
     var body: some View {
         ZStack(alignment: .topLeading) {
@@ -224,12 +222,12 @@ struct ExpandableTextEditor: View {
                     RoundedRectangle(cornerRadius: 24)
                         .stroke(isFocused ? .opacityWhite600 : .opacityWhite100, lineWidth: 1)
                 )
-                .frame(minHeight: textHeight, maxHeight: isFocused ? .infinity : 278)
+                .frame(minHeight: textHeight, maxHeight: isFocused ? .infinity : textHeight)
                 .onChange(of: text) { _, _ in
                     updateHeight()
                 }
         }
-        .frame(height: isFocused ? nil : 278)
+        .frame(height: isFocused ? nil : textHeight)
         .animation(.mediumSpring, value: isFocused)
     }
 
@@ -242,7 +240,7 @@ struct ExpandableTextEditor: View {
             context: nil
         ).height
 
-        textHeight = max(100, estimatedHeight + 40)
+        textHeight = max(278, estimatedHeight + 40)
     }
 }
 

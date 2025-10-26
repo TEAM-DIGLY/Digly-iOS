@@ -6,46 +6,74 @@ struct DGPopup: View {
     
     var body: some View {
         let popup = popupData.type
-
-        VStack(spacing: 0) {
-            // Icon
-            if !popup.image.isEmpty {
-                Image(popup.image)
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(.common100)
-                    .frame(width: 24, height: 24)
-            }
-
-            VStack(alignment: popup.isDarkMode ? .center : .leading, spacing: 12) {
-                Text(popup.title)
-                    .fontStyle(popup.isDarkMode ? .body2 :.heading2)
-                    .foregroundColor(.common100)
-
-                Text(popup.description)
-                    .fontStyle(popup.isDarkMode ? .label2 : .body2)
-                    .foregroundColor(.opacityWhite600)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, 24)
-
-            HStack(spacing: 12) {
-                if !popup.secondaryButtonText.isEmpty {
-                    buttonSection(popup.secondaryButtonText, isPrimary: false) {
-                        hidePopup()
+        Group {
+            if popup.isDarkMode {
+                VStack(alignment: .center, spacing: 0) {
+                    VStack(alignment: .center, spacing: 8) {
+                        Text(popup.title)
+                            .fontStyle(.body2)
+                            .foregroundColor(.opacityWhite800)
+                        
+                        Text(popup.description)
+                            .fontStyle(.label2)
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(.opacityWhite600)
+                    }
+                    .padding(.vertical, 20)
+                    .padding(.horizontal, 16)
+                    
+                    Divider().background(.opacityWhite600)
+                    
+                    HStack(spacing: 0) {
+                        if !popup.secondaryButtonText.isEmpty {
+                            buttonSection(popup.secondaryButtonText, isPrimary: false) {
+                                hidePopup()
+                            }
+                        }
+                        
+                        Divider().frame(maxHeight: .infinity).background(.opacityWhite600)
+                        
+                        buttonSection(popup.primaryButtonText, isPrimary: true) {
+                            popupData.action()
+                            hidePopup()
+                        }
+                    }
+                    .frame(height: 44)
+                }
+                .background(.bottomSheetBackground, in: RoundedRectangle(cornerRadius: 14))
+                .padding(.horizontal, 48)
+            } else {
+                VStack(spacing: 0) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(popup.title)
+                            .fontStyle(.heading2)
+                            .foregroundColor(.common100)
+                        
+                        Text(popup.description)
+                            .fontStyle(.body2)
+                            .foregroundColor(.opacityWhite600)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(.bottom, 24)
+                    
+                    HStack(spacing: 12) {
+                        if !popup.secondaryButtonText.isEmpty {
+                            buttonSection(popup.secondaryButtonText, isPrimary: false) {
+                                hidePopup()
+                            }
+                        }
+                        
+                        buttonSection(popup.primaryButtonText, isPrimary: true) {
+                            popupData.action()
+                            hidePopup()
+                        }
                     }
                 }
-
-                buttonSection(popup.primaryButtonText, isPrimary: true) {
-                    popupData.action()
-                    hidePopup()
-                }
+                .padding(24)
+                .background(.common100, in: RoundedRectangle(cornerRadius: 16))
+                .padding(.horizontal, 24)
             }
         }
-        .padding(24)
-        .background(popup.isDarkMode ? .bottomSheetBackground : .common0, in: RoundedRectangle(cornerRadius: 16))
-        .padding(.horizontal, 24)
     }
     
     @ViewBuilder
@@ -55,9 +83,9 @@ struct DGPopup: View {
                 return .opacityWhite850
             } else {
                 if isPrimary {
-                    return .common0
+                    return .common100
                 } else {
-                    return .opacityWhite600
+                    return .opacityBlack300
                 }
             }
         }
@@ -66,9 +94,9 @@ struct DGPopup: View {
                 return Color.clear
             } else {
                 if isPrimary {
-                    return .common100
+                    return .opacityCool900
                 } else {
-                    return .opacityWhite850
+                    return .clear
                 }
             }
         }
@@ -80,7 +108,7 @@ struct DGPopup: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 54)
                 .background(buttonBackgroundColor)
-                .cornerRadius(12)
+                .cornerRadius(16)
         }
     }
 }
@@ -89,6 +117,7 @@ struct DGPopup: View {
 #Preview {
     Preview_wrapper()
 }
+
 struct Preview_wrapper: View {
     var body: some View {
         ZStack {
