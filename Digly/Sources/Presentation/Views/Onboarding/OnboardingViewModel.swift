@@ -6,11 +6,7 @@ import SwiftUI
 @MainActor
 class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
-    
-    @Published  var isPopupPresented: Bool = true
-    @Published var isFirstChecked = false
-    @Published var isSecondChecked = false
-    @Published var isThirdChecked = false
+    @Published var isPopupPresented: Bool = false
     
     private let authUseCase: AuthUseCase
     var tempAccessToken: String?
@@ -105,23 +101,4 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    var isAllChecked: Bool {
-        isFirstChecked &&
-        isSecondChecked &&
-        isThirdChecked
-    }
-    
-    var isContinueButtonDisabled: Bool {
-        !(isFirstChecked && isSecondChecked) ||
-        isLoading
-    }
-    
-    func toggleAllChecks() {
-        let newValue = !isAllChecked
-        withAnimation(.fastEaseOut) {
-            isFirstChecked = newValue
-            isSecondChecked = newValue
-            isThirdChecked = newValue
-        }
-    }
 }
