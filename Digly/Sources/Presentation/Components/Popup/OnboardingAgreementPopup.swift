@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct OnboardingAgreementPopup: View {
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var authRouter: AuthRouter
     
     @State private var isTermsAccepted: Bool = false
     @State private var isPrivacyAccepted: Bool = false
     let onContinue: () -> Void
+    let onCancel: () -> Void
     
     var body: some View {
         VStack(spacing: 16) {
@@ -138,7 +138,7 @@ struct OnboardingAgreementPopup: View {
             .disabled(!(isTermsAccepted && isPrivacyAccepted))
             
             Button(action: {
-                dismiss()
+                onCancel()
             }) {
                 Text("취소")
                     .fontStyle(.smallLine)
@@ -161,7 +161,7 @@ struct OnboardingAgreementPopup: View {
 // 미리보기
 struct OnboardingAgreementPopup_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingAgreementPopup(onContinue: {})
+        OnboardingAgreementPopup(onContinue: {}, onCancel: {})
+            .environmentObject(AuthRouter())
     }
 }
-

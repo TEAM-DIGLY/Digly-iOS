@@ -63,6 +63,9 @@ struct OnboardingView: View {
                                    let refreshToken = viewModel.tempRefreshToken {
                                     authRouter.push(to: .createAccount(accessToken: accessToken, refreshToken: refreshToken))
                                 }
+                            },
+                            onCancel: {
+                                viewModel.isPopupPresented = false
                             }
                         )
                     }
