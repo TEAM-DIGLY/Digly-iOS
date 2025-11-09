@@ -17,7 +17,7 @@ class HomeViewModel: ObservableObject {
     @Published var showEmotionBottomSheet: Bool = false
     @Published var showEmotionCompletedPopup: Bool = false
     @Published var selectedEmotions: [Emotion] = []
-    @Published var ddayTicket: Ticket?
+    @Published var ddayTicket: Ticket? = Ticket.dummy
 
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase

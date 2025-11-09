@@ -14,7 +14,6 @@ struct HomeView: View {
             notesSection
         }
         .overlay {
-            // D-day Alert Popup
             if viewModel.showDdayAlert, let ticket = viewModel.ddayTicket {
                 DdayAlertPopup(
                     isPresented: $viewModel.showDdayAlert,
@@ -27,7 +26,6 @@ struct HomeView: View {
             }
         }
         .overlay {
-            // Emotion Completed Popup
             if viewModel.showEmotionCompletedPopup, let ticket = viewModel.ddayTicket {
                 EmotionCompletedPopup(
                     isPresented: $viewModel.showEmotionCompletedPopup,
@@ -40,14 +38,17 @@ struct HomeView: View {
             }
         }
         .sheet(isPresented: $viewModel.showEmotionBottomSheet) {
-            EmotionSelectionBottomSheet(
-                isPresented: $viewModel.showEmotionBottomSheet,
-                onComplete: { emotions in
-                    viewModel.handleEmotionComplete(emotions: emotions)
-                }
-            )
-            .presentationDetents([.height(604)])
-            .presentationDragIndicator(.hidden)
+            if let ddayTicket = viewModel.ddayTicket {
+                EmotionSelectionBottomSheet(
+                    ticketId: ddayTicket.id,
+                    currentEmotions: .constant(ddayTicket.color),
+                    onEmotionsUpdated: { emotions in
+//                        viewModel.updateTicketEmotions(emotions)
+                    }
+                )
+                .presentationDetents([.height(604)])
+                .presentationDragIndicator(.hidden)
+            }
         }
         .onAppear {
             // Check for D-day tickets when view appears

@@ -27,6 +27,18 @@ struct Ticket: Identifiable {
         self.feeling = feeling
         self.notes = notes
     }
+    
+    static let dummy: Ticket = Ticket(
+        id: 1,
+        name: "프랑켄슈타인",
+        time: Date(),
+        place: "블루스퀘어 신한카드홀",
+        count: 24,
+        seatNumber: "@4",
+        price: 20000,
+        color: [],
+        feeling: []
+    )
 }
 
 
