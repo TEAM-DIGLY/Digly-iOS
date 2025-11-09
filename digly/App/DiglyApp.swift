@@ -1,17 +1,16 @@
-//
-//  DiglyApp.swift
-//  Digly
-//
-//  Created by 윤동주 on 1/26/25.
-//
-
 import SwiftUI
 
 @main
-struct DiglyApp: App {
+struct diglyApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var body: some Scene {
         WindowGroup {
-            MainView()
+            DiglyView()
+                .onOpenURL { url in
+                    // URL 스킴 처리는 AppDelegate에서 담당
+                    _ = appDelegate.application(UIApplication.shared, open: url, options: [:])
+                }
         }
     }
 }

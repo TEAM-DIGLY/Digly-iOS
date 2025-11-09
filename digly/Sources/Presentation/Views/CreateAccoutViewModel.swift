@@ -1,11 +1,11 @@
 import Foundation
 import Combine
 import AuthenticationServices
-import GoogleSignIn
 import SwiftUI
 
+@MainActor
 class CreateAccountViewModel: ObservableObject {
-    @Published var username: String = ""{ didSet{
+    @Published var username: String = ""{ didSet {
         if username != oldValue {
             withAnimation (.mediumEaseInOut){
                 isUsernameValid = false
@@ -17,6 +17,7 @@ class CreateAccountViewModel: ObservableObject {
     @Published var errorText: String = ""
     @Published var isExistingUser: Bool = false
     @Published var isUsernameValid: Bool = false
+    
     @Published var isSelectingDigly: Bool = false
     
     @Published var isLoading: Bool = false
@@ -24,15 +25,37 @@ class CreateAccountViewModel: ObservableObject {
     @Published var selectedIndex :Int = 0
     
     private let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9_]{3,20}$")
+    private let authUseCase: AuthUseCase
+    private let memberUseCase: MemberUseCase
+    private let accessToken: String
+    private let refreshToken: String
     
     private var cancellables = Set<AnyCancellable>()
     
-    func handleDone(){
-        
+    init(accessToken: String, refreshToken: String, authUseCase: AuthUseCase = AuthUseCase(), memberUseCase: MemberUseCase = MemberUseCase(memberRepository: MemberRepository())) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        self.authUseCase = authUseCase
+        self.memberUseCase = memberUseCase
     }
     
-    //TODO: 추후 Service 레이어나, useCase를 통해 로직 캡슐화할 필요 있음.
-    func signIn(){
+    func performSignUp(onSuccess: @escaping (SignUpResult) -> Void) {
+        Task {
+            do {
+                isLoading = true
+                let selectedDiglyType = Digly.data[selectedIndex].diglyType
+                let diglyType = selectedDiglyType
+                
+                let response = try await authUseCase.signUp(name: username, diglyType: diglyType, accessToken: accessToken)
+                isLoading = false
+                
+                onSuccess(response)
+                
+            } catch {
+                isLoading = false
+                ToastManager.shared.show(.errorStringWithTask("회원가입"))
+            }
+        }
     }
     
     func handleLeftArrowPress(_ proxy:ScrollViewProxy){
@@ -95,10 +118,22 @@ class CreateAccountViewModel: ObservableObject {
         print(idToken)
     }
     
-    
     func checkUsername(){
-        // TODO: 서버로 부터 닉네임 중복여부 확인
-        isUsernameValid = true
+        Task {
+            do {
+                isLoading = true
+                try await memberUseCase.checkDuplicateNameOnServer(username)
+                isUsernameValid = true
+                errorText = ""
+            } catch let error as APIError {
+                isUsernameValid = false
+                errorText = error.localizedDescription
+            } catch {
+                isUsernameValid = false
+                errorText = "닉네임 확인 중 오류가 발생했습니다."
+            }
+            isLoading = false
+        }
     }
     
     func signUp() {
