@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct OnboardingView: View {
-    @ObservedObject var viewModel = OnboardingViewModel()
+    @StateObject private var viewModel = OnboardingViewModel()
     @EnvironmentObject private var authRouter: AuthRouter
     
     var body: some View {
@@ -81,7 +81,7 @@ struct OnboardingView: View {
             Image(provider)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 51,height: 51)
+                .frame(width: 51, height: 51)
                 .clipShape(RoundedRectangle(cornerRadius: 26))
                 .padding(12)
         }

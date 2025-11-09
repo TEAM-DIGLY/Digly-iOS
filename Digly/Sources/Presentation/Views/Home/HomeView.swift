@@ -13,9 +13,48 @@ struct HomeView: View {
             Spacer()
             notesSection
         }
-        .edgesIgnoringSafeArea(.bottom)
+        .overlay {
+            // D-day Alert Popup
+            if viewModel.showDdayAlert, let ticket = viewModel.ddayTicket {
+                DdayAlertPopup(
+                    isPresented: $viewModel.showDdayAlert,
+                    ticket: ticket,
+                    onEmotionButtonTap: {
+                        viewModel.showDdayAlert = false
+                        viewModel.showEmotionBottomSheet = true
+                    }
+                )
+            }
+        }
+        .overlay {
+            // Emotion Completed Popup
+            if viewModel.showEmotionCompletedPopup, let ticket = viewModel.ddayTicket {
+                EmotionCompletedPopup(
+                    isPresented: $viewModel.showEmotionCompletedPopup,
+                    ticket: ticket,
+                    selectedEmotions: viewModel.selectedEmotions,
+                    onViewRecord: {
+                        viewModel.navigateToEmotionRecord()
+                    }
+                )
+            }
+        }
+        .sheet(isPresented: $viewModel.showEmotionBottomSheet) {
+            EmotionSelectionBottomSheet(
+                isPresented: $viewModel.showEmotionBottomSheet,
+                onComplete: { emotions in
+                    viewModel.handleEmotionComplete(emotions: emotions)
+                }
+            )
+            .presentationDetents([.height(604)])
+            .presentationDragIndicator(.hidden)
+        }
+        .onAppear {
+            // Check for D-day tickets when view appears
+            viewModel.checkForDdayTickets()
+        }
     }
-    
+
     private var notesSection: some View {
         HStack(alignment: .bottom, spacing: 0) {
             VStack(spacing: 0) {

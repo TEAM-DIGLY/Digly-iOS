@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct EmotionSelectionBottomSheet: View {
+struct EmotionSelection2BottomSheet: View {
     let ticketId: Int
     @Binding var currentEmotions: [EmotionColor]
     let onEmotionsUpdated: ([EmotionColor]) -> Void
@@ -221,7 +221,7 @@ struct EmotionSelectionBottomSheet: View {
 }
 
 #Preview {
-    EmotionSelectionBottomSheet(
+    EmotionSelection2BottomSheet(
         ticketId: 1,
         currentEmotions: .constant([.excited, .glad]),
         onEmotionsUpdated: { _ in }

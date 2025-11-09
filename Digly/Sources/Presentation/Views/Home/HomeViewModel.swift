@@ -11,10 +11,17 @@ class HomeViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var focusedTicketIndex: Int = 0
     @Published var ticketNotes: [Note] = []
-    
+
+    // Popup states
+    @Published var showDdayAlert: Bool = true
+    @Published var showEmotionBottomSheet: Bool = false
+    @Published var showEmotionCompletedPopup: Bool = false
+    @Published var selectedEmotions: [Emotion] = []
+    @Published var ddayTicket: Ticket?
+
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
-    
+
     var focusedTicket: Ticket? {
         tickets.isEmpty ? nil : tickets[safe: focusedTicketIndex]
     }
@@ -90,5 +97,25 @@ class HomeViewModel: ObservableObject {
     func isPerformanceToday(for ticket: Ticket) -> Bool {
         let calendar = Calendar.current
         return calendar.isDate(ticket.time, inSameDayAs: Date())
+    }
+
+    // Check for D-day tickets and show alert
+    func checkForDdayTickets() {
+        if let ticket = tickets.first(where: { daysUntilPerformance(for: $0) == 0 }) {
+            ddayTicket = ticket
+            showDdayAlert = true
+        }
+    }
+
+    // Handle emotion selection completion
+    func handleEmotionComplete(emotions: [Emotion]) {
+        selectedEmotions = emotions
+        showEmotionCompletedPopup = true
+    }
+
+    // Navigate to emotion record
+    func navigateToEmotionRecord() {
+        // TODO: Implement navigation to emotion record view
+        print("Navigate to emotion record")
     }
 }

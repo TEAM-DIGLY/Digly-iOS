@@ -40,7 +40,7 @@ struct TicketDetailView: View {
         }
         .sheet(isPresented: $showEmotionBottomSheet) {
             if let ticket = viewModel.ticket {
-                EmotionSelectionBottomSheet(
+                EmotionSelection2BottomSheet(
                     ticketId: ticket.id,
                     currentEmotions: .constant(ticket.color),
                     onEmotionsUpdated: { emotions in
