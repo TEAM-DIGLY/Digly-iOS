@@ -7,7 +7,7 @@ import SwiftUI
 class OnboardingViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     
-    @Published  var isPopupPresented: Bool = false
+    @Published  var isPopupPresented: Bool = true
     @Published var isFirstChecked = false
     @Published var isSecondChecked = false
     @Published var isThirdChecked = false

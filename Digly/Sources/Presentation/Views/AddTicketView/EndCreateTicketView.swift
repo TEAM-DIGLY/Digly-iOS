@@ -190,7 +190,7 @@ extension EndCreateTicketView {
     private var ticketInfoSection: some View {
         VStack(alignment: .leading, spacing: 24) {
             Text("기본정보")
-                .fontStyle(.heading3)
+                .fontStyle(.heading2)
                 .foregroundStyle(.common100)
             
             VStack(spacing: 16) {

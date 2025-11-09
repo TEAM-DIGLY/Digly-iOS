@@ -11,25 +11,29 @@ struct PostNoteRequest: Codable {
     }
 }
 
-struct PostNoteResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let contents: [NoteContentDTO]
+struct PostNoteResponse: Codable {
+    let status: Int
+    let message: String
+    let data: NoteData
 
-    struct NoteContentDTO: Codable {
-        let question: String
-        let answer: String
+    struct NoteData: Codable {
+        let id: Int
+        let contents: [NoteContentDTO]
 
-        func toDomain() -> NoteContent {
-            NoteContent(question: question, answer: answer)
+        struct NoteContentDTO: Codable {
+            let question: String
+            let answer: String
+
+            func toDomain() -> NoteContent {
+                NoteContent(question: question, answer: answer)
+            }
         }
     }
 
     func toDomain() -> Note {
         Note(
-            id: id,
-            contents: contents.map { $0.toDomain() },
+            id: data.id,
+            contents: data.contents.map { $0.toDomain() },
             updatedAt: Date()
         )
     }
@@ -37,27 +41,31 @@ struct PostNoteResponse: BaseResponse {
 
 // MARK: - GET /api/v1/note/{noteId}
 /// - Note: `RequestDTO 불필요`
-struct GetNoteResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let contents: [NoteContentDTO]
-    let updatedAt: String
+struct GetNoteResponse: Codable {
+    let status: Int
+    let message: String
+    let data: NoteData
 
-    struct NoteContentDTO: Codable {
-        let question: String
-        let answer: String
+    struct NoteData: Codable {
+        let id: Int
+        let contents: [NoteContentDTO]
+        let updatedAt: String
 
-        func toDomain() -> NoteContent {
-            NoteContent(question: question, answer: answer)
+        struct NoteContentDTO: Codable {
+            let question: String
+            let answer: String
+
+            func toDomain() -> NoteContent {
+                NoteContent(question: question, answer: answer)
+            }
         }
     }
 
     func toDomain() -> Note {
         Note(
-            id: id,
-            contents: contents.map { $0.toDomain() },
-            updatedAt: updatedAt.toDate()
+            id: data.id,
+            contents: data.contents.map { $0.toDomain() },
+            updatedAt: data.updatedAt.toDate()
         )
     }
 }
@@ -72,42 +80,14 @@ struct PutNoteRequest: Codable {
     }
 }
 
-struct PutNoteResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let contents: [NoteContentDTO]
+struct PutNoteResponse: Codable {
+    let status: Int
+    let message: String
+    let data: NoteData
 
-    struct NoteContentDTO: Codable {
-        let question: String
-        let answer: String
-
-        func toDomain() -> NoteContent {
-            NoteContent(question: question, answer: answer)
-        }
-    }
-
-    func toDomain() -> Note {
-        Note(
-            id: id,
-            contents: contents.map { $0.toDomain() },
-            updatedAt: Date()
-        )
-    }
-}
-
-// MARK: - GET /api/v1/note/ticket/{ticketId}
-/// - Note: `RequestDTO 불필요` (query parameters: pageable)
-struct GetNotesByTicketResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let notes: [NoteDTO]
-    let pageInfo: Pagination
-
-    struct NoteDTO: Codable {
+    struct NoteData: Codable {
         let id: Int
         let contents: [NoteContentDTO]
-        let updatedAt: String
 
         struct NoteContentDTO: Codable {
             let question: String
@@ -117,20 +97,56 @@ struct GetNotesByTicketResponse: BaseResponse {
                 NoteContent(question: question, answer: answer)
             }
         }
+    }
 
-        func toDomain() -> Note {
-            Note(
-                id: id,
-                contents: contents.map { $0.toDomain() },
-                updatedAt: updatedAt.toDate()
-            )
+    func toDomain() -> Note {
+        Note(
+            id: data.id,
+            contents: data.contents.map { $0.toDomain() },
+            updatedAt: Date()
+        )
+    }
+}
+
+// MARK: - GET /api/v1/note/ticket/{ticketId}
+/// - Note: `RequestDTO 불필요` (query parameters: pageable)
+struct GetNotesByTicketResponse: Codable {
+    let status: Int
+    let message: String
+    let data: NotesData
+
+    struct NotesData: Codable {
+        let notes: [NoteDTO]
+        let pageInfo: Pagination
+
+        struct NoteDTO: Codable {
+            let id: Int
+            let contents: [NoteContentDTO]
+            let updatedAt: String
+
+            struct NoteContentDTO: Codable {
+                let question: String
+                let answer: String
+
+                func toDomain() -> NoteContent {
+                    NoteContent(question: question, answer: answer)
+                }
+            }
+
+            func toDomain() -> Note {
+                Note(
+                    id: id,
+                    contents: contents.map { $0.toDomain() },
+                    updatedAt: updatedAt.toDate()
+                )
+            }
         }
     }
 
     func toDomain() -> NotesResult {
         NotesResult(
-            notes: notes.map { $0.toDomain() },
-            pageInfo: pageInfo
+            notes: data.notes.map { $0.toDomain() },
+            pageInfo: data.pageInfo
         )
     }
 }

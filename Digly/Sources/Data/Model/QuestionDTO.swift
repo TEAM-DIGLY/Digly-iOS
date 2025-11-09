@@ -7,20 +7,24 @@ struct PostQuestionRequest: Codable {
     let content: String
 }
 
-struct PostQuestionResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let email: String
-    let title: String
-    let content: String
+struct PostQuestionResponse: Codable {
+    let status: Int
+    let message: String
+    let data: QuestionData
+
+    struct QuestionData: Codable {
+        let id: Int
+        let email: String
+        let title: String
+        let content: String
+    }
 
     func toDomain() -> QuestionResult {
         QuestionResult(
-            id: id,
-            email: email,
-            title: title,
-            content: content
+            id: data.id,
+            email: data.email,
+            title: data.title,
+            content: data.content
         )
     }
 }

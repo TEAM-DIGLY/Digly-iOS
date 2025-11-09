@@ -2,20 +2,24 @@ import Foundation
 
 // MARK: - GET /api/v1/member
 /// - Note: `RequestDTO 불필요`
-struct GetMemberResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String
-    let platformType: String
-    let memberType: String
+struct GetMemberResponse: Codable {
+    let status: Int
+    let message: String
+    let data: MemberData
+
+    struct MemberData: Codable {
+        let id: Int
+        let name: String
+        let platformType: String
+        let memberType: String
+    }
 
     func toDomain() -> MemberResult {
         MemberResult(
-            id: id,
-            name: name,
-            platformType: PlatformType(rawValue: platformType) ?? .kakao,
-            memberType: DiglyType(rawValue: memberType) ?? .collector
+            id: data.id,
+            name: data.name,
+            platformType: PlatformType(rawValue: data.platformType) ?? .kakao,
+            memberType: DiglyType(rawValue: data.memberType) ?? .collector
         )
     }
 }
@@ -31,20 +35,24 @@ struct PutMemberRequest: Codable {
     }
 }
 
-struct PutMemberResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String
-    let platformType: String
-    let memberType: String
+struct PutMemberResponse: Codable {
+    let status: Int
+    let message: String
+    let data: MemberData
+
+    struct MemberData: Codable {
+        let id: Int
+        let name: String
+        let platformType: String
+        let memberType: String
+    }
 
     func toDomain() -> MemberResult {
         MemberResult(
-            id: id,
-            name: name,
-            platformType: PlatformType(rawValue: platformType) ?? .kakao,
-            memberType: DiglyType(rawValue: memberType) ?? .collector
+            id: data.id,
+            name: data.name,
+            platformType: PlatformType(rawValue: data.platformType) ?? .kakao,
+            memberType: DiglyType(rawValue: data.memberType) ?? .collector
         )
     }
 }
@@ -54,18 +62,18 @@ struct PatchMemberRequest: Codable {
     let withdrawDesc: String
 }
 
-struct PatchMemberResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let result: EmptyResult?
+struct PatchMemberResponse: Codable {
+    let status: Int
+    let message: String
+    let data: EmptyData
 }
 
 // MARK: - GET /api/v1/member/name
 /// - Note: `RequestDTO 불필요` (query parameter로 name 전달)
-struct GetMemberNameValidationResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let result: EmptyResult?
+struct GetMemberNameValidationResponse: Codable {
+    let status: Int
+    let message: String
+    let data: EmptyData
 }
 
 // MARK: - Domain Results

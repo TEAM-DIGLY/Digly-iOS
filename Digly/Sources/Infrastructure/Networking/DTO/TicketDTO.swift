@@ -3,11 +3,15 @@ import SwiftUI
 
 // MARK: - GET /api/v1/ticket
 /// - Note: `RequestDTO 불필요` (query parameters: key, startAt, endAt, pageable)
-struct GetTicketsResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let tickets: [TicketDTO]
-    let pageInfo: Pagination
+struct GetTicketsResponse: Codable {
+    let status: Int
+    let message: String
+    let data: TicketsData
+
+    struct TicketsData: Codable {
+        let tickets: [TicketDTO]
+        let pageInfo: Pagination
+    }
 
     struct TicketDTO: Codable {
         let id: Int
@@ -38,8 +42,8 @@ struct GetTicketsResponse: BaseResponse {
 
     func toDomain() -> TicketsResult {
         TicketsResult(
-            tickets: tickets.map { $0.toDomain() },
-            pageInfo: pageInfo
+            tickets: data.tickets.map { $0.toDomain() },
+            pageInfo: data.pageInfo
         )
     }
 }
@@ -56,62 +60,70 @@ struct PostTicketRequest: Codable {
     let feeling: [String]
 }
 
-struct PostTicketResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String
-    let performanceTime: String
-    let place: String
-    let count: Int
-    let seatNumber: String?
-    let price: Int?
-    let color: [String]
-    let feeling: [String]
-    let isDeleted: Bool
+struct PostTicketResponse: Codable {
+    let status: Int
+    let message: String
+    let data: TicketData
+
+    struct TicketData: Codable {
+        let id: Int
+        let name: String
+        let performanceTime: String
+        let place: String
+        let count: Int
+        let seatNumber: String?
+        let price: Int?
+        let color: [String]
+        let feeling: [String]
+        let isDeleted: Bool
+    }
 
     func toDomain() -> Ticket {
         Ticket(
-            id: id,
-            name: name,
-            time: performanceTime.toDate(),
-            place: place,
-            count: count,
-            seatNumber: seatNumber,
-            price: price,
-            color: EmotionColor.fromRawValues(color),
-            feeling: feeling.map { Feeling(rawValue: $0) ?? .excited }
+            id: data.id,
+            name: data.name,
+            time: data.performanceTime.toDate(),
+            place: data.place,
+            count: data.count,
+            seatNumber: data.seatNumber,
+            price: data.price,
+            color: EmotionColor.fromRawValues(data.color),
+            feeling: data.feeling.map { Feeling(rawValue: $0) ?? .excited }
         )
     }
 }
 
 // MARK: - GET /api/v1/ticket/{ticketId}
 /// - Note: `RequestDTO 불필요`
-struct GetTicketResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String
-    let performanceTime: String
-    let place: String
-    let count: Int
-    let seatNumber: String?
-    let price: Int?
-    let color: [String]
-    let feeling: [String]
-    let isDeleted: Bool
+struct GetTicketResponse: Codable {
+    let status: Int
+    let message: String
+    let data: TicketData
+
+    struct TicketData: Codable {
+        let id: Int
+        let name: String
+        let performanceTime: String
+        let place: String
+        let count: Int
+        let seatNumber: String?
+        let price: Int?
+        let color: [String]
+        let feeling: [String]
+        let isDeleted: Bool
+    }
 
     func toDomain() -> Ticket {
         Ticket(
-            id: id,
-            name: name,
-            time: performanceTime.toDate(),
-            place: place,
-            count: count,
-            seatNumber: seatNumber,
-            price: price,
-            color: EmotionColor.fromRawValues(color),
-            feeling: feeling.map { Feeling(rawValue: $0) ?? .excited }
+            id: data.id,
+            name: data.name,
+            time: data.performanceTime.toDate(),
+            place: data.place,
+            count: data.count,
+            seatNumber: data.seatNumber,
+            price: data.price,
+            color: EmotionColor.fromRawValues(data.color),
+            feeling: data.feeling.map { Feeling(rawValue: $0) ?? .excited }
         )
     }
 }
@@ -128,41 +140,45 @@ struct PutTicketRequest: Codable {
     let feeling: [String]
 }
 
-struct PutTicketResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String
-    let performanceTime: String
-    let place: String
-    let count: Int
-    let seatNumber: String?
-    let price: Int?
-    let color: [String]
-    let feeling: [String]
-    let isDeleted: Bool
+struct PutTicketResponse: Codable {
+    let status: Int
+    let message: String
+    let data: TicketData
+
+    struct TicketData: Codable {
+        let id: Int
+        let name: String
+        let performanceTime: String
+        let place: String
+        let count: Int
+        let seatNumber: String?
+        let price: Int?
+        let color: [String]
+        let feeling: [String]
+        let isDeleted: Bool
+    }
 
     func toDomain() -> Ticket {
         Ticket(
-            id: id,
-            name: name,
-            time: performanceTime.toDate(),
-            place: place,
-            count: count,
-            seatNumber: seatNumber,
-            price: price,
-            color: EmotionColor.fromRawValues(color),
-            feeling: feeling.map { Feeling(rawValue: $0) ?? .excited }
+            id: data.id,
+            name: data.name,
+            time: data.performanceTime.toDate(),
+            place: data.place,
+            count: data.count,
+            seatNumber: data.seatNumber,
+            price: data.price,
+            color: EmotionColor.fromRawValues(data.color),
+            feeling: data.feeling.map { Feeling(rawValue: $0) ?? .excited }
         )
     }
 }
 
 // MARK: - DELETE /api/v1/ticket/{ticketId}
 /// - Note: `RequestDTO 불필요` (query parameter: isOptional)
-struct DeleteTicketResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let data: EmptyResult?
+struct DeleteTicketResponse: Codable {
+    let status: Int
+    let message: String
+    let data: EmptyData
 }
 
 // MARK: - Domain Results

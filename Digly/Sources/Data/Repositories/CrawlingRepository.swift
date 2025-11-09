@@ -12,7 +12,7 @@ final class CrawlingRepository: CrawlingRepositoryProtocol {
             CrawlingEndpoint.getTicketsTitle,
             queryParameters: ["title": value]
         )
-        return response.titleList
+        return response.data.titleList
     }
 
     func searchTicketPlace(_ value: String) async throws -> [String] {
@@ -20,6 +20,6 @@ final class CrawlingRepository: CrawlingRepositoryProtocol {
             CrawlingEndpoint.getTicketsPlace,
             queryParameters: ["key": value]
         )
-        return response.placeList
+        return response.data.placeList
     }
 }

@@ -4,7 +4,8 @@ enum AuthRoute: BaseRoute {
     case createAccount(accessToken: String, refreshToken: String)
     case onboarding
     case onboardingConfirm(signUpResponse: SignUpResult, accessToken: String, refreshToken: String, diglyType: DiglyType)
-    
+    case agreementDetail(type: AgreementType)
+
     var id: String {
         switch self {
         case .createAccount:
@@ -13,6 +14,8 @@ enum AuthRoute: BaseRoute {
             return "onboarding"
         case .onboardingConfirm:
             return "onboardingConfirm"
+        case .agreementDetail:
+            return "agreementDetail"
         }
     }
     

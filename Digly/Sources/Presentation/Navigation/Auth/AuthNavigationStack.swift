@@ -26,12 +26,14 @@ struct AuthNavigationStack: View {
     @ViewBuilder
     private func destinationView(for route: AuthRoute) -> some View {
         switch route {
-        case .createAccount(let accessToken, let refreshToken): 
+        case .createAccount(let accessToken, let refreshToken):
             CreateAccountView(accessToken: accessToken, refreshToken: refreshToken)
-        case .onboarding: 
+        case .onboarding:
             OnboardingView()
-        case .onboardingConfirm(let signUpResponse, let accessToken, let refreshToken, let diglyType): 
+        case .onboardingConfirm(let signUpResponse, let accessToken, let refreshToken, let diglyType):
             OnboardingConfirmView(signUpResponse: signUpResponse, accessToken: accessToken, refreshToken: refreshToken, diglyType: diglyType)
+        case .agreementDetail(let type):
+            AgreementDetailView(agreementType: type)
         }
     }
 }

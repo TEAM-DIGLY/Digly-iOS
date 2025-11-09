@@ -9,22 +9,26 @@ struct PostAuthLoginRequest: Codable {
     }
 }
 
-struct PostAuthLoginResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String?
-    let memberType: String?
-    let accessToken: String
-    let refreshToken: String
+struct PostAuthLoginResponse: Codable {
+    let status: Int
+    let message: String
+    let data: LoginData
+
+    struct LoginData: Codable {
+        let id: Int
+        let name: String?
+        let memberType: String?
+        let accessToken: String
+        let refreshToken: String
+    }
 
     func toDomain() -> SignInResult {
         SignInResult(
-            id: id,
-            name: name,
-            memberType: memberType.flatMap { DiglyType(rawValue: $0) },
-            accessToken: accessToken,
-            refreshToken: refreshToken
+            id: data.id,
+            name: data.name,
+            memberType: data.memberType.flatMap { DiglyType(rawValue: $0) },
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken
         )
     }
 }
@@ -40,34 +44,42 @@ struct PostAuthSignUpRequest: Codable {
     }
 }
 
-struct PostAuthSignUpResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let id: Int
-    let name: String
-    let memberType: String
+struct PostAuthSignUpResponse: Codable {
+    let status: Int
+    let message: String
+    let data: SignUpData
+
+    struct SignUpData: Codable {
+        let id: Int
+        let name: String
+        let memberType: String
+    }
 
     func toDomain() -> SignUpResult {
         SignUpResult(
-            id: id,
-            name: name,
-            memberType: DiglyType(rawValue: memberType) ?? .collector
+            id: data.id,
+            name: data.name,
+            memberType: DiglyType(rawValue: data.memberType) ?? .collector
         )
     }
 }
 
 // MARK: - POST /api/v1/auth/reissue
 /// - Note: `RequestDTO 불필요` (Authorization header에 refreshToken 전달)
-struct PostAuthReissueResponse: BaseResponse {
-    let statusCode: Int?
-    let message: String?
-    let accessToken: String
-    let refreshToken: String
+struct PostAuthReissueResponse: Codable {
+    let status: Int
+    let message: String
+    let data: ReissueData
+
+    struct ReissueData: Codable {
+        let accessToken: String
+        let refreshToken: String
+    }
 
     func toDomain() -> ReissueResult {
         ReissueResult(
-            accessToken: accessToken,
-            refreshToken: refreshToken
+            accessToken: data.accessToken,
+            refreshToken: data.refreshToken
         )
     }
 }

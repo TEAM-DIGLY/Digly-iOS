@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct WriteNoteView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: WriteNoteViewModel
 
     init(ticket: Ticket) {
@@ -63,12 +64,24 @@ struct WriteNoteView: View {
                 Spacer()
                 
                 Button(action: {
-                    // TODO: 노트 저장
+                    Task {
+                        let didSave = await viewModel.saveNote()
+                        if didSave {
+                            dismiss()
+                        }
+                    }
                 }) {
-                    Text("완료")
-                        .fontStyle(.heading2)
-                        .foregroundStyle(.common100)
+                    if viewModel.isSaving {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .tint(.common100)
+                    } else {
+                        Text("완료")
+                            .fontStyle(.heading2)
+                            .foregroundStyle(.common100)
+                    }
                 }
+                .disabled(viewModel.isSaving)
             }
         }
     }
