@@ -11,15 +11,26 @@ final class DiglyViewModel: ObservableObject {
     
     private func initialize() {
         Task {
-            let refreshSuccess = await TokenManager.shared.ensureValidToken()
-            
-            if refreshSuccess {
-                AuthManager.shared.setLoggedIn(true)
-            } else {
-                AuthManager.shared.logout()
+            guard let refreshToken = KeychainManager.shared.getRefreshToken(),
+                  !refreshToken.isEmpty else {
+                await MainActor.run {
+                    AuthManager.shared.logout()
+                    self.isInitializing = false
+                }
+                return
             }
             
-            isInitializing = false
+            let refreshSuccess = await TokenManager.shared.ensureValidToken()
+            
+            await MainActor.run {
+                if refreshSuccess {
+                    AuthManager.shared.setLoggedIn(true)
+                } else {
+                    AuthManager.shared.logout()
+                }
+                
+                self.isInitializing = false
+            }
         }
     }
 }

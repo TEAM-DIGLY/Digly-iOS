@@ -4,6 +4,7 @@ actor TokenManager {
     static let shared = TokenManager()
     
     private var currentRefreshTask: Task<Bool, Never>?
+    private let authUseCase = AuthUseCase()
     
     private init() {}
     
@@ -13,15 +14,7 @@ actor TokenManager {
         }
         
         let refreshTask = Task { () -> Bool in
-            guard let accessToken = KeychainManager.shared.getAccessToken(),
-                  let refreshToken = KeychainManager.shared.getRefreshToken(),
-                  !accessToken.isEmpty, !refreshToken.isEmpty else {
-                return false
-            }
-            
-            // TODO: 실제 토큰 검증 API 호출 구현 필요
-            // 현재는 토큰 존재 여부만 확인
-            return true
+            await self.performTokenRefresh()
         }
         
         currentRefreshTask = refreshTask
@@ -32,19 +25,29 @@ actor TokenManager {
     }
     
     func refreshTokens() async -> Bool {
-        guard let refreshToken = KeychainManager.shared.getRefreshToken(),
-              !refreshToken.isEmpty else {
-            return false
-        }
-        
-        // TODO: 실제 토큰 갱신 API 호출 구현 필요
-        // 현재는 기존 토큰 유지
-        return true
+        await performTokenRefresh()
     }
     
     func clearTokens() {
         KeychainManager.shared.clearTokens()
         currentRefreshTask?.cancel()
         currentRefreshTask = nil
+    }
+    
+    private func performTokenRefresh() async -> Bool {
+        guard let refreshToken = KeychainManager.shared.getRefreshToken(),
+              !refreshToken.isEmpty else {
+            return false
+        }
+        
+        do {
+            _ = try await authUseCase.reissueToken()
+            return true
+        } catch {
+            await MainActor.run {
+                AuthManager.shared.logout()
+            }
+            return false
+        }
     }
 }

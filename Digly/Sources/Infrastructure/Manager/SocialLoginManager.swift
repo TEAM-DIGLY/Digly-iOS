@@ -56,8 +56,14 @@ final class NaverLoginManager: NSObject, ObservableObject {
         
         return try await withCheckedThrowingContinuation { continuation in
             self.continuation = continuation
-            Task {
-                await instance?.requestThirdPartyLogin()
+            Task { @MainActor [weak self] in
+                guard let self, let instance = self.instance else {
+                    self?.isLoading = false
+                    continuation.resume(throwing: SocialLoginError.unknownError)
+                    self?.continuation = nil
+                    return
+                }
+                instance.requestThirdPartyLogin()
             }
         }
     }
