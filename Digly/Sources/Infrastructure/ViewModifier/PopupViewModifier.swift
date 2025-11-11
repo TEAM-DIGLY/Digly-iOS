@@ -13,37 +13,37 @@ struct PopupViewModifier: ViewModifier {
         content
             .overlay {
                 if manager.isPresented, let popupType = manager.currentPopupType {
-                    ZStack {
-                        Color.black
-                            .edgesIgnoringSafeArea(.all)
-                            .opacity(manager.isAnimating ? 0.3 : 0.0)
-                            .onTapGesture {
-                                if popupType.config.isOptional { manager.dismissPopup() }
-                            }
-                            .animation(.fastSpring, value: manager.isAnimating)
+                    if case .custom(let view) = popupType {
+                        // Custom views handle their own background and animation
+                        AnyView(view)
+                    } else {
+                        ZStack {
+                            Color.black
+                                .edgesIgnoringSafeArea(.all)
+                                .opacity(manager.isAnimating ? 0.3 : 0.0)
+                                .onTapGesture {
+                                    if popupType.config.isOptional { manager.dismissPopup() }
+                                }
+                                .animation(.fastSpring, value: manager.isAnimating)
 
-                        popupContent(for: popupType)
+                            DGPopup(
+                                hidePopup: manager.dismissPopup,
+                                type: popupType
+                            )
                             .opacity(manager.isAnimating ? 1 : 0)
                             .offset(y: manager.isAnimating ? 0 : -80)
                             .animation(.mediumSpring, value: manager.isAnimating)
+                        }
                     }
                 }
             }
             .onChange(of: manager.isPresented) { _, newValue in
+                if case .custom = manager.currentPopupType {
+                    // Custom views don't use the isAnimating state
+                    return
+                }
                 manager.isAnimating = newValue
             }
-    }
-
-    @ViewBuilder
-    private func popupContent(for popupType: PopupType) -> some View {
-        if case .custom(let view) = popupType {
-            AnyView(view)
-        } else {
-            DGPopup(
-                hidePopup: manager.dismissPopup,
-                type: popupType
-            )
-        }
     }
 
 }

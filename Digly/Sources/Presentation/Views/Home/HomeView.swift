@@ -2,40 +2,17 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var router: HomeRouter
-    
+
     @StateObject var viewModel = HomeViewModel()
     @StateObject private var authManager = AuthManager.shared
-    
+    @StateObject private var popupManager = PopupManager.shared
+
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
             headerSection
             mainSection
             Spacer()
             notesSection
-        }
-        .overlay {
-            if viewModel.showDdayAlert, let ticket = viewModel.ddayTicket {
-                DdayAlertPopup(
-                    isPresented: $viewModel.showDdayAlert,
-                    ticket: ticket,
-                    onEmotionButtonTap: {
-                        viewModel.showDdayAlert = false
-                        viewModel.showEmotionBottomSheet = true
-                    }
-                )
-            }
-        }
-        .overlay {
-            if viewModel.showEmotionCompletedPopup, let ticket = viewModel.ddayTicket {
-                EmotionCompletedPopup(
-                    isPresented: $viewModel.showEmotionCompletedPopup,
-                    ticket: ticket,
-                    selectedEmotions: viewModel.selectedEmotions,
-                    onViewRecord: {
-                        viewModel.navigateToEmotionRecord()
-                    }
-                )
-            }
         }
         .sheet(isPresented: $viewModel.showEmotionBottomSheet) {
             if let ddayTicket = viewModel.ddayTicket {
@@ -51,7 +28,6 @@ struct HomeView: View {
             }
         }
         .onAppear {
-            // Check for D-day tickets when view appears
             viewModel.checkForDdayTickets()
         }
     }

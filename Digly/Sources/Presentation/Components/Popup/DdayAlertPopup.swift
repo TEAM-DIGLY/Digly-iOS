@@ -1,17 +1,17 @@
 import SwiftUI
 
 struct DdayAlertPopup: View {
-    @Binding var isPresented: Bool
     let ticket: Ticket
     let onEmotionButtonTap: () -> Void
-    
+    let onDismiss: () -> Void
+
     var body: some View {
         ZStack {
             Color.black.opacity(0.5)
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     withAnimation(.easeInOut) {
-                        isPresented = false
+                        onDismiss()
                     }
                 }
             
@@ -20,7 +20,7 @@ struct DdayAlertPopup: View {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
-                            isPresented = false
+                            onDismiss()
                         }
                     }) {
                         Image("close")
@@ -109,7 +109,7 @@ struct DdayAlertPopup: View {
                 
                 Button(action: {
                     withAnimation(.easeInOut) {
-                        isPresented = false
+                        onDismiss()
                     }
                 }) {
                     Text("다음에 남길게요")
@@ -131,7 +131,6 @@ struct DdayAlertPopup: View {
 
 #Preview {
     DdayAlertPopup(
-        isPresented: .constant(true),
         ticket: Ticket(
             id: 1,
             name: "프랑켄슈타인",
@@ -142,6 +141,7 @@ struct DdayAlertPopup: View {
             price: 20000,
             emotions: [.distressed]
         ),
-        onEmotionButtonTap: {}
+        onEmotionButtonTap: {},
+        onDismiss: {}
     )
 }

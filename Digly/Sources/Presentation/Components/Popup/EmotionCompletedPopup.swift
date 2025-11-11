@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct EmotionCompletedPopup: View {
-    @Binding var isPresented: Bool
     let ticket: Ticket
     let selectedEmotions: [Emotion]
     let onViewRecord: () -> Void
+    let onDismiss: () -> Void
 
     var body: some View {
         ZStack {
@@ -12,7 +12,7 @@ struct EmotionCompletedPopup: View {
                 .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
                     withAnimation(.easeInOut) {
-                        isPresented = false
+                        onDismiss()
                     }
                 }
 
@@ -22,7 +22,7 @@ struct EmotionCompletedPopup: View {
                     Spacer()
                     Button(action: {
                         withAnimation(.easeInOut) {
-                            isPresented = false
+                            onDismiss()
                         }
                     }) {
                         Image(systemName: "xmark")
@@ -99,9 +99,6 @@ struct EmotionCompletedPopup: View {
                 // View record button
                 Button(action: {
                     onViewRecord()
-                    withAnimation(.easeInOut) {
-                        isPresented = false
-                    }
                 }) {
                     Text("감정기록 보러 가기")
                         .fontStyle(.label1)
@@ -139,7 +136,6 @@ struct EmotionCompletedPopup: View {
 
 #Preview {
     EmotionCompletedPopup(
-        isPresented: .constant(true),
         ticket: Ticket(
             id: 1,
             name: "프랑켄슈타인",
@@ -151,6 +147,7 @@ struct EmotionCompletedPopup: View {
             emotions: [.distressed]
         ),
         selectedEmotions: [.relaxed, .glad],
-        onViewRecord: {}
+        onViewRecord: {},
+        onDismiss: {}
     )
 }

@@ -13,14 +13,16 @@ class HomeViewModel: ObservableObject {
     @Published var ticketNotes: [Note] = []
 
     // Popup states
-    @Published var showDdayAlert: Bool = true
     @Published var showEmotionBottomSheet: Bool = false
-    @Published var showEmotionCompletedPopup: Bool = false
     @Published var selectedEmotions: [Emotion] = []
     @Published var ddayTicket: Ticket? = Ticket.dummy
 
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
+
+    // Popup callbacks
+    var onShowDdayAlert: ((Ticket) -> Void)?
+    var onShowEmotionCompleted: ((Ticket, [Emotion]) -> Void)?
 
     var focusedTicket: Ticket? {
         tickets.isEmpty ? nil : tickets[safe: focusedTicketIndex]
@@ -103,14 +105,39 @@ class HomeViewModel: ObservableObject {
     func checkForDdayTickets() {
         if let ticket = tickets.first(where: { daysUntilPerformance(for: $0) == 0 }) {
             ddayTicket = ticket
-            showDdayAlert = true
+            PopupManager.shared.show(.custom(
+                DdayAlertPopup(
+                    ticket: ticket,
+                    onEmotionButtonTap: { [weak self] in
+                        PopupManager.shared.dismissPopup()
+                        self?.showEmotionBottomSheet = true
+                    },
+                    onDismiss: {
+                        PopupManager.shared.dismissPopup()
+                    }
+                )
+            ))
         }
     }
 
     // Handle emotion selection completion
     func handleEmotionComplete(emotions: [Emotion]) {
         selectedEmotions = emotions
-        showEmotionCompletedPopup = true
+        if let ticket = ddayTicket {
+            PopupManager.shared.show(.custom(
+                EmotionCompletedPopup(
+                    ticket: ticket,
+                    selectedEmotions: emotions,
+                    onViewRecord: { [weak self] in
+                        PopupManager.shared.dismissPopup()
+                        self?.navigateToEmotionRecord()
+                    },
+                    onDismiss: {
+                        PopupManager.shared.dismissPopup()
+                    }
+                )
+            ))
+        }
     }
 
     // Navigate to emotion record
