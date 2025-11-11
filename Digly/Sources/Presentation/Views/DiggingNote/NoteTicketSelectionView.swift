@@ -88,8 +88,7 @@ class NoteTicketSelectionViewModel: ObservableObject {
                 count: 1,
                 seatNumber: "A-12",
                 price: 120000,
-                color: [.excited, .glad],
-                feeling: [.excited, .joyful]
+                emotions: [.excited, .glad]
             ),
             Ticket(
                 id: 2,
@@ -99,8 +98,7 @@ class NoteTicketSelectionViewModel: ObservableObject {
                 count: 2,
                 seatNumber: "B-15",
                 price: 150000,
-                color: [.satisfied],
-                feeling: [.satisfied, .peaceful]
+                emotions: [.glad]
             ),
             Ticket(
                 id: 3,
@@ -110,8 +108,7 @@ class NoteTicketSelectionViewModel: ObservableObject {
                 count: 3,
                 seatNumber: "C-20",
                 price: 130000,
-                color: [.relaxed, .satisfied],
-                feeling: [.peaceful]
+                emotions: [.relaxed, .satisfied]
             ),
             Ticket(
                 id: 4,
@@ -121,8 +118,7 @@ class NoteTicketSelectionViewModel: ObservableObject {
                 count: 4,
                 seatNumber: "D-8",
                 price: 140000,
-                color: [.glad],
-                feeling: [.joyful]
+                emotions: [.glad]
             )
         ]
     }

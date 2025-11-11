@@ -53,8 +53,8 @@ final class TicketRepository: TicketRepositoryProtocol {
             count: ticket.count,
             seatNumber: ticket.seatNumber,
             price: ticket.price,
-            color: ticket.color.map { $0.rawValue },
-            feeling: ticket.feeling.map { $0.rawValue }
+            color: ticket.emotions.map { $0.rawValue },
+            feeling: ticket.emotions.map { $0.rawValue }
         )
 
         let response: PostTicketResponse = try await networkAPI.request(
@@ -72,8 +72,8 @@ final class TicketRepository: TicketRepositoryProtocol {
             count: ticket.count,
             seatNumber: ticket.seatNumber,
             price: ticket.price,
-            color: ticket.color.map { $0.rawValue },
-            feeling: ticket.feeling.map { $0.rawValue }
+            color: ticket.emotions.map { $0.rawValue },
+            feeling: ticket.emotions.map { $0.rawValue }
         )
 
         let response: PutTicketResponse = try await networkAPI.request(

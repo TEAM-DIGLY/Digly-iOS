@@ -34,8 +34,7 @@ struct GetTicketsResponse: Codable {
                 count: count,
                 seatNumber: seatNumber,
                 price: price,
-                color: EmotionColor.fromRawValues(color),
-                feeling: feeling.map { Feeling(rawValue: $0) ?? .excited }
+                emotions: feeling.map { Emotion(rawValue: $0) ?? .excited }
             )
         }
     }
@@ -87,8 +86,7 @@ struct PostTicketResponse: Codable {
             count: data.count,
             seatNumber: data.seatNumber,
             price: data.price,
-            color: EmotionColor.fromRawValues(data.color),
-            feeling: data.feeling.map { Feeling(rawValue: $0) ?? .excited }
+            emotions: data.feeling.map { Emotion(rawValue: $0) ?? .excited }
         )
     }
 }
@@ -122,8 +120,7 @@ struct GetTicketResponse: Codable {
             count: data.count,
             seatNumber: data.seatNumber,
             price: data.price,
-            color: EmotionColor.fromRawValues(data.color),
-            feeling: data.feeling.map { Feeling(rawValue: $0) ?? .excited }
+            emotions: data.feeling.map { Emotion(rawValue: $0) ?? .excited }
         )
     }
 }
@@ -167,8 +164,7 @@ struct PutTicketResponse: Codable {
             count: data.count,
             seatNumber: data.seatNumber,
             price: data.price,
-            color: EmotionColor.fromRawValues(data.color),
-            feeling: data.feeling.map { Feeling(rawValue: $0) ?? .excited }
+            emotions: data.feeling.map { Emotion(rawValue: $0) ?? .excited }
         )
     }
 }

@@ -23,7 +23,7 @@ class TicketDetailViewModel: ObservableObject {
                 ticket = try await ticketUseCase.getTicketDetail(ticketId: id)
                 
                 if let ticket = ticket {
-                    hasEmotions = !ticket.feeling.isEmpty
+                    hasEmotions = !ticket.emotions.isEmpty
                 }
                 
                 isLoading = false
@@ -37,7 +37,7 @@ class TicketDetailViewModel: ObservableObject {
     func goToDiggingNote() {
     }
     
-    func updateTicketEmotions(_ emotions: [EmotionColor]) {
+    func updateTicketEmotions(_ emotions: [Emotion]) {
         Task {
             do {
                 guard let currentTicket = ticket else { return }
@@ -55,8 +55,7 @@ class TicketDetailViewModel: ObservableObject {
                     count: currentTicket.count,
                     seatNumber: currentTicket.seatNumber,
                     price: currentTicket.price,
-                    color: emotions,
-                    feeling: currentTicket.feeling
+                    emotions: currentTicket.emotions
                 )
                 
                 hasEmotions = !emotions.isEmpty

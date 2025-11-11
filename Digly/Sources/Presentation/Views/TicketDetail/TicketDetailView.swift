@@ -42,7 +42,7 @@ struct TicketDetailView: View {
             if let ticket = viewModel.ticket {
                 EmotionSelectionBottomSheet(
                     ticketId: ticket.id,
-                    currentEmotions: .constant(ticket.color),
+                    currentEmotions: ticket.emotions,
                     onEmotionsUpdated: { emotions in
                         viewModel.updateTicketEmotions(emotions)
                     }
@@ -99,7 +99,7 @@ struct TicketDetailView: View {
                             .frame(height: 1)
 
                         HStack(spacing: 8) {
-                            ForEach(ticket.feeling.prefix(2), id: \.self) { emotion in
+                            ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
                                 Text("#\(emotion.rawValue)")
                                     .fontStyle(.body1)
                                     .foregroundStyle(.common100)

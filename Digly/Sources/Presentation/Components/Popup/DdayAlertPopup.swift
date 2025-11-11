@@ -140,8 +140,7 @@ struct DdayAlertPopup: View {
             count: 24,
             seatNumber: "@4",
             price: 20000,
-            color: [],
-            feeling: []
+            emotions: [.distressed]
         ),
         onEmotionButtonTap: {}
     )

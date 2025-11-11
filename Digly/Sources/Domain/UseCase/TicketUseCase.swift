@@ -32,10 +32,10 @@ final class TicketUseCase {
         count: Int,
         seatNumber: String? = nil,
         price: Int? = nil,
-        colors: [EmotionColor],
-        feelings: [String]
+        emotions: [String]
     ) async throws -> Ticket {
-        let feelingEnums = feelings.compactMap { Feeling(rawValue: $0) }
+        let emotionEnums = emotions.compactMap { Emotion(rawValue: $0) }
+        
         let ticket = Ticket(
             id: 0,
             name: name,
@@ -44,8 +44,7 @@ final class TicketUseCase {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: colors,
-            feeling: feelingEnums
+            emotions: emotionEnums
         )
         return try await ticketRepository.createTicket(ticket: ticket)
     }
@@ -58,10 +57,9 @@ final class TicketUseCase {
         count: Int,
         seatNumber: String? = nil,
         price: Int? = nil,
-        colors: [EmotionColor],
-        feelings: [String]
+        emotions: [String]
     ) async throws -> Ticket {
-        let feelingEnums = feelings.compactMap { Feeling(rawValue: $0) }
+        let emotionEnums = emotions.compactMap { Emotion(rawValue: $0) }
         let ticket = Ticket(
             id: ticketId,
             name: name,
@@ -70,15 +68,14 @@ final class TicketUseCase {
             count: count,
             seatNumber: seatNumber,
             price: price,
-            color: colors,
-            feeling: feelingEnums
+            emotions: emotionEnums
         )
         return try await ticketRepository.updateTicket(ticketId: ticketId, ticket: ticket)
     }
 
     func updateTicketEmotions(
         ticketId: Int,
-        emotions: [EmotionColor]
+        emotions: [Emotion]
     ) async throws -> Ticket {
         // First get current ticket data
         let currentTicket = try await getTicketDetail(ticketId: ticketId)
@@ -92,8 +89,7 @@ final class TicketUseCase {
             count: currentTicket.count,
             seatNumber: currentTicket.seatNumber,
             price: currentTicket.price,
-            color: emotions,
-            feeling: currentTicket.feeling
+            emotions: emotions
         )
 
         return try await ticketRepository.updateTicket(ticketId: ticketId, ticket: updatedTicket)

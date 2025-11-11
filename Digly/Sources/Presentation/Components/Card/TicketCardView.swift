@@ -66,8 +66,8 @@ struct TicketCardView: View {
 
     // MARK: - Gradient Colors Logic
     private var gradientColors: (upper: [Color], bottom: [Color]) {
-        if !ticket.color.isEmpty {
-            let mapped = ticket.color.map { $0.color }
+        if !ticket.emotions.isEmpty {
+            let mapped = ticket.emotions.map { $0.color }
             if mapped.count == 1 {
                 let c = mapped[0]
                 return ([c.opacity(0.2), c.opacity(0.02)], [c.opacity(0.2), c.opacity(0.1)])

@@ -6,7 +6,7 @@ struct TicketNoteCardView: View {
     @Binding var isExpanded: Bool
     
     private var ticketGradient: LinearGradient {
-        let colors = ticketWithNotes.ticket.color.map { $0.color }
+        let colors = ticketWithNotes.ticket.emotions.map { $0.color }
         if colors.isEmpty {
             return LinearGradient(colors: [.neutral800, .neutral700], startPoint: .topLeading, endPoint: .bottomTrailing)
         } else if colors.count == 1 {

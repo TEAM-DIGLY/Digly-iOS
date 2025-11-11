@@ -148,8 +148,7 @@ struct EmotionCompletedPopup: View {
             count: 2,
             seatNumber: "24",
             price: 2000,
-            color: [],
-            feeling: []
+            emotions: [.distressed]
         ),
         selectedEmotions: [.relaxed, .glad],
         onViewRecord: {}

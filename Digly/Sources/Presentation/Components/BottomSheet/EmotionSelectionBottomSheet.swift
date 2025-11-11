@@ -2,23 +2,23 @@ import SwiftUI
 
 struct EmotionSelectionBottomSheet: View {
     let ticketId: Int
-    @Binding var currentEmotions: [EmotionColor]
-    let onEmotionsUpdated: ([EmotionColor]) -> Void
+    let currentEmotions: [Emotion]
+    let onEmotionsUpdated: ([Emotion]) -> Void
     @Environment(\.dismiss) private var dismiss
 
-    @State private var selectedEmotions: Set<EmotionColor> = []
+    @State private var selectedEmotions: [Emotion] = []
     @State private var isLoading: Bool = false
 
     private let ticketUseCase: TicketUseCase
 
     init(
         ticketId: Int,
-        currentEmotions: Binding<[EmotionColor]>,
-        onEmotionsUpdated: @escaping ([EmotionColor]) -> Void,
+        currentEmotions: [Emotion],
+        onEmotionsUpdated: @escaping ([Emotion]) -> Void,
         ticketUseCase: TicketUseCase = TicketUseCase()
     ) {
         self.ticketId = ticketId
-        self._currentEmotions = currentEmotions
+        self.currentEmotions = currentEmotions
         self.onEmotionsUpdated = onEmotionsUpdated
         self.ticketUseCase = ticketUseCase
     }
@@ -47,7 +47,7 @@ struct EmotionSelectionBottomSheet: View {
         }
         .background(backgroundGradient)
         .onAppear {
-            selectedEmotions = Set(currentEmotions)
+            selectedEmotions = currentEmotions
         }
     }
 
@@ -81,20 +81,20 @@ struct EmotionSelectionBottomSheet: View {
 
     private var emotionGridSection: some View {
         LazyVGrid(columns: emotionGrid, spacing: 16) {
-            ForEach(EmotionColor.allCases, id: \.self) { emotion in
+            ForEach(Emotion.allCases, id: \.self) { emotion in
                 emotionButton(emotion: emotion)
             }
         }
     }
 
-    private func emotionButton(emotion: EmotionColor) -> some View {
+    private func emotionButton(emotion: Emotion) -> some View {
         let isSelected = selectedEmotions.contains(emotion)
 
         return Button(action: {
             if isSelected {
-                selectedEmotions.remove(emotion)
+                selectedEmotions = selectedEmotions.filter {$0 != emotion}
             } else {
-                selectedEmotions.insert(emotion)
+                selectedEmotions.append(emotion)
             }
         }) {
             VStack(spacing: 8) {
@@ -114,7 +114,7 @@ struct EmotionSelectionBottomSheet: View {
                     }
                 }
 
-                Text(emotion.displayName)
+                Text(emotion.rawValue)
                     .fontStyle(.body2)
                     .foregroundStyle(isSelected ? .common100 : .opacityWhite300)
             }
@@ -138,13 +138,13 @@ struct EmotionSelectionBottomSheet: View {
                     GridItem(.flexible()),
                     GridItem(.flexible())
                 ], spacing: 8) {
-                    ForEach(Array(selectedEmotions).sorted(by: { $0.rawValue < $1.rawValue }), id: \.self) { emotion in
+                    ForEach(selectedEmotions, id: \.self) { emotion in
                         HStack(spacing: 8) {
                             Circle()
                                 .fill(emotion.color)
                                 .frame(width: 16, height: 16)
 
-                            Text(emotion.displayName)
+                            Text(emotion.rawValue)
                                 .fontStyle(.body2)
                                 .foregroundStyle(.common100)
 
@@ -223,7 +223,7 @@ struct EmotionSelectionBottomSheet: View {
 #Preview {
     EmotionSelectionBottomSheet(
         ticketId: 1,
-        currentEmotions: .constant([.excited, .glad]),
+        currentEmotions: [.excited, .glad],
         onEmotionsUpdated: { _ in }
     )
 }

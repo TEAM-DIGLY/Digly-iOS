@@ -9,13 +9,12 @@ struct Ticket: Identifiable {
     let count: Int
     let seatNumber: String?
     let price: Int?
-    let color: [EmotionColor]
-    let feeling: [Feeling]
+    let emotions: [Emotion]
     
     let notes: [Note]?
     
     
-    init(id: Int, name: String, time: Date, place: String, count: Int, seatNumber: String?, price: Int?, color: [EmotionColor], feeling: [Feeling], notes: [Note]? = nil) {
+    init(id: Int, name: String, time: Date, place: String, count: Int, seatNumber: String?, price: Int?, emotions: [Emotion], notes: [Note]? = nil) {
         self.id = id
         self.name = name
         self.time = time
@@ -23,8 +22,7 @@ struct Ticket: Identifiable {
         self.count = count
         self.seatNumber = seatNumber
         self.price = price
-        self.color = color
-        self.feeling = feeling
+        self.emotions = emotions
         self.notes = notes
     }
     
@@ -36,8 +34,7 @@ struct Ticket: Identifiable {
         count: 24,
         seatNumber: "@4",
         price: 20000,
-        color: [],
-        feeling: []
+        emotions: []
     )
 }
 

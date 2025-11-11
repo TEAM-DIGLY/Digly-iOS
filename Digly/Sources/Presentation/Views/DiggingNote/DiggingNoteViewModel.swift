@@ -147,8 +147,7 @@ extension DiggingNoteViewModel {
             count: 2,
             seatNumber: "A12",
             price: 132000,
-            color: [.excited, .glad],
-            feeling: [.excited, .joyful]
+            emotions: [.distressed]
         )
 
         let secondTicket = Ticket(
@@ -159,8 +158,7 @@ extension DiggingNoteViewModel {
             count: 1,
             seatNumber: "B8",
             price: 88000,
-            color: [.satisfied, .relaxed],
-            feeling: [.peaceful, .satisfied]
+            emotions: [.satisfied]
         )
 
         let thirdTicket = Ticket(
@@ -171,8 +169,7 @@ extension DiggingNoteViewModel {
             count: 2,
             seatNumber: nil,
             price: nil,
-            color: [.relaxed],
-            feeling: [.peaceful]
+            emotions: [.satisfied]
         )
 //
 //        let firstNotes = [

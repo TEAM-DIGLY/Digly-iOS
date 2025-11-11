@@ -41,9 +41,9 @@ struct HomeView: View {
             if let ddayTicket = viewModel.ddayTicket {
                 EmotionSelectionBottomSheet(
                     ticketId: ddayTicket.id,
-                    currentEmotions: .constant(ddayTicket.color),
+                    currentEmotions: ddayTicket.emotions,
                     onEmotionsUpdated: { emotions in
-//                        viewModel.updateTicketEmotions(emotions)
+                        viewModel.handleEmotionComplete(emotions: emotions)
                     }
                 )
                 .presentationDetents([.height(604)])
@@ -218,9 +218,9 @@ struct HomeView: View {
                     Spacer()
                     
                     HStack(spacing: 8) {
-                        ForEach(Array(ticket.feeling.prefix(2).enumerated()), id: \.offset) { index, feeling in
-                            if index < ticket.color.count {
-                                tagView(text: "#\(feeling)", color: ticket.color[index].color)
+                        ForEach(Array(ticket.emotions.prefix(2).enumerated()), id: \.offset) { index, emotion in
+                            if index < ticket.emotions.count {
+                                tagView(text: "#\(emotion)", color: emotion.color)
                             }
                         }
                         Spacer()

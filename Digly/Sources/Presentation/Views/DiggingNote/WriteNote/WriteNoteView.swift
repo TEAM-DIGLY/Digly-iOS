@@ -53,10 +53,10 @@ struct WriteNoteView: View {
                 Toggle("", isOn: Binding(
                     get: { viewModel.isGuideMode },
                     set: { newValue in
-                        let popupType: PopupType = viewModel.isGuideMode ? .toggleGuideOff : .toggleGuideOn
-                        PopupManager.shared.show(type: popupType) {
-                            viewModel.toggleGuideMode()
-                        }
+                        let popupType: PopupType = viewModel.isGuideMode
+                            ? .toggleGuideOff(onClick: { viewModel.toggleGuideMode() })
+                            : .toggleGuideOn(onClick: { viewModel.toggleGuideMode() })
+                        PopupManager.shared.show(popupType)
                     }
                 ))
                 .toggleStyle(CustomToggleStyle())
@@ -360,7 +360,6 @@ struct QuestionSelectionBottomSheet: View {
         count: 1,
         seatNumber: nil,
         price: nil,
-        color: [.excited],
-        feeling: [.excited]
+        emotions: [.distressed]
     ))
 }
