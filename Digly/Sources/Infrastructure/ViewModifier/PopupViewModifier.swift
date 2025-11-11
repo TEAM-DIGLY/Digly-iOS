@@ -1,41 +1,49 @@
 import SwiftUI
 
+extension View {
+    func presentPopup(_ popupManager: PopupManager) -> some View {
+        modifier(PopupViewModifier(manager: popupManager))
+    }
+}
+
 struct PopupViewModifier: ViewModifier {
-    @Binding var isPresented: Bool
-    @State private var isAnimating: Bool = false
-    
-    let data: PopupData?
-    
+    @ObservedObject var manager: PopupManager
+
     func body(content: Content) -> some View {
         content
             .overlay {
-                if isPresented, let popupData = data {
+                if manager.isPresented, let popupType = manager.currentPopupType {
                     ZStack {
                         Color.black
                             .edgesIgnoringSafeArea(.all)
-                            .opacity(isAnimating ? 0.3 : 0.0)
+                            .opacity(manager.isAnimating ? 0.3 : 0.0)
                             .onTapGesture {
-                                if popupData.type.isOptional { dismissPopup() }
+                                if popupType.config.isOptional { manager.dismissPopup() }
                             }
-                            .animation(.spring(duration: 0.1), value: isAnimating)
-                        
-                        DGPopup(
-                            hidePopup: dismissPopup,
-                            popupData: popupData
-                        )
-                        .opacity(isAnimating ? 1 : 0)
-                        .offset(y: isAnimating ? 0 : -80)
-                        .animation(.spring(duration: 0.3), value: isAnimating)
+                            .animation(.fastSpring, value: manager.isAnimating)
+
+                        popupContent(for: popupType)
+                            .opacity(manager.isAnimating ? 1 : 0)
+                            .offset(y: manager.isAnimating ? 0 : -80)
+                            .animation(.mediumSpring, value: manager.isAnimating)
                     }
                 }
             }
-            .onChange(of: isPresented) { _, newValue in
-                isAnimating = newValue
+            .onChange(of: manager.isPresented) { _, newValue in
+                manager.isAnimating = newValue
             }
     }
-    
-    private func dismissPopup() {
-        isPresented = false
-        isAnimating = false
+
+    @ViewBuilder
+    private func popupContent(for popupType: PopupType) -> some View {
+        if case .custom(let view) = popupType {
+            AnyView(view)
+        } else {
+            DGPopup(
+                hidePopup: manager.dismissPopup,
+                type: popupType
+            )
+        }
     }
+
 }

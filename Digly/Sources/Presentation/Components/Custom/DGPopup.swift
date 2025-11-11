@@ -2,72 +2,48 @@ import SwiftUI
 
 struct DGPopup: View {
     let hidePopup: () -> Void
-    let popupData: PopupData
-    
+    let type: PopupType
+
     var body: some View {
-        let popup = popupData.type
+        let config = type.config
+
         Group {
-            if popup.isDarkMode {
+            if config.isDarkMode {
                 VStack(alignment: .center, spacing: 0) {
                     VStack(alignment: .center, spacing: 8) {
-                        Text(popup.title)
+                        Text(config.title)
                             .fontStyle(.body2)
                             .foregroundColor(.opacityWhite800)
-                        
-                        Text(popup.description)
+
+                        Text(config.description)
                             .fontStyle(.label2)
                             .multilineTextAlignment(.center)
                             .foregroundColor(.opacityWhite600)
                     }
                     .padding(.vertical, 20)
                     .padding(.horizontal, 16)
-                    
+
                     Divider().background(.opacityWhite600)
-                    
-                    HStack(spacing: 0) {
-                        if !popup.secondaryButtonText.isEmpty {
-                            buttonSection(popup.secondaryButtonText, isPrimary: false) {
-                                hidePopup()
-                            }
-                        }
-                        
-                        Divider().frame(maxHeight: .infinity).background(.opacityWhite600)
-                        
-                        buttonSection(popup.primaryButtonText, isPrimary: true) {
-                            popupData.action()
-                            hidePopup()
-                        }
-                    }
-                    .frame(height: 44)
+
+                    buttonSection
                 }
                 .background(.bottomSheetBackground, in: RoundedRectangle(cornerRadius: 14))
-                .padding(.horizontal, 48)
+                .padding(.horizontal, 56)
             } else {
                 VStack(spacing: 0) {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(popup.title)
+                        Text(config.title)
                             .fontStyle(.heading2)
                             .foregroundColor(.common100)
-                        
-                        Text(popup.description)
+
+                        Text(config.description)
                             .fontStyle(.body2)
                             .foregroundColor(.opacityWhite600)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     .padding(.bottom, 24)
-                    
-                    HStack(spacing: 12) {
-                        if !popup.secondaryButtonText.isEmpty {
-                            buttonSection(popup.secondaryButtonText, isPrimary: false) {
-                                hidePopup()
-                            }
-                        }
-                        
-                        buttonSection(popup.primaryButtonText, isPrimary: true) {
-                            popupData.action()
-                            hidePopup()
-                        }
-                    }
+
+                    buttonSection
                 }
                 .padding(24)
                 .background(.common100, in: RoundedRectangle(cornerRadius: 16))
@@ -75,39 +51,68 @@ struct DGPopup: View {
             }
         }
     }
-    
+
     @ViewBuilder
-    private func buttonSection(_ text: String, isPrimary: Bool, action: @escaping ()-> Void)-> some View {
-        var buttonForegroundColor: Color {
-            if popupData.type.isDarkMode {
-                return .opacityWhite850
-            } else {
-                if isPrimary {
-                    return .common100
-                } else {
-                    return .opacityBlack300
+    private var buttonSection: some View {
+        let config = type.config
+
+        switch config.buttonLayout {
+        case .horizontal:
+            HStack(spacing: config.isDarkMode ? 0 : 12) {
+                ForEach(Array(config.buttons.enumerated()), id: \.offset) { index, buttonConfig in
+                    if config.isDarkMode {
+                        if index > 0 {
+                            Divider().frame(maxHeight: .infinity).background(.opacityWhite600)
+                        }
+                        darkModeButton(buttonConfig)
+                    } else {
+                        lightModeButton(buttonConfig)
+                    }
+                }
+            }
+            .frame(height: config.isDarkMode ? 44 : nil)
+        case .vertical:
+            VStack(spacing: config.isDarkMode ? 0 : 12) {
+                ForEach(Array(config.buttons.enumerated()), id: \.offset) { index, buttonConfig in
+                    if config.isDarkMode {
+                        if index > 0 {
+                            Divider().background(.opacityWhite600)
+                        }
+                        darkModeButton(buttonConfig)
+                            .frame(height: 44)
+                    } else {
+                        lightModeButton(buttonConfig)
+                    }
                 }
             }
         }
-        var buttonBackgroundColor: Color {
-            if popupData.type.isDarkMode {
-                return Color.clear
-            } else {
-                if isPrimary {
-                    return .opacityCool900
-                } else {
-                    return .clear
-                }
-            }
+    }
+
+    @ViewBuilder
+    private func darkModeButton(_ buttonConfig: ButtonConfig) -> some View {
+        Button(action: {
+            buttonConfig.onClick()
+            hidePopup()
+        }) {
+            Text(buttonConfig.text)
+                .fontStyle(.label2)
+                .foregroundColor(.opacityWhite850)
+                .frame(maxWidth: .infinity)
         }
-        
-        Button(action: action) {
-            Text(text)
-                .fontStyle(popupData.type.isDarkMode ? .label2 : .body1)
-                .foregroundColor(buttonForegroundColor)
+    }
+
+    @ViewBuilder
+    private func lightModeButton(_ buttonConfig: ButtonConfig) -> some View {
+        Button(action: {
+            buttonConfig.onClick()
+            hidePopup()
+        }) {
+            Text(buttonConfig.text)
+                .fontStyle(.body1)
+                .foregroundColor(buttonConfig.type == .primary ? .common100 : .opacityBlack300)
                 .frame(maxWidth: .infinity)
                 .frame(height: 54)
-                .background(buttonBackgroundColor)
+                .background(buttonConfig.type == .primary ? .opacityCool900 : .clear)
                 .cornerRadius(16)
         }
     }
@@ -123,11 +128,11 @@ struct Preview_wrapper: View {
         ZStack {
             Color.black
                 .edgesIgnoringSafeArea(.all)
-                .opacity( 0.3)
-            
+                .opacity(0.3)
+
             DGPopup(
                 hidePopup: {},
-                popupData: PopupData(type: .updateMandatory, action: {})
+                type: .toggleGuideOff(onClick: {})
             )
         }
     }

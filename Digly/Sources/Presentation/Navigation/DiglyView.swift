@@ -35,10 +35,7 @@ struct DiglyView: View {
                 }
             }
         }
-        .presentPopup(
-            isPresented: $popupManager.popupPresented,
-            data: popupManager.currentPopupData
-        )
+        .presentPopup(popupManager)
         .presentToast(
             isPresented: $toastManager.toastPresented,
             data: toastManager.currentToastType

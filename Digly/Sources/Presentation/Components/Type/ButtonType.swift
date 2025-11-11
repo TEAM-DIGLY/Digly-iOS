@@ -3,45 +3,42 @@ import SwiftUI
 enum ButtonType {
     case primary
     case primaryDark
+    case none
     
     var font: Font {
         switch self {
-        case .primary:
-                .body1
         default:
-                .body1
+                .mid
         }
     }
     
     var backgroundColor: Color {
         switch self {
-        case .primary: .neutral900
-        case .primaryDark: .pMid
+        default: .clear
         }
     }
     
     var foregroundColor: Color {
         switch self {
-        case .primary: .common100
-        case .primaryDark: .common100
+        default: .opacityWhite850
         }
     }
     
     var strokeColor: Color {
         switch self {
-        case .primary: .clear
-        case .primaryDark: .clear
+        default: .clear
         }
     }
     
     var height: CGFloat {
-        54
+        43
     }
     
     var disabledBackgroundColor: Color {
         switch self {
         case .primary: .opacityBlack400
         case .primaryDark: .opacityBlack600
+        default: .opacityBlack400
         }
     }
     
@@ -50,6 +47,7 @@ enum ButtonType {
         switch self {
         case .primary: .common100
         case .primaryDark: .opacityWhite400
+        default: .common100
         }
     }
 }
