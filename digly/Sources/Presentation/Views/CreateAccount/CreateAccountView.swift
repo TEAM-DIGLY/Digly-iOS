@@ -5,7 +5,7 @@ struct CreateAccountView: View {
     let refreshToken: String
     
     @StateObject private var viewModel: CreateAccountViewModel
-    @FocusState private var isUsernameFocused : Bool
+    @FocusState private var isFocused : Bool
     @EnvironmentObject private var authRouter: AuthRouter
     
     init(accessToken: String, refreshToken: String) {
@@ -33,7 +33,7 @@ struct CreateAccountView: View {
             .padding(.bottom, 16)
             
             LiveDigly(
-                isSurprised: isUsernameFocused,
+                isSurprised: isFocused,
                 readingValue: viewModel.username,
                 onStareUp: viewModel.isSelectingDigly
             )
@@ -53,7 +53,36 @@ struct CreateAccountView: View {
         .background(.common100)
         .navigationBarBackButtonHidden()
         .toolbar(.hidden)
-        .onTapGesture { isUsernameFocused = false }
+        .onTapGesture { isFocused = false }
+        
+        .overlay(alignment: .bottom) {
+            if !viewModel.username.isEmpty {
+                DGButton(
+                    text: viewModel.isSelectingDigly ? "\(Digly.data[viewModel.selectedIndex].role)하는 디글러 선택하기" : "다음으로",
+                    type: .primaryDark,
+                    disabled: !viewModel.errorText.isEmpty
+                ){
+                    if viewModel.isSelectingDigly {
+                        viewModel.performSignUp { signUpResponse in
+                            let selectedDiglyType = Digly.data[viewModel.selectedIndex].diglyType
+                            authRouter.push(to: .onboardingConfirm(
+                                signUpResponse: signUpResponse,
+                                accessToken: accessToken,
+                                refreshToken: refreshToken,
+                                diglyType: selectedDiglyType
+                            ))
+                        }
+                    } else {
+                        viewModel.handleSubmit()
+                    }
+                }
+                .disabled(!viewModel.errorText.isEmpty)
+                .padding(.horizontal, 24)
+                .padding(.bottom, 12)
+                .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.mediumSpring, value: viewModel.username.isEmpty)
     }
     
     @ViewBuilder
@@ -71,30 +100,21 @@ struct CreateAccountView: View {
             }
             .padding(.bottom,24)
             
-            HStack(spacing: 0) {
-                TextField("", text: $viewModel.username, prompt: Text("이름").foregroundColor(.neutral300))
-                    .fontStyle(.title2)
-                    .foregroundStyle(.common0)
-                    .focused($isUsernameFocused)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity)
-                
-                Button(action: viewModel.handleSubmit) {
-                    Text(viewModel.isUsernameValid ? "완료" : "다음")
-                        .fontStyle(.title3)
-                        .transition(.opacity.animation(.easeInOut))
-                        .foregroundStyle(.common100)
+            TextField("", text: $viewModel.username, prompt: Text("이름").foregroundColor(.neutral300))
+                .fontStyle(.title2)
+                .foregroundStyle(.common0)
+                .focused($isFocused)
+                .onAppear {
+                    isFocused = true
                 }
-                .frame(width:72)
-                .disabled(viewModel.username.isEmpty || !viewModel.errorText.isEmpty)
-            }
-            .frame(height: 64)
-            .padding(.leading, 16)
-            .background{
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(.neutral50)
-                    .stroke(.neutral200)
-            }
+                .frame(maxWidth: .infinity)
+                .frame(height: 64)
+                .padding(.leading, 16)
+                .background{
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(.neutral50)
+                        .stroke(.neutral200)
+                }
             
             statusText
                 .frame(maxWidth: .infinity,alignment: .leading)
@@ -144,30 +164,6 @@ struct CreateAccountView: View {
             
             diglyTypeSelectSection
                 .padding(.bottom, 24)
-            
-            Button(action: {
-                Task {
-                    viewModel.performSignUp { signUpResponse in
-                        let selectedDiglyType = Digly.data[viewModel.selectedIndex].diglyType
-                        authRouter.push(to: .onboardingConfirm(
-                            signUpResponse: signUpResponse,
-                            accessToken: accessToken,
-                            refreshToken: refreshToken,
-                            diglyType: selectedDiglyType
-                        ))
-                    }
-                }
-            }) {
-                Text("\(Digly.data[viewModel.selectedIndex].role)하는 디글러 선택하기")
-                    .fontStyle(.body2)
-                    .foregroundStyle(.common100)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(.neutral900)
-                    .cornerRadius(12)
-            }
-            .disabled(viewModel.isLoading)
-            .opacity(viewModel.isLoading ? 0.6 : 1.0)
         }
         .padding(.horizontal, 24)
         .padding(.top, 32)

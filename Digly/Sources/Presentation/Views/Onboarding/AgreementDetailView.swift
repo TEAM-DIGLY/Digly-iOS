@@ -22,9 +22,7 @@ struct AgreementDetailView: View {
                 Spacer()
             }
             .padding(.horizontal, 25)
-            .padding(.top, 32)
-            .padding(.bottom, 32)
-            .frame(height: 80)
+            .padding(.vertical, 8)
 
             ScrollView {
                 Text(agreementType.content)

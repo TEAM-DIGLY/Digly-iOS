@@ -14,6 +14,8 @@ enum ButtonType {
     
     var backgroundColor: Color {
         switch self {
+        case .primaryDark:
+                .opacityCool900
         default: .clear
         }
     }
