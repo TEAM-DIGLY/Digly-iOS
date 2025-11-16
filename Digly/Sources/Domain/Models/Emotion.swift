@@ -11,34 +11,34 @@ enum Emotion: String, CaseIterable {
     var color: Color {
         switch self {
         case .distressed:
-            return Color("emotion/distressed")
+            return .distressed
         case .excited:
-            return Color("emotion/excited")
+            return .excited
         case .glad:
-            return Color("emotion/glad")
+            return .glad
         case .gloomy:
-            return Color("emotion/gloomy")
+            return .gloomy
         case .relaxed:
-            return Color("emotion/relaxed")
+            return .relaxed
         case .satisfied:
-            return Color("emotion/satisfied")
+            return .satisfied
         }
     }
 
     var color50: Color {
         switch self {
         case .distressed:
-            return Color("emotion/distressed50")
+            return .distressed50
         case .excited:
-            return Color("emotion/excited50")
+            return .excited50
         case .glad:
-            return Color("emotion/glad50")
+            return .glad50
         case .gloomy:
-            return Color("emotion/gloomy50")
+            return .gloomy50
         case .relaxed:
-            return Color("emotion/relaxed50")
+            return .relaxed50
         case .satisfied:
-            return Color("emotion/satisfied50")
+            return .satisfied50
         }
     }
 }
