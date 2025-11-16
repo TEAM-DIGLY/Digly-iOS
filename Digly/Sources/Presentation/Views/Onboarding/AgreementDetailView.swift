@@ -5,8 +5,8 @@ struct AgreementDetailView: View {
     let agreementType: AgreementType
 
     var body: some View {
-        VStack(spacing: 0) {
-            HStack(spacing: 16) {
+        DGScreen(horizontalPadding: 0) {
+            HStack(spacing: 0) {
                 Button(action: {
                     dismiss()
                 }) {
@@ -14,30 +14,26 @@ struct AgreementDetailView: View {
                         .renderingMode(.template)
                         .foregroundStyle(.common0)
                 }
-
+                
                 Text(agreementType.title)
                     .fontStyle(.heading2)
                     .foregroundStyle(.common0)
-
+                
                 Spacer()
             }
-            .padding(.horizontal, 25)
             .padding(.vertical, 8)
-
+            .padding(.horizontal, 16)
+            
             ScrollView {
                 Text(agreementType.content)
                     .fontStyle(.body2)
                     .foregroundStyle(.common0)
-                    .opacity(0.7)
                     .padding(.horizontal, 32)
-                    .padding(.top, 0)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Spacer()
             }
-
-            Spacer()
         }
-        .background(Color.common100)
-        .navigationBarHidden(true)
     }
 }
 
