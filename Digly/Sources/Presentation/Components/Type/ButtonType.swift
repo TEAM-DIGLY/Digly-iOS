@@ -7,6 +7,8 @@ enum ButtonType {
     
     var font: Font {
         switch self {
+        case .primaryDark, .primary:
+                .body2
         default:
                 .mid
         }
@@ -33,7 +35,12 @@ enum ButtonType {
     }
     
     var height: CGFloat {
-        43
+        switch self {
+        case .primary, .primaryDark:
+            48
+        default:
+            43
+        }
     }
     
     var disabledBackgroundColor: Color {
