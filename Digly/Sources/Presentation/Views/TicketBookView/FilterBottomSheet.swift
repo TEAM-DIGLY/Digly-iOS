@@ -76,7 +76,7 @@ struct FilterBottomSheet: View {
             
             Spacer()
             
-            DGButton(text: "적용하기", type: .primaryDark, disabled: !isApplyButtonEnabled, onClick: applyFilter)
+            DGButton(text: "적용하기", type: .primaryDark, isDisabled: !isApplyButtonEnabled, onClick: applyFilter)
                 .padding(.horizontal, 24)
         }
         .onAppear {

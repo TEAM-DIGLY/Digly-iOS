@@ -1,37 +1,54 @@
 import SwiftUI
 
 struct DGButton: View {
-    let config: ButtonConfig
+    let text: LocalizedStringResource
+    let type: ButtonType
+    var isLoading: Bool
+    var isDisabled: Bool
+    let onClick: () -> Void
     
     init(
-        text: String,
+        text: LocalizedStringResource,
         type: ButtonType = .primary,
-        disabled: Bool = false,
-        onClick: @escaping () -> Void = {}
+        isLoading: Bool = false,
+        isDisabled: Bool = false,
+        onClick: @escaping () -> Void
     ) {
-        self.config = ButtonConfig(
-            text: text,
-            type: type,
-            onClick: onClick,
-            disabled: disabled
-        )
+        self.text = text
+        self.type = type
+        self.isLoading = isLoading
+        self.isDisabled = isDisabled
+        self.onClick = onClick
+    }
+    
+    private var indicatorColor: Color {
+        type == .primary && !isDisabled ? .common100 : .opacityCool50
     }
     
     var body: some View {
-        Button(action: config.onClick) {
-            Text(config.text)
-                .font(config.type.font)
-                .foregroundStyle(config.disabled ? config.type.disabledForegroundColor : config.type.foregroundColor)
-                .frame(maxWidth: .infinity)
-                .frame(height: config.type.height)
-                .background(config.disabled ? config.type.disabledBackgroundColor : config.type.backgroundColor)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(config.type.strokeColor, lineWidth: 1)
-                )
+        Button(action: onClick) {
+            ZStack {
+                Text(text)
+                    .font(type.font)
+                    .opacity(isLoading ? 0 : 1)
+                    .foregroundStyle(isDisabled ? type.disabledForegroundColor : type.foregroundColor)
+                
+                ProgressView()
+                    .scaleEffect(1.2)
+                    .tint(indicatorColor)
+                    .opacity(isLoading ? 1 : 0)
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: type.height)
+            
         }
-        .disabled(config.disabled)
+        .background(isDisabled ? type.disabledBackgroundColor : type.backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(type.strokeColor, lineWidth: 1)
+        )
+        .disabled(isDisabled)
     }
 }
 
@@ -44,8 +61,8 @@ struct DGButton: View {
         
         DGButton(
             text: "비활성화된 버튼",
-            disabled: true
-        )
+            isDisabled: true
+        ){}
     }
     .padding()
 }

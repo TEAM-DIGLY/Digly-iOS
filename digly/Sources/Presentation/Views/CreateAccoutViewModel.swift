@@ -5,7 +5,7 @@ import SwiftUI
 
 @MainActor
 class CreateAccountViewModel: ObservableObject {
-    @Published var username: String = "ㅁㄴㅇㄹ"{  didSet {
+    @Published var username: String = ""{  didSet {
         if username != oldValue {
             withAnimation (.mediumEaseInOut){
                 isUsernameValid = false

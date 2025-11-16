@@ -167,7 +167,7 @@ struct EmotionSelectionBottomSheet: View {
         DGButton(
             text: "감정 등록 완료",
             type: .primaryDark,
-            disabled: selectedEmotions.isEmpty || isLoading,
+            isDisabled: selectedEmotions.isEmpty || isLoading,
             onClick: {
                 updateTicketEmotions()
             }

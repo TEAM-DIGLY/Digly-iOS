@@ -74,7 +74,7 @@ struct AddTicketView: View {
             DGButton(
                 text: "다음으로",
                 type: .primaryDark,
-                disabled: selectedType == nil) {
+                isDisabled: selectedType == nil) {
                     handleNextButton()
                 }
                 .padding(.horizontal, 24)

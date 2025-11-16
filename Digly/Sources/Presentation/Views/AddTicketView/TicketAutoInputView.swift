@@ -121,7 +121,7 @@ extension TicketAutoInputView {
         DGButton(
             text: viewModel.isProcessing ? "티켓 정보 추출하기" : (viewModel.ticketText.isEmpty ? "다음으로" : "티켓 정보 추출하기"),
             type: .primaryDark,
-            disabled: viewModel.ticketText.isEmpty
+            isDisabled: viewModel.ticketText.isEmpty
         ) {
             if !viewModel.ticketText.isEmpty {
                 viewModel.extractTicketInfo()

@@ -60,7 +60,8 @@ struct CreateAccountView: View {
                 DGButton(
                     text: viewModel.isSelectingDigly ? "\(Digly.data[viewModel.selectedIndex].role)하는 디글러 선택하기" : "다음으로",
                     type: .primaryDark,
-                    disabled: !viewModel.errorText.isEmpty
+                    isLoading: viewModel.isLoading,
+                    isDisabled: !viewModel.errorText.isEmpty
                 ){
                     if viewModel.isSelectingDigly {
                         viewModel.performSignUp { signUpResponse in
