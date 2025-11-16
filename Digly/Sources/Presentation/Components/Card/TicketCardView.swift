@@ -51,7 +51,7 @@ struct TicketCardView: View {
                 .padding(.horizontal, 16)
         }
         .frame(maxWidth: cardType == .large ? 200 : .infinity)
-        .frame(height: cardType == .large ? 200 : 185)
+        .frame(height: cardType == .large ? 284 : 182)
         .clipShape(
             UnevenRoundedRectangle(
                 topLeadingRadius: cornerSize[0],
