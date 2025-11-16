@@ -29,7 +29,7 @@ struct DiggingNoteNavigationStack: View {
     private func destinationView(for route: DiggingNoteRoute) -> some View {
         switch route {
         case .diggingNote:              DiggingNoteView()
-        case .ticketSelection:          NoteTicketSelectionView()
+        case .ticketSelection:          SelectNoteTicketView()
         case .writeNote(let ticket):    WriteNoteView(ticket: ticket)
         }
     }
