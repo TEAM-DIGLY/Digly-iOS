@@ -1,45 +1,29 @@
 import SwiftUI
 
 struct InquiryView: View {
-    @Environment(\.dismiss) private var dismiss
-    @State private var email: String = ""
-    @State private var title: String = ""
-    @State private var content: String = ""
+    @EnvironmentObject private var router: HomeRouter
+
+    @StateObject private var viewModel = InquiryViewModel()
     @FocusState private var focusedField: InquiryFieldType?
 
-    enum InquiryFieldType {
-        case email
-        case title
-        case content
-    }
-    
-    private let titleMaxLength = 30
-    private let contentMaxLength = 1000
-
-    private var canSubmit: Bool {
-        !email.isEmpty && !title.isEmpty && !content.isEmpty
-    }
-
     var body: some View {
-        VStack(spacing: 0) {
-            // Navigation Bar
+        DGScreen(horizontalPadding: 0, onClick: {
+            focusedField = nil
+        }) {
             navigationBar
+                .padding(.horizontal, 16)
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: 24) {
-                    // Email Section
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading, spacing: 12) {
                     emailSection
-
-                    // Inquiry Content Section
-                    inquiryContentSection
+                        .padding(.bottom, 12)
+                    requiredLabel("문의내용")
+                    titleField
+                    contentEditor
                 }
-                .padding(.horizontal, 28)
+                .padding(.horizontal, 24)
                 .padding(.top, 24)
             }
-        }
-        .navigationBarHidden(true)
-        .onTapGesture {
-            focusedField = nil
         }
     }
 
@@ -47,7 +31,9 @@ struct InquiryView: View {
     private var navigationBar: some View {
         HStack {
             Button(action: {
-                dismiss()
+                PopupManager.shared.show(.backWarning(value: "문의 작성") {
+                    router.pop()
+                })
             }) {
                 Image("chevron_left")
                     .renderingMode(.template)
@@ -63,16 +49,23 @@ struct InquiryView: View {
             Spacer()
 
             Button(action: {
-                // Submit inquiry
-                submitInquiry()
+                viewModel.submitInquiry {
+                    router.pop()
+                }
             }) {
-                Text("등록")
-                    .fontStyle(.headline2)
-                    .foregroundStyle(canSubmit ? .neutral900 : Color.neutral900.opacity(0.4))
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .neutral900))
+                        .scaleEffect(0.8)
+                } else {
+                    Text("등록")
+                        .fontStyle(.headline2)
+                        .foregroundStyle(viewModel.canSubmit ? .neutral900 : Color.neutral900.opacity(0.4))
+                }
             }
-            .disabled(!canSubmit)
+            .padding(.horizontal, 8)
+            .disabled(!viewModel.canSubmit)
         }
-        .padding(.horizontal, 18)
         .padding(.vertical, 12)
     }
 
@@ -82,28 +75,18 @@ struct InquiryView: View {
             requiredLabel("답변받을 이메일")
 
             DGTextField(
-                text: $email,
+                text: $viewModel.email,
                 placeholder: "yourmail@mail.com",
                 keyboardType: .emailAddress,
                 backgroundColor: .neutral50,
                 borderColor: .clear,
                 isDeleteButtonPresent: focusedField == .email
-            )
+            ) {
+                focusedField = .title
+            }
             .focused($focusedField, equals: .email)
-        }
-    }
-
-    // MARK: - Inquiry Content Section
-    private var inquiryContentSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            requiredLabel("문의내용")
-
-            VStack(spacing: 12) {
-                // Title Field
-                titleField
-
-                // Content Editor
-                contentEditor
+            .onAppear {
+                focusedField = .email
             }
         }
     }
@@ -111,21 +94,23 @@ struct InquiryView: View {
     // MARK: - Title Field
     private var titleField: some View {
         DGTextField(
-            text: $title,
+            text: $viewModel.title,
             placeholder: "제목 (최대 30자)",
             backgroundColor: .neutral50,
             borderColor: .clear,
             isDeleteButtonPresent: focusedField == .title
-        )
+        ) {
+            focusedField = .content
+        }
         .focused($focusedField, equals: .title)
-        .textInputLimit(text: $title, maxLength: titleMaxLength)
+        .textInputLimit(text: $viewModel.title, maxLength: viewModel.titleMaxLength)
     }
 
     // MARK: - Content Editor
     private var contentEditor: some View {
         VStack(spacing: 2) {
             ZStack(alignment: .topLeading) {
-                if content.isEmpty {
+                if viewModel.content.isEmpty {
                     Text("내용을 입력하세요")
                         .fontStyle(.body1)
                         .foregroundStyle(.neutral300)
@@ -133,7 +118,7 @@ struct InquiryView: View {
                         .padding(.vertical, 14)
                 }
 
-                TextEditor(text: $content)
+                TextEditor(text: $viewModel.content)
                     .fontStyle(.body1)
                     .foregroundStyle(.text0)
                     .padding(.horizontal, 12)
@@ -147,13 +132,13 @@ struct InquiryView: View {
 
             HStack {
                 Spacer()
-                Text("\(content.count)/\(contentMaxLength)")
+                Text("\(viewModel.content.count)/\(viewModel.contentMaxLength)")
                     .fontStyle(.caption2)
                     .foregroundStyle(.neutral500)
             }
             .padding(.horizontal, 12)
         }
-        .textInputLimit(text: $content, maxLength: contentMaxLength)
+        .textInputLimit(text: $viewModel.content, maxLength: viewModel.contentMaxLength)
     }
 
     // MARK: - Helper Views
@@ -169,15 +154,8 @@ struct InquiryView: View {
         }
         .padding(.horizontal, 12)
     }
-
-    // MARK: - Actions
-    private func submitInquiry() {
-        // TODO: Implement inquiry submission
-        dismiss()
-    }
 }
-
 
 #Preview {
     InquiryView()
-} 
+}
