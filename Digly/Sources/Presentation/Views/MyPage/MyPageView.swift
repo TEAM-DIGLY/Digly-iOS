@@ -7,40 +7,34 @@ struct MyPageView: View {
     
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true) {
-            VStack(spacing: 0) {
                 BackNavWithTitle(title: "마이페이지") {}
                 .padding(.horizontal, 8)
                 .padding(.top, 8)
                 
-                ScrollView {
-                    VStack(spacing: 0) {
-                        profileSection
-                            .padding(.horizontal, 40)
-                            .padding(.bottom, 40)
-                        
-                        menuItem(title: "1:1 문의") {}
-                        
-                        Rectangle()
-                            .fill(.common0.opacity(0.05))
-                            .frame(height: 3)
-                        
-                        menuItem(title: "이용약관") {
-                            router.push(to: .agreementDetail(.service))
-                        }
-                        
-                        Divider()
-                            .padding(.horizontal, 24)
-                        
-                        menuItem(title: "개인정보 수집 및 이용 동의 내역") {
-                            router.push(to: .agreementDetail(.privacy))
-                        }
-                        
-                        Spacer(minLength: 100)
-                    }
-                    .padding(.vertical, 16)
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 0) {
+                    profileSection
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 40)
                     
-                    logoutButton
+                    menuItem(title: "1:1 문의") { router.push(to: .inquiry) }
+                    
+                    Rectangle()
+                        .fill(.common0.opacity(0.05))
+                        .frame(height: 3)
+                    
+                    menuItem(title: "이용약관") { router.push(to: .agreementDetail(.service)) }
+                    
+                    Divider()
+                        .padding(.horizontal, 24)
+                    
+                    menuItem(title: "개인정보 수집 및 이용 동의 내역") { router.push(to: .agreementDetail(.privacy)) }
+                    
+                    Spacer(minLength: 100)
                 }
+                .padding(.vertical, 16)
+                
+                logoutButton
             }
         }
     }
@@ -68,6 +62,7 @@ struct MyPageView: View {
             }
             
             Button(action: {
+                router.push(to: .profileSetting)
             }) {
                 HStack(spacing: 10) {
                     Image("edit")
