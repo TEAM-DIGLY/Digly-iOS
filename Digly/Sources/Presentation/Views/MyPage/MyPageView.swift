@@ -116,7 +116,7 @@ struct MyPageView: View {
             Spacer()
             
             Button(action: {
-                AuthManager.shared.logout()
+                PopupManager.shared.show(.logoutWarning { AuthManager.shared.logout() })
             }) {
                 Text("로그아웃")
                     .fontStyle(.body2)

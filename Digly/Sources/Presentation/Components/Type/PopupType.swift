@@ -5,6 +5,7 @@ enum PopupType {
     case updateOptional(onClick: () -> Void)
     case toggleGuideOff(onClick: () -> Void)
     case toggleGuideOn(onClick: () -> Void)
+    case logoutWarning(onClick: () -> Void)
     case custom(any View)
 
     var config: PopupConfig {
@@ -16,9 +17,8 @@ enum PopupType {
                 isOptional: false,
                 isDarkMode: false,
                 buttons: [
-                    ButtonConfig(text: "업데이트 하기", type: .primary, onClick: onClick)
-                ],
-                buttonLayout: .vertical
+                    ButtonConfig(text: "업데이트 하기"){ onClick() }
+                ]
             )
         case .updateOptional(let onClick):
             PopupConfig(
@@ -27,10 +27,9 @@ enum PopupType {
                 isOptional: true,
                 isDarkMode: false,
                 buttons: [
-                    ButtonConfig(text: "업데이트 하기", type: .primary, onClick: onClick),
-                    ButtonConfig(text: "취소", type: .none, onClick: {})
-                ],
-                buttonLayout: .vertical
+                    ButtonConfig(text: "업데이트 하기"){ onClick() },
+                    ButtonConfig(text: "취소") {}
+                ]
             )
         case .toggleGuideOff(let onClick):
             PopupConfig(
@@ -39,10 +38,9 @@ enum PopupType {
                 isOptional: true,
                 isDarkMode: true,
                 buttons: [
-                    ButtonConfig(text: "취소", type: .none, onClick: {}),
-                    ButtonConfig(text: "끄기", type: .primary, onClick: onClick)
-                ],
-                buttonLayout: .horizontal
+                    ButtonConfig(text: "취소") {},
+                    ButtonConfig(text: "끄기") { onClick() }
+                ]
             )
         case .toggleGuideOn(let onClick):
             PopupConfig(
@@ -51,10 +49,20 @@ enum PopupType {
                 isOptional: true,
                 isDarkMode: true,
                 buttons: [
-                    ButtonConfig(text: "취소", type: .none, onClick: {}),
-                    ButtonConfig(text: "사용", type: .primary, onClick: onClick),
-                ],
-                buttonLayout: .horizontal
+                    ButtonConfig(text: "취소") {},
+                    ButtonConfig(text: "사용") { onClick() }
+                ]
+            )
+        case .logoutWarning(let onClick):
+            PopupConfig(
+                title: "정말 로그아웃 할까요?",
+                description: "처음 로그인 화면으로 돌아갈게요.",
+                isOptional: true,
+                isDarkMode: false,
+                buttons: [
+                    ButtonConfig(text: "취소") {},
+                    ButtonConfig(text: "로그아웃") { onClick() }
+                ]
             )
         case .custom:
             PopupConfig(
@@ -62,8 +70,7 @@ enum PopupType {
                 description: "",
                 isOptional: false,
                 isDarkMode: false,
-                buttons: [],
-                buttonLayout: .vertical
+                buttons: []
             )
         }
     }
@@ -75,7 +82,6 @@ struct PopupConfig {
     let isOptional: Bool
     let isDarkMode: Bool
     let buttons: [ButtonConfig]
-    let buttonLayout: ButtonLayout
 
     init(
         title: String,
@@ -83,18 +89,11 @@ struct PopupConfig {
         isOptional: Bool = true,
         isDarkMode: Bool = true,
         buttons: [ButtonConfig],
-        buttonLayout: ButtonLayout = .vertical
     ) {
         self.title = title
         self.description = description
         self.isOptional = isOptional
         self.isDarkMode = isDarkMode
         self.buttons = buttons
-        self.buttonLayout = buttonLayout
     }
-}
-
-enum ButtonLayout {
-    case vertical
-    case horizontal
 }

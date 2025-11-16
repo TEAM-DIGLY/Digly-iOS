@@ -33,7 +33,6 @@ enum ToastType {
         case .error, .errorStringWithTask, .errorWithMessage:
             return ButtonConfig(
                 text: "재시도",
-                type: .primary,
                 onClick: {},
                 disabled: false
             )
