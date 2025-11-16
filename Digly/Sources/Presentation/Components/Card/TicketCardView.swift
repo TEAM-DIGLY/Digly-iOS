@@ -94,9 +94,9 @@ struct TicketCardView: View {
                 HStack(alignment: .top){
                     Text(ticket.name)
                         .fontStyle(.body1)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(.common100)
                         .lineLimit(2)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .multilineTextAlignment(.leading)
                     
                     Image("chevron_right")
                         .renderingMode(.template)
