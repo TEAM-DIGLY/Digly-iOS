@@ -109,9 +109,7 @@ extension CreateTicketFormView {
                 placeholderColor: .opacityWhite300,
                 backgroundColor: .opacityWhite50,
                 borderColor: .opacityWhite100,
-                cursorColor: .common100,
-                isFocused: $isFocused,
-                onClear: {}
+                cursorColor: .common100
             )
             .focused($isFocused)
             .onAppear {

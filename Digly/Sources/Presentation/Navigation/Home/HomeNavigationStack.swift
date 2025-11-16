@@ -34,7 +34,9 @@ struct HomeNavigationStack: View {
         switch route {
         case .alarmList: AlarmListView()
         case .myPage: MyPageView()
-        case .ticketFlow: 
+        case .agreementDetail(let type):
+            AgreementDetailView(agreementType: type)
+        case .ticketFlow:
             TicketFlowNavigationStack(onFlowCompleted: {
                 router.pop() // Return to previous screen when ticket flow completes
             })

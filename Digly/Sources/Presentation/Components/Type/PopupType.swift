@@ -6,8 +6,9 @@ enum PopupType {
     case toggleGuideOff(onClick: () -> Void)
     case toggleGuideOn(onClick: () -> Void)
     case logoutWarning(onClick: () -> Void)
+    case deleteAccountWarning(onClick: () -> Void)
     case custom(any View)
-
+    
     var config: PopupConfig {
         switch self {
         case .updateMandatory(let onClick):
@@ -62,6 +63,17 @@ enum PopupType {
                 buttons: [
                     ButtonConfig(text: "취소") {},
                     ButtonConfig(text: "로그아웃") { onClick() }
+                ]
+            )
+        case .deleteAccountWarning(let onClick):
+            PopupConfig(
+                title: "정말 탈퇴할까요?",
+                description: "디글리를 떠나면 7일간 재가입을 할 수 없어요.",
+                isOptional: true,
+                isDarkMode: false,
+                buttons: [
+                    ButtonConfig(text: "취소") {},
+                    ButtonConfig(text: "탈퇴") {onClick()}
                 ]
             )
         case .custom:

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MyPageView: View {
+    @EnvironmentObject private var router: HomeRouter
     @Environment(\.dismiss) private var dismiss
     @StateObject private var authManager = AuthManager.shared
     
@@ -23,12 +24,16 @@ struct MyPageView: View {
                             .fill(.common0.opacity(0.05))
                             .frame(height: 3)
                         
-                        menuItem(title: "이용약관") {}
+                        menuItem(title: "이용약관") {
+                            router.push(to: .agreementDetail(.service))
+                        }
                         
                         Divider()
                             .padding(.horizontal, 24)
                         
-                        menuItem(title: "개인정보 수집 및 이용 동의 내역") {}
+                        menuItem(title: "개인정보 수집 및 이용 동의 내역") {
+                            router.push(to: .agreementDetail(.privacy))
+                        }
                         
                         Spacer(minLength: 100)
                     }
@@ -134,6 +139,5 @@ struct MyPageView: View {
 }
 
 #Preview {
-        MyPageView()
-    
-} 
+    MyPageView()
+}

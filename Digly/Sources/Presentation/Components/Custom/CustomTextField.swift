@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct DGTextField<T>: View where T: Hashable {
-    @Binding var text: T
-    @FocusState private var internalFocusState: Bool
+struct DGTextField: View {
+    @Binding var text: String
+    @FocusState private var isFocused: Bool
     
     let placeholder: String
     var keyboardType: UIKeyboardType = .default
@@ -12,56 +12,45 @@ struct DGTextField<T>: View where T: Hashable {
     var borderColor: Color = .sbDefault
     var cursorColor: Color = .text100
     
-    var isFocused: FocusState<Bool>.Binding?
-    
-    var showClearButton: Bool = true
-    var onClear: (() -> Void)?
+    var isDeleteButtonPresent: Bool = false
     var onSubmit: (() -> Void)?
-    
-    private var isFieldFocused: Bool {
-        isFocused?.wrappedValue ?? internalFocusState
-    }
     
     var body: some View {
         HStack(alignment: .center) {
-            TextField("",
-                      text: Binding(
-                        get: { String(describing: text) },
-                        set: { if let value = $0 as? T { text = value } }
-                      ),
-                      prompt: prompt
-            )
+            TextField("", text: $text, prompt: prompt)
+            .keyboardType(keyboardType)
+            .focused($isFocused)
+            
             .tint(cursorColor)
-            .autocorrectionDisabled()
-            .autocapitalization(.none)
             .fontStyle(.headline1)
             .foregroundStyle(.common100)
-            .focused(isFocused ?? $internalFocusState)
             
-            if showClearButton && isFieldFocused {
+            if isDeleteButtonPresent {
                 Button(action: {
-                    onClear?()
-                    if let emptyValue = "" as? T {
-                        text = emptyValue
-                    }
+                    text = ""
                 }) {
                     Image("x_circle")
                         .renderingMode(.template)
                         .foregroundStyle(cursorColor)
                 }
-                .opacity(isFieldFocused ? 1 : 0)
-                .scaleEffect(isFieldFocused ? 1 : 0)
+                .opacity(isFocused ? 1 : 0)
+                .scaleEffect(isFocused ? 1 : 0)
             }
         }
+        .autocorrectionDisabled()
+        .autocapitalization(.none)
+        
         .padding(.horizontal, 16)
         .frame(height: 56, alignment: .center)
         .background(backgroundColor, in: RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(borderColor, lineWidth: isFieldFocused ? 1.5 : 1)
+                .stroke(
+                    isFocused ? .sbDefault : .sbLight,
+                    lineWidth: isFocused ? 1.5 : 1
+                )
         )
-        .animation(.fastSpring, value: isFieldFocused)
-        .keyboardType(keyboardType)
+        .animation(.fastSpring, value: isFocused)
         .onSubmit {
             onSubmit?()
         }

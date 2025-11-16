@@ -5,6 +5,7 @@ enum HomeRoute: BaseRoute {
     case alarmList
     case myPage
     case ticketFlow
+    case agreementDetail(AgreementType)
     
     var id: String {
         String(describing: self)

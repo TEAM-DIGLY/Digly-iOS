@@ -8,9 +8,9 @@ enum AgreementType: CaseIterable, Hashable {
     var title: String {
         switch self {
         case .service:
-            "(필수)휴미나 서비스 이용 약관에 동의"
+            "이용약관 동의"
         case .privacy:
-            "(필수)개인 정보 활용에 동의"
+            "개인정보 수집 및 이용 동의"
         }
     }
     
