@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum CreateTicketStep: Int, CaseIterable, TicketFlowStepProtocol {
+enum CreateTicketStep: Int, CaseIterable {
     case title = 0
     case dateTime = 1
     case venue = 2
@@ -34,6 +34,10 @@ enum CreateTicketStep: Int, CaseIterable, TicketFlowStepProtocol {
         case .ticketDetails:
             return ""
         }
+    }
+    
+    var progressPercentage: Double {
+        return Double(index + 1) / Double(Self.allCases.count)
     }
     
     func getFormattedTitle(with showName: String = "") -> String {
