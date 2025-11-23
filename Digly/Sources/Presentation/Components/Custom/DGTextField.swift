@@ -84,21 +84,6 @@ enum TextFieldType {
             true
         }
     }
-    
-    var keyboardType: UIKeyboardType {
-        switch self {
-        case .createTicketOptional:
-                .default
-        case .createTicket:
-                .default
-        case .inquiry:
-                .default
-        case .inquiryEmail:
-                .emailAddress
-        case .profileSetting:
-                .default
-        }
-    }
 }
 
 
@@ -113,7 +98,6 @@ struct DGTextField: View {
     var body: some View {
         ZStack(alignment: .trailing) {
             TextField("", text: $text, prompt: prompt)
-                .keyboardType(type.keyboardType)
                 .focused($isFocused)
             
                 .tint(type.cursorColor)

@@ -300,7 +300,6 @@ extension CreateTicketFormView {
                             type: .createTicketOptional
                         )
                         .focused($isFocused)
-                        .padding(.horizontal, 16)
                     }
                 
                     VStack(alignment: .leading, spacing: 12) {
@@ -318,7 +317,6 @@ extension CreateTicketFormView {
                         )
                         .focused($isFocused)
                         .keyboardType(.numberPad)
-                        .padding(.horizontal, 16)
                     }
                 }
             }

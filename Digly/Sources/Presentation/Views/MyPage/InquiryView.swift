@@ -82,6 +82,7 @@ struct InquiryView: View {
                 focusedField = .title
             }
             .focused($focusedField, equals: .email)
+            .keyboardType(.emailAddress)
             .onAppear {
                 focusedField = .email
             }
