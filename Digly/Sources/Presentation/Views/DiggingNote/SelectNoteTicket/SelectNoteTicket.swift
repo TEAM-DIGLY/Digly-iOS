@@ -9,27 +9,35 @@ struct SelectNoteTicketView: View {
             BackNavWithTitle(title: "티켓 선택하기", backgroundColor: .common0)
                 .padding(.horizontal, 24)
             
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVGrid(
-                    columns: [
-                        GridItem(.flexible(), spacing: 0),
-                        GridItem(.flexible(), spacing: 0)
-                    ],
-                    spacing: 0
-                ) {
-                    ForEach(viewModel.tickets) { ticket in
-                        let isSelected = viewModel.selectedTicketId == ticket.id
-                        
-                        TicketCardView(ticket: ticket, cardType: .note_small)
-                            .opacity(isSelected ? 1.0 : 0.3)
-                            .onTapGesture {
-                                viewModel.selectTicket(ticket)
-                            }
+            if viewModel.tickets.isEmpty {
+                Text("노트를 작성할 티켓이 없어요.\n먼저 티켓을 만들어 보세요.")
+                    .font(.body2)
+                    .foregroundStyle(.opacityWhite600)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVGrid(
+                        columns: [
+                            GridItem(.flexible(), spacing: 0),
+                            GridItem(.flexible(), spacing: 0)
+                        ],
+                        spacing: 0
+                    ) {
+                        ForEach(viewModel.tickets) { ticket in
+                            let isSelected = viewModel.selectedTicketId == ticket.id
+                            
+                            TicketCardView(ticket: ticket, cardType: .note_small)
+                                .opacity(isSelected ? 1.0 : 0.3)
+                                .onTapGesture {
+                                    viewModel.selectTicket(ticket)
+                                }
+                        }
                     }
+                    .padding(.horizontal, 12)
+                    .padding(.top, 32)
+                    .padding(.bottom, 140)
                 }
-                .padding(.horizontal, 12)
-                .padding(.top, 32)
-                .padding(.bottom, 140)
             }
         }
         .overlay(alignment: .bottom) {
