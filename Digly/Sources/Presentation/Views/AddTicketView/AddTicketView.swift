@@ -70,15 +70,21 @@ struct AddTicketView: View {
             .padding(.horizontal, 52)
             
             Spacer()
-            
-            DGButton(
-                text: "다음으로",
-                type: .primaryDark,
-                isDisabled: selectedType == nil) {
-                    handleNextButton()
-                }
-                .padding(.horizontal, 24)
         }
+        .overlay(alignment: .bottom) {
+            if selectedType != nil {
+                DGButton(
+                    text: "다음으로",
+                    type: .primaryDark,
+                    isDisabled: selectedType == nil) {
+                        handleNextButton()
+                    }
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 12)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
+        }
+        .animation(.mediumSpring, value: selectedType)
     }
 
     private func handleNextButton() {

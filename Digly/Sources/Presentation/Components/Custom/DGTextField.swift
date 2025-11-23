@@ -32,6 +32,7 @@ struct DGTextField: View {
                 Image("x_circle")
                     .renderingMode(.template)
                     .foregroundStyle(cursorColor)
+                    .padding(.horizontal, 8)
             }
             .opacity(isFocused ? 1 : 0)
             .scaleEffect(isFocused ? 1 : 0)
