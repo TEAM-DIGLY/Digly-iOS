@@ -106,11 +106,7 @@ extension CreateTicketFormView {
             DGTextField(
                 text: viewModel.setFieldBinding(for: type),
                 placeholder: type.placeholderText,
-                textColor: .neutral100,
-                placeholderColor: .opacityWhite300,
-                backgroundColor: .opacityWhite50,
-                borderColor: .opacityWhite100,
-                cursorColor: .common100
+                type: .createTicket
             )
             .focused($isFocused)
             .onAppear {
@@ -255,7 +251,7 @@ extension CreateTicketFormView {
                     isRequired: true
                 )
                 
-                HStack(spacing: 20) {
+                HStack(alignment: .bottom, spacing: 20) {
                     formFieldView(
                         label: "관람 일시",
                         value: viewModel.formData.date?.toyyyyMMddString() ?? "관람 일자",
@@ -295,23 +291,16 @@ extension CreateTicketFormView {
                             .fontStyle(.label2)
                             .foregroundStyle(.neutral300)
                         
-                        TextField("ex) a열 j 32번", text: Binding(
-                            get: { viewModel.formData.seatNumber },
-                            set: { viewModel.updateSeatLocation($0) }
-                        ))
-                        .focused($isFocused)
-                        .fontStyle(.headline1)
-                        .foregroundStyle(viewModel.formData.seatNumber.isEmpty ? .neutral400 : .neutral100)
-                        .padding(.horizontal, 16)
-                        .frame(height: 57)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14)
-                                .fill(.neutral900.opacity(0.05))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
-                                )
+                        DGTextField(
+                            text: Binding(
+                                get: { viewModel.formData.seatNumber },
+                                set: { viewModel.updateSeatLocation($0) }
+                            ),
+                            placeholder: "ex) a열 j 32번",
+                            type: .createTicketOptional
                         )
+                        .focused($isFocused)
+                        .padding(.horizontal, 16)
                     }
                 
                     VStack(alignment: .leading, spacing: 12) {
@@ -319,23 +308,17 @@ extension CreateTicketFormView {
                             .fontStyle(.label2)
                             .foregroundStyle(.neutral300)
                         
-                        TextField("", text: Binding(
-                            get: { String(viewModel.formData.price) },
-                            set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
-                        ))
+                        DGTextField(
+                            text: Binding(
+                                get: { String(viewModel.formData.price) },
+                                set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
+                            ),
+                            placeholder: "ex) 100,000",
+                            type: .createTicketOptional
+                        )
                         .focused($isFocused)
                         .keyboardType(.numberPad)
-                        .fontStyle(.headline1)
                         .padding(.horizontal, 16)
-                        .frame(height: 57)
-                        .background(
-                            RoundedRectangle(cornerRadius: 14)
-                                .fill(.neutral900.opacity(0.05))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
-                                )
-                        )
                     }
                 }
             }
@@ -415,7 +398,7 @@ extension CreateTicketFormView {
             set: { viewModel.updateSeatNumber($0) }
         ))
         .fontStyle(.headline1)
-        .foregroundStyle(.neutral400)
+        .foregroundStyle(.neutral100)
         .multilineTextAlignment(.center)
         .frame(height: 57)
         .background(

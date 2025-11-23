@@ -71,7 +71,11 @@ struct ProfileSettingView: View {
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral600)
 
-            DGTextField(text: $viewModel.nickname, placeholder: "")
+            DGTextField(
+                text: $viewModel.nickname,
+                placeholder: "",
+                type: .profileSetting
+            )
         }
     }
 

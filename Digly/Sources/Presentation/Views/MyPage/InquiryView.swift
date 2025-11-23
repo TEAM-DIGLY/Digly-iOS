@@ -77,10 +77,7 @@ struct InquiryView: View {
             DGTextField(
                 text: $viewModel.email,
                 placeholder: "yourmail@mail.com",
-                keyboardType: .emailAddress,
-                backgroundColor: .neutral50,
-                borderColor: .clear,
-                isDeleteButtonPresent: focusedField == .email
+                type: .inquiryEmail
             ) {
                 focusedField = .title
             }
@@ -96,9 +93,7 @@ struct InquiryView: View {
         DGTextField(
             text: $viewModel.title,
             placeholder: "제목 (최대 30자)",
-            backgroundColor: .neutral50,
-            borderColor: .clear,
-            isDeleteButtonPresent: focusedField == .title
+            type: .inquiry
         ) {
             focusedField = .content
         }
