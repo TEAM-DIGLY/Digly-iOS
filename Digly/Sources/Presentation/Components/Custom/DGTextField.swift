@@ -39,7 +39,7 @@ struct DGTextField: View {
         .autocorrectionDisabled()
         .autocapitalization(.none)
         
-        .padding(.horizontal, 16)
+        .padding(.leading, 16)
         .frame(height: 56, alignment: .center)
         .background(backgroundColor, in: RoundedRectangle(cornerRadius: 16))
         .animation(.mediumSpring, value: isFocused)
