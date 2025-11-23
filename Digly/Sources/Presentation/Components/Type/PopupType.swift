@@ -6,6 +6,7 @@ enum PopupType {
     case toggleGuideOff(onClick: () -> Void)
     case toggleGuideOn(onClick: () -> Void)
     case logoutWarning(onClick: () -> Void)
+    case backWarning(value: String, onClick: () -> Void)
     case deleteAccountWarning(onClick: () -> Void)
     case custom(any View)
     
@@ -45,13 +46,24 @@ enum PopupType {
             )
         case .toggleGuideOn(let onClick):
             PopupConfig(
-                title: "가이드 설정",
+                title: "",
                 description: "가이드를 사용할 시 작성한 노트가\n초기화 됩니다. 가이드를 사용할까요?",
                 isOptional: true,
                 isDarkMode: true,
                 buttons: [
                     ButtonConfig(text: "취소") {},
                     ButtonConfig(text: "사용") { onClick() }
+                ]
+            )
+        case .backWarning(let value, let onClick):
+            PopupConfig(
+                title: "\(value)을 중단할까요?",
+                description: "지금 나가면 작성한 내용은 저장되지 않아요.",
+                isOptional: true,
+                isDarkMode: true,
+                buttons: [
+                    ButtonConfig(text: "계속 작성") {},
+                    ButtonConfig(text: "중단") { onClick() }
                 ]
             )
         case .logoutWarning(let onClick):

@@ -7,10 +7,10 @@ struct MyPageView: View {
     
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true) {
-                BackNavWithTitle(title: "마이페이지") {}
+            BackNavWithTitle(title: "마이페이지") {}
                 .padding(.horizontal, 8)
                 .padding(.top, 8)
-                
+            
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 0) {
                     profileSection

@@ -106,6 +106,7 @@ extension CreateTicketFormView {
             DGTextField(
                 text: viewModel.setFieldBinding(for: type),
                 placeholder: type.placeholderText,
+                textColor: .neutral100,
                 placeholderColor: .opacityWhite300,
                 backgroundColor: .opacityWhite50,
                 borderColor: .opacityWhite100,

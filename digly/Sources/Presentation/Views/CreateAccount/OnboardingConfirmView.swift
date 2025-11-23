@@ -1,5 +1,5 @@
 import SwiftUI
-
+import Lottie
 struct OnboardingConfirmView: View {
     let signUpResponse: SignUpResult
     let accessToken: String
@@ -10,10 +10,9 @@ struct OnboardingConfirmView: View {
     var body: some View {
         DGScreen(horizontalPadding: 0, isLoading: isLoading) {
             ZStack{
-                Image("tmp")
-                    .resizable()
-                    .frame(maxWidth: .infinity,maxHeight: .infinity)
-                    .ignoresSafeArea()
+//                LottieView(name: "EMYc4sGwq6", bundle: .main)
+//                    .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+//                    .frame(width: 200, height: 200)
                 
                 VStack{
                     Spacer()

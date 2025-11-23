@@ -16,7 +16,7 @@ struct DGTextField: View {
     var onSubmit: (() -> Void)?
     
     var body: some View {
-        HStack(alignment: .center) {
+        ZStack(alignment: .trailing) {
             TextField("", text: $text, prompt: prompt)
                 .keyboardType(keyboardType)
                 .focused($isFocused)
@@ -24,7 +24,7 @@ struct DGTextField: View {
                 .tint(cursorColor)
                 .fontStyle(.headline1)
                 .foregroundStyle(textColor)
-            
+                .frame(maxWidth: .infinity)
             
             Button(action: {
                 text = ""
@@ -34,6 +34,7 @@ struct DGTextField: View {
                     .foregroundStyle(cursorColor)
                     .padding(.horizontal, 8)
             }
+            .background(backgroundColor.opacity(0.5))
             .opacity(isFocused ? 1 : 0)
             .scaleEffect(isFocused ? 1 : 0)
         }
