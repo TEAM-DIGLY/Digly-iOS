@@ -1,10 +1,12 @@
 import Foundation
 
 enum HomeRoute: BaseRoute {
-//    case home
+    //    case home
     case alarmList
     case myPage
     case ticketFlow
+    case inquiry
+    case profileSetting
     case agreementDetail(AgreementType)
     
     var id: String {
@@ -12,7 +14,11 @@ enum HomeRoute: BaseRoute {
     }
     
     var disableSwipeBack: Bool {
-        false
+        switch self {
+        case .inquiry:
+            true
+        default:
+            false
+        }
     }
 }
-
