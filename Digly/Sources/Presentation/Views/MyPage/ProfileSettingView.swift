@@ -2,53 +2,35 @@ import SwiftUI
 
 struct ProfileSettingView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var authManager = AuthManager.shared
-    @State private var nickname: String = ""
-    @State private var currentCharacterIndex: Int = 0
-    
-    private let characters = Digly.data
-    
+    @StateObject private var viewModel = ProfileSettingViewModel()
+
     var body: some View {
-        ZStack {
-            Color.clear
-                .ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                // Navigation Bar
-                navigationBar
-                
-                ScrollView {
-                    VStack(spacing: 24) {
-                        // Nickname Section
-                        nicknameSection
-                            .padding(.horizontal, 24)
-                            .padding(.top, 32)
-                        
-                        // Character Section
-                        characterSection
-                            .padding(.horizontal, 24)
-                        
-                        Spacer(minLength: 100)
-                    }
+        DGScreen(horizontalPadding: 0) {
+            navigationBar
+
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 24) {
+                    nicknameSection
+                        .padding(.horizontal, 24)
+                        .padding(.top, 32)
+
+                    characterSection
+                        .padding(.horizontal, 24)
+
+                    Spacer(minLength: 100)
                 }
             }
-            
-            // Bottom Section
-            VStack {
-                Spacer()
-                
-                bottomSection
-                    .padding(.horizontal, 24)
-                    .padding(.bottom, 34)
-            }
         }
-        .navigationBarHidden(true)
+        .overlay(alignment: .bottom) {
+            bottomSection
+                .padding(.horizontal, 24)
+                .padding(.bottom, 34)
+        }
         .onAppear {
-            nickname = authManager.nickname
-            currentCharacterIndex = characters.firstIndex { $0.diglyType == authManager.diglyType } ?? 0
+            viewModel.onAppear()
         }
     }
-    
+
     // MARK: - Navigation Bar
     private var navigationBar: some View {
         HStack {
@@ -59,18 +41,19 @@ struct ProfileSettingView: View {
                     .renderingMode(.template)
                     .foregroundStyle(.neutral900)
             }
-            
+
             Spacer()
-            
+
             Text("프로필 설정")
                 .fontStyle(.headline2)
                 .foregroundStyle(.neutral900)
-            
+
             Spacer()
-            
+
             Button(action: {
-                // Save action
-                saveProfile()
+                viewModel.saveProfile {
+                    dismiss()
+                }
             }) {
                 Text("수정")
                     .fontStyle(.body2)
@@ -80,42 +63,42 @@ struct ProfileSettingView: View {
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
     }
-    
+
     // MARK: - Nickname Section
     private var nicknameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("닉네임")
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral600)
-            
-            DGTextField(text: $nickname, placeholder: "")
+
+            DGTextField(text: $viewModel.nickname, placeholder: "")
         }
     }
-    
+
     // MARK: - Character Section
     private var characterSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("나의 캐릭터")
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral600)
-            
-            Text("# \(characters[currentCharacterIndex].role)")
+
+            Text("# \(viewModel.characters[viewModel.currentCharacterIndex].role)")
                 .fontStyle(.body2)
                 .foregroundStyle(.neutral800)
-            
+
             // Character Selector
             characterSelector
                 .padding(.top, 24)
         }
     }
-    
+
     // MARK: - Character Selector
     private var characterSelector: some View {
         HStack(spacing: 0) {
             // Left Arrow
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    currentCharacterIndex = (currentCharacterIndex - 1 + characters.count) % characters.count
+                    viewModel.selectPreviousCharacter()
                 }
             }) {
                 Image("chevron_left")
@@ -124,33 +107,33 @@ struct ProfileSettingView: View {
                     .frame(width: 24, height: 24)
             }
             .padding(.leading, 20)
-            
+
             Spacer()
-            
+
             // Character Display
             VStack(spacing: 8) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 16)
                         .fill(.neutral100)
                         .frame(width: 120, height: 160)
-                    
-                    Image(characters[currentCharacterIndex].diglyType.profileImageName)
+
+                    Image(viewModel.characters[viewModel.currentCharacterIndex].diglyType.profileImageName)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 120)
                 }
-                
+
                 Image("chevron_down_sm")
                     .renderingMode(.template)
                     .foregroundStyle(.neutral400)
             }
-            
+
             Spacer()
-            
+
             // Right Arrow
             Button(action: {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    currentCharacterIndex = (currentCharacterIndex + 1) % characters.count
+                    viewModel.selectNextCharacter()
                 }
             }) {
                 Image("chevron_right")
@@ -161,46 +144,40 @@ struct ProfileSettingView: View {
             .padding(.trailing, 20)
         }
     }
-    
+
     // MARK: - Bottom Section
     private var bottomSection: some View {
         VStack(spacing: 16) {
-            Text("\(getCurrentDateString()) 로그인")
+            Text("\(viewModel.getCurrentDateString()) 로그인")
                 .fontStyle(.caption2)
                 .foregroundStyle(.neutral400)
-            
+
             Button(action: {
-                // Withdrawal action
+                viewModel.showWithdrawalConfirmation()
             }) {
-                Text("회원 탈퇴")
-                    .fontStyle(.body2)
-                    .foregroundStyle(.neutral600)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(.neutral200, lineWidth: 1)
-                    )
+                if viewModel.isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .neutral600))
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(.neutral200, lineWidth: 1)
+                        )
+                } else {
+                    Text("회원 탈퇴")
+                        .fontStyle(.body2)
+                        .foregroundStyle(.neutral600)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(.neutral200, lineWidth: 1)
+                        )
+                }
             }
+            .disabled(viewModel.isLoading)
         }
-    }
-    
-    // MARK: - Helper Methods
-    private func getCurrentDateString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd"
-        return formatter.string(from: Date())
-    }
-    
-    // MARK: - Save Profile
-    private func saveProfile() {
-        // Update nickname
-        authManager.updateNickname(nickname)
-        
-        // Update character
-        authManager.updateDiglyType(characters[currentCharacterIndex].diglyType)
-        
-        dismiss()
     }
 }
 
@@ -219,6 +196,5 @@ extension DiglyType {
 }
 
 #Preview {
-        ProfileSettingView()
-    
-} 
+    ProfileSettingView()
+}
