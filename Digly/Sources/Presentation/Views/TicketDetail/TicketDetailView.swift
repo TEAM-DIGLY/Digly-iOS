@@ -6,7 +6,6 @@ struct TicketDetailView: View {
 
     let ticketId: Int
     @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
-    @State private var showEmotionBottomSheet = false
     
     var body: some View {
         DGScreen(
@@ -39,7 +38,7 @@ struct TicketDetailView: View {
         .alert(isPresented: $viewModel.isScreenshotTaken) {
             Alert(title: Text("스크린샷 저장 완료"), message: Text("스크린샷이 저장되었습니다."), dismissButton: .default(Text("확인")))
         }
-        .sheet(isPresented: $showEmotionBottomSheet) {
+        .sheet(isPresented: $viewModel.isEmotionSheetPresent) {
             if let ticket = viewModel.ticket {
                 EmotionSelectionBottomSheet(
                     ticketId: ticket.id,
@@ -136,7 +135,7 @@ struct TicketDetailView: View {
                         .foregroundStyle(.opacityWhite850)
                         .frame(height: 76, alignment: .center)
                         .onTapGesture {
-                            showEmotionBottomSheet = true
+                            viewModel.isEmotionSheetPresent = true
                         }
                 }
             }
@@ -306,4 +305,8 @@ struct TicketDetailView: View {
         formatter.dateFormat = "yyyy년 MM월 dd일 (E) HH:mm"
         return formatter.string(from: date)
     }
+}
+
+#Preview {
+    TicketDetailView(ticketId: 23)
 }
