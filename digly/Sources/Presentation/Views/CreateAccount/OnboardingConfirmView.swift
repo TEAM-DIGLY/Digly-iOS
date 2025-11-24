@@ -1,48 +1,33 @@
 import SwiftUI
 import Lottie
+
 struct OnboardingConfirmView: View {
     let signUpResponse: SignUpResult
     let accessToken: String
     let refreshToken: String
-    let diglyType: DiglyType
+    @State private var isButtonPresent = true
     @State private var isLoading = false
     
     var body: some View {
-        DGScreen(horizontalPadding: 0, isLoading: isLoading) {
-            ZStack{
-//                LottieView(name: "EMYc4sGwq6", bundle: .main)
-//                    .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
-//                    .frame(width: 200, height: 200)
-                
-                VStack{
-                    Spacer()
-                    
-                    Button(action: {
-                        handleStartDigly()
-                    }) {
-                        Text("디글리 시작하기")
-                            .fontStyle(.body2)
-                            .foregroundStyle(.common100)
-                            .padding(.vertical, 16)
-                            .padding(.horizontal, 24)
-                            .background(.neutral900)
-                            .cornerRadius(12)
+        LottieView(animation: .named("onboarding_2"))
+            .playbackMode(.playing(.fromProgress(0, toProgress: 0.2, loopMode: .loop)))
+
+            .overlay(alignment: .bottom) {
+                if isButtonPresent {
+                    DGButton(text: "디글리 시작하기", type: .primaryDark) {
+                        AuthManager.shared.login(accessToken, refreshToken, signUpResponse.name, signUpResponse.memberType)
                     }
-                    .disabled(isLoading)
-                    .opacity(isLoading ? 0.6 : 1.0)
+                    .padding(.bottom, 64)
+                    .frame(width: 140)
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
-                .padding(.bottom,64)
             }
-        }
+            .animation(.mediumSpring, value: isButtonPresent)
+            .edgesIgnoringSafeArea(.all)
     }
-    
-    private func handleStartDigly() {
-        Task {
-            isLoading = true
-            
-            AuthManager.shared.login(accessToken, refreshToken, signUpResponse.name, diglyType)
-            
-            isLoading = false
-        }
-    }
+}
+
+
+#Preview {
+    OnboardingConfirmView(signUpResponse: SignUpResult(id: 1, name: "asdf", memberType: .analyst), accessToken: "asf", refreshToken: "asdf")
 }

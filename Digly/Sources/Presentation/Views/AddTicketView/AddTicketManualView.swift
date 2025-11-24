@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct CreateTicketFormView: View {
+struct AddTicketManualView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: CreateTicketViewModel
+    @StateObject private var viewModel: AddTicketManualViewModel
 
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
@@ -12,7 +12,7 @@ struct CreateTicketFormView: View {
     var onNavigateToEndTicket: ((CreateTicketFormData) -> Void)?
 
     init(onNavigateToEndTicket: ((CreateTicketFormData) -> Void)? = nil) {
-        self._viewModel = StateObject(wrappedValue: CreateTicketViewModel())
+        self._viewModel = StateObject(wrappedValue: AddTicketManualViewModel())
         self.onNavigateToEndTicket = onNavigateToEndTicket
     }
     
@@ -65,7 +65,7 @@ struct CreateTicketFormView: View {
 }
 
 // MARK: - Components
-extension CreateTicketFormView {
+extension AddTicketManualView {
     private var labelSection: some View {
         HStack(spacing: 4) {
             Text(viewModel.currentStep.getFormattedTitle(with: viewModel.formData.showName))
@@ -413,5 +413,5 @@ extension CreateTicketFormView {
 
 
 #Preview {
-    CreateTicketFormView()
+    AddTicketManualView()
 }

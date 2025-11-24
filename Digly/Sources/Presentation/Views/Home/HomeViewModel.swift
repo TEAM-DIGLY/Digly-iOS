@@ -26,8 +26,8 @@ class HomeViewModel: ObservableObject {
         tickets.isEmpty ? nil : tickets[safe: focusedTicketIndex]
     }
     
-    init(ticketUseCase: TicketUseCase = TicketUseCase(ticketRepository: TicketRepository()),
-         noteUseCase: NoteUseCase = NoteUseCase(noteRepository: NoteRepository())) {
+    init(ticketUseCase: TicketUseCase = TicketUseCase(),
+         noteUseCase: NoteUseCase = NoteUseCase()) {
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
         

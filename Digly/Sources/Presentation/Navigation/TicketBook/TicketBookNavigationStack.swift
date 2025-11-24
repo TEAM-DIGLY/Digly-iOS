@@ -50,7 +50,7 @@ struct TicketBookNavigationStack: View {
     private func ticketFlowDestinationView(for route: TicketFlowRoute) -> some View {
         switch route {
         case .addTicket:
-            AddTicketView(
+            StartAddTicketManualView(
                 onNavigateToAutoInput: {
                     router.path.append(TicketFlowRoute.ticketAutoInput)
                 },
@@ -59,15 +59,15 @@ struct TicketBookNavigationStack: View {
                 }
             )
         case .ticketAutoInput:
-            TicketAutoInputView()
+            AddTicketAutoView()
         case .createTicketForm:
-            CreateTicketFormView(
+            AddTicketManualView(
                 onNavigateToEndTicket: { ticketData in
                     router.path.append(TicketFlowRoute.endCreateTicket(ticketData: ticketData))
                 }
             )
         case .endCreateTicket(let ticketData):
-            EndCreateTicketView(
+            EndAddTicketManualView(
                 ticketData: ticketData,
                 onAddFeelingTapped: {
                     router.path.append(TicketFlowRoute.addFeelingView)

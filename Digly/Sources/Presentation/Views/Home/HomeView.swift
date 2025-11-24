@@ -6,6 +6,7 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var popupManager = PopupManager.shared
+    @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
 
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
@@ -76,7 +77,7 @@ struct HomeView: View {
     
     private var headerSection: some View {
         HStack (spacing: 4) {
-            Text("\(authManager.nickname)의")
+            Text("\(displayNickname)의")
                 .fontStyle(.headline1)
                 .foregroundStyle(.neutral900)
             
@@ -225,8 +226,13 @@ struct HomeView: View {
     }
 }
 
+private extension HomeView {
+    var displayNickname: String {
+        nicknameUD.isEmpty ? authManager.nickname : nicknameUD
+    }
+}
+
 #Preview {
     HomeView()
         .environmentObject(HomeRouter())
 }
-

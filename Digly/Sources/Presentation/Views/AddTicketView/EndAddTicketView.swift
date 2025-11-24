@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct EndCreateTicketView: View {
+struct EndAddTicketManualView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: EndCreateTicketViewModel
+    @StateObject private var viewModel: EndAddTicketManualViewModel
     
     let onAddFeelingTapped: () -> Void
     let onEditTicketTapped: () -> Void
@@ -14,7 +14,7 @@ struct EndCreateTicketView: View {
         onEditTicketTapped: @escaping () -> Void,
         onCompleteTapped: @escaping () -> Void
     ) {
-        self._viewModel = StateObject(wrappedValue: EndCreateTicketViewModel(ticketData: ticketData))
+        self._viewModel = StateObject(wrappedValue: EndAddTicketManualViewModel(ticketData: ticketData))
         self.onAddFeelingTapped = onAddFeelingTapped
         self.onEditTicketTapped = onEditTicketTapped
         self.onCompleteTapped = onCompleteTapped
@@ -49,7 +49,7 @@ struct EndCreateTicketView: View {
 }
 
 // MARK: - Components
-extension EndCreateTicketView {
+extension EndAddTicketManualView {
     private var headerSection: some View {
         BackNavWithTitle(
             title: "티켓 추가하기",
@@ -257,7 +257,7 @@ extension EndCreateTicketView {
 #Preview {
     let sampleData = CreateTicketFormData()
     
-    EndCreateTicketView(
+    EndAddTicketManualView(
         ticketData: sampleData,
         onAddFeelingTapped: {},
         onEditTicketTapped: {},

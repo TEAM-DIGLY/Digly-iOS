@@ -32,7 +32,7 @@ enum TicketCreationType {
     }
 }
 
-struct AddTicketView: View {
+struct StartAddTicketManualView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selectedType: TicketCreationType?
 
@@ -138,5 +138,5 @@ struct TicketOptionCard: View {
 }
 
 #Preview {
-    AddTicketView()
+    StartAddTicketManualView()
 }

@@ -14,7 +14,6 @@ struct PopupViewModifier: ViewModifier {
             .overlay {
                 if manager.isPresented, let popupType = manager.currentPopupType {
                     if case .custom(let view) = popupType {
-                        // Custom views handle their own background and animation
                         AnyView(view)
                     } else {
                         ZStack {

@@ -2,14 +2,14 @@ import SwiftUI
 import Combine
 
 @MainActor
-final class EndCreateTicketViewModel: ObservableObject {
+final class EndAddTicketManualViewModel: ObservableObject {
     @Published var ticketData: CreateTicketFormData
     
     private let ticketUseCase: TicketUseCase
     
     init(
         ticketData: CreateTicketFormData,
-        ticketUseCase: TicketUseCase = TicketUseCase(ticketRepository: TicketRepository())
+        ticketUseCase: TicketUseCase = TicketUseCase()
     ) {
         self.ticketData = ticketData
         self.ticketUseCase = ticketUseCase

@@ -48,4 +48,21 @@ final class NoteRepository: NoteRepositoryProtocol {
         )
         return response.toDomain()
     }
+
+    func deleteNote(noteId: Int) async throws {
+        let _: DeleteNoteResponse = try await networkAPI.request(NoteEndpoint.deleteNote(noteId))
+    }
+
+    func getNotesWithoutTicket(page: Int, size: Int) async throws -> NotesResult {
+        let query: [String: String] = [
+            "page": "\(page)",
+            "size": "\(size)"
+        ]
+
+        let response: GetNotesWithoutTicketResponse = try await networkAPI.request(
+            NoteEndpoint.getNotesWithoutTicket,
+            queryParameters: query
+        )
+        return response.toDomain()
+    }
 }

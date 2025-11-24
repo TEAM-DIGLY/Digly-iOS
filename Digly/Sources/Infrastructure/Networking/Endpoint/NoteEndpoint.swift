@@ -5,6 +5,8 @@ enum NoteEndpoint: APIEndpoint {
     case getNote(Int)
     case putNote(Int)
     case getNotesByTicket(Int)
+    case deleteNote(Int)
+    case getNotesWithoutTicket
     
     var path: String {
         switch self {
@@ -14,23 +16,29 @@ enum NoteEndpoint: APIEndpoint {
             return "/api/v1/note/\(noteId)"
         case .getNotesByTicket(let ticketId):
             return "/api/v1/note/ticket/\(ticketId)"
+        case .deleteNote(let noteId):
+            return "/api/v1/note/\(noteId)"
+        case .getNotesWithoutTicket:
+            return "/api/v1/note/ticket-none"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getNote, .getNotesByTicket:
+        case .getNote, .getNotesByTicket, .getNotesWithoutTicket:
             return .GET
         case .postNote:
             return .POST
         case .putNote:
             return .PUT
+        case .deleteNote:
+            return .DELETE
         }
     }
     
     var tokenType: TokenType {
         switch self {
-        case .postNote, .getNote, .putNote, .getNotesByTicket:
+        case .postNote, .getNote, .putNote, .getNotesByTicket, .deleteNote, .getNotesWithoutTicket:
             return .accessToken
         }
     }

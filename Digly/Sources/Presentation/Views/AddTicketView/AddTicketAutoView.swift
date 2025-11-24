@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct TicketAutoInputView: View {
-    @StateObject private var viewModel = TicketAutoInputViewModel()
+struct AddTicketAutoView: View {
+    @StateObject private var viewModel = AddTicketAutoViewModel()
     
     @State private var isGuidePopupPresented: Bool = false
     @State private var isAnimating: Bool = false
@@ -59,7 +59,7 @@ struct TicketAutoInputView: View {
 }
 
 // MARK: - Components
-extension TicketAutoInputView {
+extension AddTicketAutoView {
     private var guidanceSection: some View {
         VStack(spacing: 14) {
             Text("[안내] 한 번에 1개의 티켓 정보만 등록할 수 있어요.")
@@ -131,5 +131,5 @@ extension TicketAutoInputView {
 }
 
 #Preview {
-    TicketAutoInputView()
+    AddTicketAutoView()
 }

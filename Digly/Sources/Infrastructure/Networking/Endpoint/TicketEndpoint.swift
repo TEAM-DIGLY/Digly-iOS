@@ -6,6 +6,8 @@ enum TicketEndpoint: APIEndpoint {
     case getTicket(Int)
     case putTicket(Int)
     case deleteTicket(Int)
+    case getTicketsForDiggingNote
+    case getTicketsComplete
     
     var path: String {
         switch self {
@@ -13,12 +15,16 @@ enum TicketEndpoint: APIEndpoint {
             return "/api/v1/ticket"
         case .getTicket(let ticketId), .putTicket(let ticketId), .deleteTicket(let ticketId):
             return "/api/v1/ticket/\(ticketId)"
+        case .getTicketsForDiggingNote:
+            return "/api/v1/ticket/digging-note"
+        case .getTicketsComplete:
+            return "/api/v1/ticket/complete"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .getTickets, .getTicket:
+        case .getTickets, .getTicket, .getTicketsForDiggingNote, .getTicketsComplete:
             return .GET
         case .postTicket:
             return .POST

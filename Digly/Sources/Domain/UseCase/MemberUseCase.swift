@@ -3,7 +3,7 @@ import Foundation
 final class MemberUseCase {
     private let memberRepository: MemberRepositoryProtocol
 
-    init(memberRepository: MemberRepositoryProtocol) {
+    init(memberRepository: MemberRepositoryProtocol = MemberRepository()) {
         self.memberRepository = memberRepository
     }
 

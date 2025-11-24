@@ -9,16 +9,23 @@ final class TicketUseCase {
     }
 
     func getBigTickets() async throws -> [Ticket] {
-        let result = try await ticketRepository.getTickets(startAt: nil, endAt: nil, page: nil, size: 5)
+        let result = try await ticketRepository.getTickets(startAt: nil, endAt: nil, page: nil, size: 5, keyword: nil)
         return result.tickets
     }
 
     func getAllTickets(
         startDate: Date? = nil,
         endDate: Date? = nil,
-        page: Int = 0
+        page: Int = 0,
+        keyword: String? = nil
     ) async throws -> TicketsResult {
-        return try await ticketRepository.getTickets(startAt: startDate, endAt: endDate, page: page, size: nil)
+        return try await ticketRepository.getTickets(
+            startAt: startDate,
+            endAt: endDate,
+            page: page,
+            size: nil,
+            keyword: keyword
+        )
     }
 
     func getTicketDetail(ticketId: Int) async throws -> Ticket {
@@ -97,5 +104,13 @@ final class TicketUseCase {
 
     func deleteTicket(ticketId: Int, withNotes: Bool) async throws {
         try await ticketRepository.deleteTicket(ticketId: ticketId, isOptional: withNotes)
+    }
+
+    func getTicketsForDiggingNote(page: Int = 0, size: Int = 20) async throws -> TicketDiggingNotesResult {
+        try await ticketRepository.getTicketsForDiggingNote(page: page, size: size)
+    }
+
+    func getTicketsComplete() async throws -> [TicketComplete] {
+        try await ticketRepository.getTicketsComplete()
     }
 }

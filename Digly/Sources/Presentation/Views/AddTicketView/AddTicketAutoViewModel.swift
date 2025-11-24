@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-class TicketAutoInputViewModel: ObservableObject {
+class AddTicketAutoViewModel: ObservableObject {
     @Published var ticketText: String = ""
     @Published var isProcessing: Bool = false
     @Published var extractedData: CreateTicketFormData?

@@ -23,7 +23,6 @@ struct GetTicketsResponse: Codable {
         let price: Int?
         let color: [String]
         let feeling: [String]
-        let isDeleted: Bool
 
         func toDomain() -> Ticket {
             Ticket(
@@ -74,7 +73,6 @@ struct PostTicketResponse: Codable {
         let price: Int?
         let color: [String]
         let feeling: [String]
-        let isDeleted: Bool
     }
 
     func toDomain() -> Ticket {
@@ -108,7 +106,30 @@ struct GetTicketResponse: Codable {
         let price: Int?
         let color: [String]
         let feeling: [String]
-        let isDeleted: Bool
+        let notes: [TicketNoteDTO]?
+
+        struct TicketNoteDTO: Codable {
+            let id: Int
+            let contents: [NoteContentDTO]
+            let updatedAt: String
+
+            struct NoteContentDTO: Codable {
+                let question: String
+                let answer: String
+
+                func toDomain() -> NoteContent {
+                    NoteContent(question: question, answer: answer)
+                }
+            }
+
+            func toDomain() -> Note {
+                Note(
+                    id: id,
+                    contents: contents.map { $0.toDomain() },
+                    updatedAt: updatedAt.toDate()
+                )
+            }
+        }
     }
 
     func toDomain() -> Ticket {
@@ -120,7 +141,8 @@ struct GetTicketResponse: Codable {
             count: data.count,
             seatNumber: data.seatNumber,
             price: data.price,
-            emotions: data.feeling.map { Emotion(rawValue: $0) ?? .excited }
+            emotions: data.feeling.map { Emotion(rawValue: $0) ?? .excited },
+            notes: data.notes?.map { $0.toDomain() }
         )
     }
 }
@@ -177,8 +199,93 @@ struct DeleteTicketResponse: Codable {
     let data: EmptyData
 }
 
+// MARK: - GET /api/v1/ticket/digging-note
+struct GetTicketsForDiggingNoteResponse: Codable {
+    let status: Int
+    let message: String
+    let data: TicketsPageData
+
+    struct TicketsPageData: Codable {
+        let tickets: [TicketElement]
+        let pageInfo: Pagination
+
+        struct TicketElement: Codable {
+            let id: Int
+            let name: String
+            let lastModifiedAt: String
+            let noteCount: Int
+
+            func toDomain() -> TicketDiggingNote {
+                TicketDiggingNote(
+                    id: id,
+                    name: name,
+                    lastModifiedAt: lastModifiedAt.toDate(),
+                    noteCount: noteCount
+                )
+            }
+        }
+    }
+
+    func toDomain() -> TicketDiggingNotesResult {
+        TicketDiggingNotesResult(
+            tickets: data.tickets.map { $0.toDomain() },
+            pageInfo: data.pageInfo
+        )
+    }
+}
+
+// MARK: - GET /api/v1/ticket/complete
+struct GetTicketsCompleteResponse: Codable {
+    let status: Int
+    let message: String
+    let data: TicketsCompleteData
+
+    struct TicketsCompleteData: Codable {
+        let tickets: [TicketCompleteDTO]
+
+        struct TicketCompleteDTO: Codable {
+            let id: Int
+            let name: String
+            let performanceTime: String
+            let place: String
+
+            func toDomain() -> TicketComplete {
+                TicketComplete(
+                    id: id,
+                    name: name,
+                    performanceTime: performanceTime.toDate(),
+                    place: place
+                )
+            }
+        }
+    }
+
+    func toDomain() -> [TicketComplete] {
+        data.tickets.map { $0.toDomain() }
+    }
+}
+
 // MARK: - Domain Results
 struct TicketsResult {
     let tickets: [Ticket]
     let pageInfo: Pagination
+}
+
+struct TicketDiggingNotesResult {
+    let tickets: [TicketDiggingNote]
+    let pageInfo: Pagination
+}
+
+struct TicketDiggingNote {
+    let id: Int
+    let name: String
+    let lastModifiedAt: Date
+    let noteCount: Int
+}
+
+struct TicketComplete {
+    let id: Int
+    let name: String
+    let performanceTime: Date
+    let place: String
 }

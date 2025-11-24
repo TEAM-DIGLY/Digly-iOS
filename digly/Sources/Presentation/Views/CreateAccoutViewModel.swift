@@ -32,7 +32,12 @@ class CreateAccountViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(accessToken: String, refreshToken: String, authUseCase: AuthUseCase = AuthUseCase(), memberUseCase: MemberUseCase = MemberUseCase(memberRepository: MemberRepository())) {
+    init(
+        accessToken: String,
+        refreshToken: String,
+        authUseCase: AuthUseCase = AuthUseCase(),
+        memberUseCase: MemberUseCase = MemberUseCase()
+    ) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
         self.authUseCase = authUseCase

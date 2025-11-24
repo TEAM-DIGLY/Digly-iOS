@@ -10,7 +10,7 @@ struct TicketFlowNavigationStack: View {
     }
     
     var body: some View {
-        AddTicketView()
+        StartAddTicketManualView()
             .environmentObject(router)
     }
     
@@ -18,13 +18,13 @@ struct TicketFlowNavigationStack: View {
     private func destinationView(for route: TicketFlowRoute) -> some View {
         switch route {
         case .addTicket: 
-            AddTicketView()
+            StartAddTicketManualView()
         case .ticketAutoInput:
-            TicketAutoInputView()
+            AddTicketAutoView()
         case .createTicketForm: 
-            CreateTicketFormView()
+            AddTicketManualView()
         case .endCreateTicket(let ticketData): 
-            EndCreateTicketView(
+            EndAddTicketManualView(
                 ticketData: ticketData,
                 onAddFeelingTapped: {
                     router.push(to: .addFeelingView)

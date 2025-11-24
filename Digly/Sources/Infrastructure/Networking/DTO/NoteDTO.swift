@@ -151,6 +151,34 @@ struct GetNotesByTicketResponse: Codable {
     }
 }
 
+// MARK: - DELETE /api/v1/note/{noteId}
+/// - Note: `RequestDTO 불필요`
+struct DeleteNoteResponse: Codable {
+    let status: Int
+    let message: String
+    let data: EmptyData
+}
+
+// MARK: - GET /api/v1/note/ticket-none
+/// - Note: `RequestDTO 불필요` (query parameters: pageable)
+struct GetNotesWithoutTicketResponse: Codable {
+    let status: Int
+    let message: String
+    let data: NotesData
+
+    struct NotesData: Codable {
+        let notes: [GetNotesByTicketResponse.NotesData.NoteDTO]
+        let pageInfo: Pagination
+    }
+
+    func toDomain() -> NotesResult {
+        NotesResult(
+            notes: data.notes.map { $0.toDomain() },
+            pageInfo: data.pageInfo
+        )
+    }
+}
+
 // MARK: - Domain Results
 struct NotesResult {
     let notes: [Note]

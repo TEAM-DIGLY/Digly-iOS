@@ -11,7 +11,8 @@ final class TicketRepository: TicketRepositoryProtocol {
         startAt: Date? = nil,
         endAt: Date? = nil,
         page: Int? = nil,
-        size: Int? = nil
+        size: Int? = nil,
+        keyword: String? = nil
     ) async throws -> TicketsResult {
         var queryParams: [String: String] = [:]
 
@@ -31,6 +32,10 @@ final class TicketRepository: TicketRepositoryProtocol {
 
         if let size = size {
             queryParams["size"] = String(size)
+        }
+
+        if let keyword = keyword {
+            queryParams["key"] = keyword
         }
 
         let response: GetTicketsResponse = try await networkAPI.request(
@@ -88,5 +93,23 @@ final class TicketRepository: TicketRepositoryProtocol {
             TicketEndpoint.deleteTicket(ticketId),
             queryParameters: ["isOptional": String(isOptional)]
         )
+    }
+
+    func getTicketsForDiggingNote(page: Int, size: Int) async throws -> TicketDiggingNotesResult {
+        let query: [String: String] = [
+            "page": "\(page)",
+            "size": "\(size)"
+        ]
+
+        let response: GetTicketsForDiggingNoteResponse = try await networkAPI.request(
+            TicketEndpoint.getTicketsForDiggingNote,
+            queryParameters: query
+        )
+        return response.toDomain()
+    }
+
+    func getTicketsComplete() async throws -> [TicketComplete] {
+        let response: GetTicketsCompleteResponse = try await networkAPI.request(TicketEndpoint.getTicketsComplete)
+        return response.toDomain()
     }
 }

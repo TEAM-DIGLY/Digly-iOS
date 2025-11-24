@@ -24,6 +24,14 @@ final class NoteUseCase {
         return try await noteRepository.getNotesByTicket(ticketId: ticketId, page: page, size: size)
     }
 
+    func deleteNote(noteId: Int) async throws {
+        try await noteRepository.deleteNote(noteId: noteId)
+    }
+
+    func getNotesWithoutTicket(page: Int = 0, size: Int = 20) async throws -> NotesResult {
+        try await noteRepository.getNotesWithoutTicket(page: page, size: size)
+    }
+
     func validateNoteData(contents: [NoteContent]) -> Bool {
         // contents 배열이 비어있지 않고, 각 content가 유효한지 확인
         guard !contents.isEmpty else { return false }

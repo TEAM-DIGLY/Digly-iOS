@@ -3,7 +3,7 @@ import Foundation
 final class QuestionUseCase {
     private let questionRepository: QuestionRepositoryProtocol
 
-    init(questionRepository: QuestionRepositoryProtocol) {
+    init(questionRepository: QuestionRepositoryProtocol = QuestionRepository()) {
         self.questionRepository = questionRepository
     }
 

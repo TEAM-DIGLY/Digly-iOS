@@ -4,7 +4,7 @@ import Combine
 final class CrawlingUseCase {
     private let crawlingRepository: CrawlingRepositoryProtocol
     
-    init(crawlingRepository: CrawlingRepositoryProtocol) {
+    init(crawlingRepository: CrawlingRepositoryProtocol = CrawlingRepository()) {
         self.crawlingRepository = crawlingRepository
     }
     

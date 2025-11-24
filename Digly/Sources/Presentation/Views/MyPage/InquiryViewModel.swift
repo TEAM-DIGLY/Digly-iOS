@@ -24,7 +24,7 @@ class InquiryViewModel: ObservableObject {
         !email.isEmpty && !title.isEmpty && !content.isEmpty && !isLoading
     }
 
-    init(questionUseCase: QuestionUseCase = QuestionUseCase(questionRepository: QuestionRepository())) {
+    init(questionUseCase: QuestionUseCase = QuestionUseCase()) {
         self.questionUseCase = questionUseCase
     }
 

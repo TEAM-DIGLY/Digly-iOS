@@ -6,10 +6,6 @@ enum CreateTicketStep: Int, CaseIterable {
     case venue = 2
     case ticketDetails = 3
     
-    var index: Int {
-        return self.rawValue
-    }
-    
     var screenTitle: String {
         switch self {
         case .title:
@@ -37,7 +33,7 @@ enum CreateTicketStep: Int, CaseIterable {
     }
     
     var progressPercentage: Double {
-        return Double(index + 1) / Double(Self.allCases.count)
+        return Double(self.rawValue + 1) / Double(Self.allCases.count)
     }
     
     func getFormattedTitle(with showName: String = "") -> String {

@@ -69,8 +69,7 @@ struct CreateAccountView: View {
                             authRouter.push(to: .onboardingConfirm(
                                 signUpResponse: signUpResponse,
                                 accessToken: accessToken,
-                                refreshToken: refreshToken,
-                                diglyType: selectedDiglyType
+                                refreshToken: refreshToken
                             ))
                         }
                     } else {

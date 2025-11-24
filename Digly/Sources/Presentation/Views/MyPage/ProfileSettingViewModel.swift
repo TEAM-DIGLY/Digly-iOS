@@ -14,7 +14,7 @@ class ProfileSettingViewModel: ObservableObject {
 
     let characters = Digly.data
 
-    init(memberUseCase: MemberUseCase = MemberUseCase(memberRepository: MemberRepository())) {
+    init(memberUseCase: MemberUseCase = MemberUseCase()) {
         self.memberUseCase = memberUseCase
     }
 

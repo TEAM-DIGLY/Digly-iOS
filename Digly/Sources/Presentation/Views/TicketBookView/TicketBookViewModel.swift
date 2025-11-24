@@ -23,7 +23,6 @@ class TicketBookViewModel: ObservableObject {
     }
     
     @Published var totalCnt: Int = 0
-    @Published var username: String = "username"
     
     @Published var currentPage: Int = 0
     @Published var hasMorePages: Bool = true

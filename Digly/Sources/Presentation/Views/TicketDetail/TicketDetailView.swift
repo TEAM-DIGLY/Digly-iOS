@@ -5,6 +5,7 @@ struct TicketDetailView: View {
     @StateObject var viewModel: TicketDetailViewModel = TicketDetailViewModel()
 
     let ticketId: Int
+    @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
     @State private var showEmotionBottomSheet = false
     
     var body: some View {
@@ -87,7 +88,7 @@ struct TicketDetailView: View {
             Image("ticket-base-big")
             
             VStack(alignment: .center, spacing: 0) {
-                Text("@username")
+                Text("@\(nicknameUD.isEmpty ? "username" : nicknameUD)")
                     .fontStyle(.body2)
                     .foregroundStyle(.opacityWhite300)
                     .padding(.top, 24)
@@ -274,10 +275,9 @@ struct TicketDetailView: View {
         @unknown default:
             await MainActor.run {
                 ToastManager.shared.show(.errorStringWithTask("스크린샷 저장"))
-            }
         }
     }
-
+}
     private func performSave(_ image: UIImage) async {
         do {
             try await PHPhotoLibrary.shared().performChanges {

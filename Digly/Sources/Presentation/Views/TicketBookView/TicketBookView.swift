@@ -3,6 +3,7 @@ import SwiftUI
 struct TicketBookView: View {
     @StateObject private var viewModel = TicketBookViewModel()
     @EnvironmentObject private var router: TicketBookRouter
+    @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
     
     @State private var showSortBottomSheet = false
     @State private var showFilterBottomSheet = false
@@ -37,7 +38,7 @@ struct TicketBookView: View {
     private var headerView: some View {
         HStack(alignment: .bottom) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(viewModel.username)'s\nticket book")
+                Text("\(displayNickname)'s\nticket book")
                     .fontStyle(.title2)
                     .foregroundStyle(.common100)
             }
@@ -130,4 +131,10 @@ struct TicketBookView: View {
 #Preview {
     TicketBookView()
         .environmentObject(TicketBookRouter())
+}
+
+private extension TicketBookView {
+    var displayNickname: String {
+        nicknameUD.isEmpty ? "username" : nicknameUD
+    }
 }

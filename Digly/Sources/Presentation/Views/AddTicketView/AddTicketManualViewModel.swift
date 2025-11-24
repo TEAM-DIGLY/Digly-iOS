@@ -16,7 +16,7 @@ enum DateTimeStep: String, CaseIterable {
 }
 
 @MainActor
-final class CreateTicketViewModel: ObservableObject {
+final class AddTicketManualViewModel: ObservableObject {
     @Published var formData = CreateTicketFormData()
     
     @Published var currentStep: CreateTicketStep = .title
@@ -162,7 +162,7 @@ final class CreateTicketViewModel: ObservableObject {
                 isLoading = false
                 ToastManager.shared.show(.success("티켓이 생성되었습니다."))
                 
-                // Navigate to EndCreateTicketView
+                // Navigate to EndAddTicketManualView
                 onTicketCreated?(formData)
             } catch {
                 isLoading = false
@@ -173,7 +173,7 @@ final class CreateTicketViewModel: ObservableObject {
     }
 }
 
-extension CreateTicketViewModel {
+extension AddTicketManualViewModel {
     private func setupTitleSearchObserver() {
         $formData
             .map { $0.showName }
