@@ -12,7 +12,7 @@ class TicketDetailViewModel: ObservableObject {
         count: 24,
         seatNumber: "@4",
         price: 20000,
-        emotions: [.distressed]
+        emotions: [.excited, .relaxed]
     )
     
     @Published var isLoading: Bool = false

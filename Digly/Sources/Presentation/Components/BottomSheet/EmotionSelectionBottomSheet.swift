@@ -24,8 +24,9 @@ struct EmotionSelectionBottomSheet: View {
     }
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             backgroundGradient
+                .animation(.spring(duration: 1.4), value: selectedEmotions)
             
             VStack(spacing: 0) {
                 headerSection
@@ -38,6 +39,8 @@ struct EmotionSelectionBottomSheet: View {
                     
                     emotionGridSection
                         .padding(.bottom, 32)
+                        .animation(.fastSpring, value: selectedEmotions)
+                    
                     selectedEmotionSection
                 }
                 .padding(.horizontal, 24)
@@ -48,6 +51,7 @@ struct EmotionSelectionBottomSheet: View {
                 bottomButton
             }
         }
+        .background(.bottomSheetBackground)
         .onAppear {
             selectedEmotions = currentEmotions
         }
@@ -138,22 +142,62 @@ struct EmotionSelectionBottomSheet: View {
         .padding(.horizontal, 24)
         .padding(.bottom, 34)
     }
-
+    
+@ViewBuilder
     private var backgroundGradient: some View {
         ZStack {
-            Color.bottomSheetBackground
-
+            // 1
             Circle()
-                .fill(.opacityWhite50)
-                .frame(width: 200, height: 200)
-                .offset(x: -100, y: 0)
-
+                .fill(circleColor(for: 0))
+                .blur(radius: 8)
+                .frame(width: 424, height: 424)
+                .offset(x: 64, y: 72)
+            // 2
             Circle()
-                .fill(.opacityWhite50)
-                .frame(width: 150, height: 150)
-                .offset(x: 120, y: 0)
+                .fill(circleColor(for: 1))
+                .blur(radius: 8)
+                .frame(width: 363, height: 363)
+                .offset(x: 93, y: 32)
+            // 3
+            Circle()
+                .fill(circleColor(for: 2))
+                .blur(radius: 8)
+                .frame(width: 300, height: 300)
+                .offset(x: -94, y: 0)
+            // 4
+            Circle()
+                .fill(circleColor(for: 3))
+                .blur(radius: 8)
+                .frame(width: 424, height: 424)
+                .offset(x: -64, y: 72)
+            // 5
+            Circle()
+                .fill(circleColor(for: 4))
+                .blur(radius: 8)
+                .frame(width: 363, height: 363)
+                .offset(x: -93, y: 32)
+            // 6
+            Circle()
+                .fill(circleColor(for: 5))
+                .blur(radius: 8)
+                .frame(width: 300, height: 300) 
+                .offset(x: 94, y: 0)
         }
-        .ignoresSafeArea()
+        .offset(y: 100)
+    }
+
+    private func circleColor(for index: Int) -> Color {
+        if selectedEmotions.isEmpty {
+            return .opacityWhite50
+        } else if selectedEmotions.count == 1 {
+            return selectedEmotions[0].color50.opacity(0.18)
+        } else {
+            if index < 3 {
+                return selectedEmotions[0].color50.opacity(0.18)
+            } else {
+                return selectedEmotions[1].color50.opacity(0.18)
+            }
+        }
     }
 
     private func updateTicketEmotions() {
@@ -185,7 +229,7 @@ struct EmotionSelectionBottomSheet: View {
 #Preview {
     EmotionSelectionBottomSheet(
         ticketId: 1,
-        currentEmotions: [.excited, .glad],
+        currentEmotions: [.excited, .relaxed],
         onEmotionsUpdated: { _ in }
     )
 }
