@@ -5,7 +5,8 @@ import Combine
 final class EditTicketViewModel: ObservableObject {
     @Published var formData = CreateTicketFormData()
     @Published var isLoading: Bool = false
-
+    @Published var dateTimeStep: DateTimeStep = .date
+    
     private let ticketUseCase: TicketUseCase
     private let originalTicket: Ticket
 
@@ -18,7 +19,6 @@ final class EditTicketViewModel: ObservableObject {
     ) {
         self.originalTicket = ticket
         self.ticketUseCase = ticketUseCase
-        self.onTicketUpdated = onTicketUpdated
 
         // Initialize form data with existing ticket info
         formData.showName = ticket.name
@@ -56,12 +56,35 @@ final class EditTicketViewModel: ObservableObject {
                 )
 
                 isLoading = false
-                onTicketUpdated?(updatedTicket)
             } catch {
                 isLoading = false
                 ToastManager.shared.show(.errorStringWithTask("티켓 수정"))
-                print("티켓 수정 실패: \(error)")
             }
+        }
+    }
+    
+    func setDateTimeFieldBinding(for step: DateTimeStep) -> Binding<Date> {
+        switch step {
+        case .date:
+            return Binding(
+                get: { self.formData.date ?? Date() },
+                set: { newValue in
+                    self.formData.updateDate(from: newValue)
+                }
+            )
+        case .time:
+            return Binding(
+                get: {
+                    if let time = self.formData.time { return time }
+                    var components = Calendar.current.dateComponents([.year, .month, .day], from: Date())
+                    components.hour = 15
+                    components.minute = 0
+                    return Calendar.current.date(from: components) ?? Date()
+                },
+                set: { newValue in
+                    self.formData.updateTime(from: newValue)
+                }
+            )
         }
     }
 

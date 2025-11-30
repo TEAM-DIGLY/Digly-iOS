@@ -1,193 +1,184 @@
 import SwiftUI
 
 struct EditTicketView: View {
-    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: EditTicketViewModel
+    @EnvironmentObject private var router: TicketBookRouter
+    
+    @State private var isDateFocused: Bool = false
+    @State private var isTimeFocused: Bool = false
+    @State private var isTimeSelected: Bool = false
+    
     @FocusState private var isFocused: Bool
-
-    var onTicketUpdated: ((Ticket) -> Void)?
-
-    init(ticket: Ticket, onTicketUpdated: ((Ticket) -> Void)? = nil) {
+    
+    init(ticket: Ticket) {
         self._viewModel = StateObject(wrappedValue: EditTicketViewModel(ticket: ticket))
-        self.onTicketUpdated = onTicketUpdated
     }
-
+    
     var body: some View {
-        DGScreen(
-            backgroundColor: .common0,
-            isLoading: viewModel.isLoading,
-            onClick: { isFocused = false }
-        ) {
+        DGScreen(backgroundColor: .common0, isLoading: viewModel.isLoading, onClick: { isFocused = false }) {
             VStack(spacing: 0) {
-                headerSection
-                    .padding(.bottom, 24)
-
+                TitleBackNavBar(title: "티켓 수정하기", isDarkMode: true) {
+                    Button(action: {
+                        viewModel.updateTicket()
+                    }) {
+                        Text("완료")
+                            .fontStyle(.headline2)
+                            .foregroundStyle(viewModel.isUpdateButtonEnabled ? .opacityWhite850 : .opacityWhite300)
+                    }
+                    .disabled(!viewModel.isUpdateButtonEnabled)
+                }
+                .padding(.bottom, 24)
+                
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing: 32) {
-                        formFieldView(
+                        DGFormField(
+                            value: $viewModel.formData.showName,
                             label: "극 제목",
-                            binding: $viewModel.formData.showName,
-                            placeholder: "ex) 프랑켄슈타인",
                             isRequired: true
                         )
-
-                        dateTimeSection
-
-                        formFieldView(
-                            label: "관람 장소",
-                            binding: $viewModel.formData.place,
-                            placeholder: "ex) 블루스퀘어 신한카드홀",
-                            isRequired: true
-                        )
-
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 4) {
-                                Text("(선택) 관람 횟수")
-                                    .fontStyle(.label2)
-                                    .foregroundStyle(.neutral300)
-                            }
-
-                            HStack(spacing: 12) {
-                                minusButton
-                                seatCounterTextField
-                                plusButton
-                            }
+                        
+                        HStack(spacing: 16) {
+                            dateTimeField(.date)
+                            dateTimeField(.time)
                         }
-
-                        formFieldView(
+                        
+                        
+                        DGFormField(
+                            value: $viewModel.formData.place,
+                            label: "관람 장소",
+                            isRequired: true
+                        )
+                        
+                        
+                        Text("(선택) 관람 횟수")
+                            .fontStyle(.label2)
+                            .foregroundStyle(.neutral300)
+                        
+                        
+                        HStack(spacing: 12) {
+                            minusButton
+                            seatCounterTextField
+                            plusButton
+                        }
+                        
+                        DGFormField(
+                            value: $viewModel.formData.seatNumber,
                             label: "(선택) 좌석 번호",
-                            binding: $viewModel.formData.seatNumber,
-                            placeholder: "ex) a열 j 32번",
                             isRequired: false
                         )
-
-                        VStack(alignment: .leading, spacing: 12) {
-                            Text("(선택) 티켓 가격")
-                                .fontStyle(.label2)
-                                .foregroundStyle(.neutral300)
-
-                            DGTextField(
-                                text: Binding(
-                                    get: { viewModel.formData.price == -1 ? "" : String(viewModel.formData.price) },
-                                    set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
-                                ),
-                                placeholder: "ex) 100,000",
-                                type: .createTicketOptional
-                            )
-                            .focused($isFocused)
-                            .keyboardType(.numberPad)
-                        }
+                        
+                        
+                        Text("(선택) 티켓 가격")
+                            .fontStyle(.label2)
+                            .foregroundStyle(.neutral300)
+                        
+                        DGTextField(
+                            text: Binding(
+                                get: { viewModel.formData.price == -1 ? "" : String(viewModel.formData.price) },
+                                set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
+                            ),
+                            placeholder: "ex) 100,000",
+                            type: .createTicketOptional
+                        )
+                        .focused($isFocused)
+                        .keyboardType(.numberPad)
+                        
                     }
                     .padding(.horizontal, 24)
                 }
             }
         }
+        
+        .overlay(alignment: .bottom) {
+            if isDateFocused || isTimeFocused {
+                VStack(spacing: 0) {
+                    if isDateFocused {
+                        DatePicker(
+                            "",
+                            selection: viewModel.setDateTimeFieldBinding(for: .date),
+                            displayedComponents: .date
+                        )
+                        .onTapGesture(count: 99){}
+                        .tint(.neutral300)
+                        .colorScheme(.dark)
+                        .datePickerStyle(GraphicalDatePickerStyle())
+                        .frame(width: 320)
+                    }
+                    
+                    if isTimeFocused {
+                        DatePicker(
+                            "",
+                            selection: viewModel.setDateTimeFieldBinding(for: .time),
+                            displayedComponents: .hourAndMinute
+                        )
+                        .tint(.common100)
+                        .datePickerStyle(.wheel)
+                        .tint(.neutral300)
+                        .colorScheme(.dark)
+                        .frame(width: 320)
+                    }
+                }
+                .padding(.vertical, 8)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .stroke(.opacityWhite100, lineWidth: 1)
+                )
+            }
+        }
         .onAppear {
             viewModel.onTicketUpdated = { ticket in
-                onTicketUpdated?(ticket)
-                dismiss()
+                router.pop()
             }
         }
     }
 }
 
+
 // MARK: - Components
 extension EditTicketView {
-    private var headerSection: some View {
-        TitleBackNavBar(title: "티켓 수정하기", isDarkMode: true) {
-            Button(action: {
-                viewModel.updateTicket()
-            }) {
-                Text("완료")
-                    .fontStyle(.headline2)
-                    .foregroundStyle(viewModel.isUpdateButtonEnabled ? .opacityWhite850 : .opacityWhite300)
-            }
-            .disabled(!viewModel.isUpdateButtonEnabled)
-        }
-    }
-
-    private var dateTimeSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 4) {
-                Text("관람 일시")
-                    .fontStyle(.label2)
-                    .foregroundStyle(.neutral300)
-
-                Text("*")
-                    .fontStyle(.label2)
-                    .foregroundStyle(.error)
-            }
-
-            HStack(spacing: 20) {
-                DatePicker(
-                    "",
-                    selection: Binding(
-                        get: { viewModel.formData.date ?? Date() },
-                        set: { viewModel.formData.updateDate(from: $0) }
-                    ),
-                    displayedComponents: .date
-                )
-                .labelsHidden()
-                .tint(.neutral300)
-                .colorScheme(.dark)
-                .frame(maxWidth: .infinity)
-                .frame(height: 57)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(.neutral900.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14)
-                                .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
-                        )
-                )
-
-                DatePicker(
-                    "",
-                    selection: Binding(
-                        get: { viewModel.formData.time ?? Date() },
-                        set: { viewModel.formData.updateTime(from: $0) }
-                    ),
-                    displayedComponents: .hourAndMinute
-                )
-                .labelsHidden()
-                .tint(.neutral300)
-                .colorScheme(.dark)
-                .frame(maxWidth: .infinity)
-                .frame(height: 57)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(.neutral900.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14)
-                                .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
-                        )
-                )
-            }
-        }
-    }
-
     @ViewBuilder
-    private func formFieldView(label: String, binding: Binding<String>, placeholder: String, isRequired: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 4) {
-                Text(label)
-                    .fontStyle(.label2)
-                    .foregroundStyle(.neutral300)
-
-                if isRequired {
-                    Text("*")
-                        .fontStyle(.label2)
-                        .foregroundStyle(.error)
+    private func dateTimeField(_ step: DateTimeStep) -> some View {
+        let isFieldFocused = step == .date ? isDateFocused : isTimeFocused
+        var value: String {
+            if step == .date {
+                viewModel.formData.date?.toyyyyMMddString() ?? "관람 일자"
+            } else {
+                if isTimeSelected {
+                    viewModel.formData.time?.toTimeString() ?? "관람 시간"
+                } else {
+                    "관람 시간"
                 }
             }
-
-            DGTextField(
-                text: binding,
-                placeholder: placeholder,
-                type: isRequired ? .createTicket : .createTicketOptional
-            )
-            .focused($isFocused)
         }
+        
+        Button(action: {
+            if step == .time {
+                isTimeSelected = true
+            }
+            isDateFocused = step == .date
+            isTimeFocused = step != .date
+            
+        }) {
+            HStack {
+                Text(value)
+                    .fontStyle(.headline1)
+                    .foregroundStyle(value.contains("관람") ? .opacityWhite300 : .neutral300)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                if value.contains("관람") {
+                    Image(step.rawValue)
+                }
+            }
+            .padding(.leading, 16)
+            .frame(height: 48)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isFieldFocused ? .opacityWhite600 : .opacityWhite100, lineWidth: isFieldFocused ? 1.5 : 1)
+                    .background(.opacityWhite50)
+            )
+        }
+        .contentTransition(.numericText())
     }
 
     private var minusButton: some View {

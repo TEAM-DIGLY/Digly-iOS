@@ -21,7 +21,7 @@ struct TicketNoteCardView: View {
             if isExpanded, !notes.isEmpty  {
                 VStack(spacing: 16) {
                     ForEach(notes) { note in
-                        noteSection(note)
+                        DGNoteCard(note: note)
                     }
                 }
                 .padding(.top, 20)
@@ -42,6 +42,7 @@ struct TicketNoteCardView: View {
                 endPoint: .bottomTrailing)
             )
         )
+        .animation(.mediumFastSpring, value: isExpanded)
         .onTapGesture {
             isExpanded.toggle()
         }
@@ -108,21 +109,5 @@ struct TicketNoteCardView: View {
                 Spacer()
             }
         }
-    }
-    
-    private func noteSection(_ note: Note) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(note.updatedAt.timeAgoString())
-                .fontStyle(.caption1)
-                .foregroundStyle(.neutral400)
-            
-//            Text(note.content)
-//                .fontStyle(.label2)
-//                .foregroundStyle(.neutral100)
-//                .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
-        .background(.opacityWhite50, in: RoundedRectangle(cornerRadius: 16))
     }
 }

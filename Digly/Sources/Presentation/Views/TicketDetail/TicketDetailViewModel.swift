@@ -19,9 +19,11 @@ class TicketDetailViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isScreenshotTaken: Bool = false
     @Published var isEmotionSheetPresent = false
-    @Published var isMenuSheetPresent = false
+    
+    @Published var isMenuPresent = false
     @Published var isEditViewPresent = false
     @Published var ticketDeleted = false
+    
     let ticketUseCase: TicketUseCase
     
     init(

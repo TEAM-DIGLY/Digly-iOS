@@ -3,16 +3,20 @@ import Photos
 
 struct TicketDetailView: View {
     @StateObject var viewModel: TicketDetailViewModel = TicketDetailViewModel()
-    @Environment(\.dismiss) private var dismiss
-
-    let ticketId: Int
     @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
+    
+    let ticketId: Int
+    let onNavigateToEdit: (Ticket) -> Void
+    let onNavigateReset: () -> Void
     
     var body: some View {
         DGScreen(
             horizontalPadding: 0,
             backgroundColor: .common0,
-            isLoading: viewModel.isLoading
+            isLoading: viewModel.isLoading,
+            onClick: {
+                viewModel.isMenuPresent = false
+            }
         ) {
             if let ticket = viewModel.ticket {
                 ScrollView(.vertical, showsIndicators: false) {
@@ -50,20 +54,19 @@ struct TicketDetailView: View {
                 .presentationBackground(.clear)
             }
         }
-        .fullScreenCover(isPresented: $viewModel.isEditViewPresent) {
-            if let ticket = viewModel.ticket {
-                EditTicketView(ticket: ticket) { updated in
-                    viewModel.ticket = updated
-                    ToastManager.shared.show(.success("티켓이 수정되었습니다"))
-                }
+        .overlay(alignment: .top) {
+            if let ticket = viewModel.ticket, viewModel.isMenuPresent {
+                menuSection(ticket)
             }
         }
+        .animation(.mediumSpring, value: viewModel.isMenuPresent)
+        
         .onAppear {
             viewModel.getTicketDetail(id: ticketId)
         }
         .onChange(of: viewModel.ticketDeleted) { deleted in
             if deleted {
-                dismiss()
+                onNavigateReset()
             }
         }
     }
@@ -76,19 +79,9 @@ struct TicketDetailView: View {
                 }) {
                     Image("download")
                 }
-
+                
                 Button(action: {
-                    PopupManager.shared.show(.custom(
-                        TicketMenuDropdown(
-                            onEditSelected: {
-                                viewModel.isEditViewPresent = true
-                            },
-                            onDeleteSelected: {
-                                viewModel.showDeleteConfirmation()
-                            }
-                        )
-                        .background(Color.black.opacity(0.001))
-                    ))
+                    viewModel.isMenuPresent = true
                 }) {
                     Image("detail")
                 }
@@ -101,6 +94,43 @@ struct TicketDetailView: View {
         Text(ticket.name)
             .fontStyle(.heading1)
             .foregroundStyle(.common100)
+    }
+    
+    private func menuSection(_ ticket: Ticket) -> some View {
+        ZStack (alignment: .top) {
+            Color.black.opacity(0.1).ignoresSafeArea()
+                .onTapGesture {
+                    viewModel.isMenuPresent = false
+                }
+            
+            VStack(alignment: .center, spacing: 0) {
+                Button(action: {
+                    onNavigateToEdit(ticket)
+                    viewModel.isMenuPresent = false
+                }) {
+                    Text("수정하기")
+                        .font(.body2)
+                        .foregroundStyle(.opacityWhite850)
+                        .frame(height: 52)
+                }
+                
+                Divider()
+                    .background(Color.opacityWhite100)
+                
+                Button(action: {
+                    viewModel.showDeleteConfirmation()
+                    viewModel.isMenuPresent = false
+                }) {
+                    Text("삭제하기")
+                        .font(.body2)
+                        .foregroundStyle(.opacityWhite850)
+                        .frame(height: 52)
+                }
+            }
+            .background(Color(hex: "222222"), in: RoundedRectangle(cornerRadius: 16))
+            .padding(.horizontal, 12)
+            .padding(.top, 64)
+        }
     }
     
     private func ticketCard(ticket: Ticket) -> some View {
@@ -172,7 +202,7 @@ struct TicketDetailView: View {
                 .padding(.leading, 12)
 
             VStack(spacing: 16) {
-                infoRow(title: "관람일", content: formatDate(ticket.time), subtitle: "#\(ticket.count)번째 관람")
+                infoRow(title: "관람일", content: ticket.time.toKoreanDateString(), subtitle: "#\(ticket.count)번째 관람")
 
                 infoRow(title: "장소", content: ticket.place)
 
@@ -342,15 +372,8 @@ struct TicketDetailView: View {
         case permissionDenied
         case saveFailed
     }
-
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 MM월 dd일 (E) HH:mm"
-        return formatter.string(from: date)
-    }
 }
 
 #Preview {
-    TicketDetailView(ticketId: 23)
+    TicketDetailView(ticketId: 23, onNavigateToEdit: {}, onNavigateReset: {})
 }

@@ -9,6 +9,9 @@ enum HomeRoute: BaseRoute {
     case profileSetting
     case agreementDetail(AgreementType)
     
+    case ticketDetail(Int)
+    case editTicket(Ticket)
+    
     var id: String {
         String(describing: self)
     }

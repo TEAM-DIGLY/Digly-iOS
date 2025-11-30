@@ -245,117 +245,72 @@ extension AddTicketManualView {
     private var ticketDetailsSection: some View {
         ScrollView(.vertical, showsIndicators: false) {
             VStack(spacing: 32) {
-                formFieldView(
+                DGFormField(
+                    value: $viewModel.formData.showName,
                     label: "극 제목",
-                    value: viewModel.formData.showName,
                     isRequired: true
                 )
                 
                 HStack(alignment: .bottom, spacing: 20) {
-                    formFieldView(
-                        label: "관람 일시",
-                        value: viewModel.formData.date?.toyyyyMMddString() ?? "관람 일자",
-                        isRequired: true
-                    )
-                    
-                    formFieldView(
-                        label: "",
-                        value: viewModel.formData.time?.toTimeString() ?? "관람 시간",
-                        isRequired: false
-                    )
+                    dateTimeField(.date)
+                    dateTimeField(.time)
                 }
                 
-                formFieldView(
+                DGFormField(
+                    value: $viewModel.formData.place,
                     label: "관람 장소",
-                    value: viewModel.formData.place,
                     isRequired: true
                 )
                 
-                VStack(spacing: 34) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 4) {
-                            Text("(선택) 관람 횟수")
-                                .fontStyle(.label2)
-                                .foregroundStyle(.neutral300)
-                        }
-                        
-                        HStack(spacing: 12) {
-                            minusButton
-                            seatCounterTextField
-                            plusButton
-                        }
-                    }
                     
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("(선택) 좌석 번호")
+                        Text("(선택) 관람 횟수")
                             .fontStyle(.label2)
                             .foregroundStyle(.neutral300)
-                        
-                        DGTextField(
-                            text: Binding(
-                                get: { viewModel.formData.seatNumber },
-                                set: { viewModel.updateSeatLocation($0) }
-                            ),
-                            placeholder: "ex) a열 j 32번",
-                            type: .createTicketOptional
-                        )
-                        .focused($isFocused)
+                    
+                    
+                    HStack(spacing: 12) {
+                        minusButton
+                        seatCounterTextField
+                        plusButton
                     }
                 
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("(선택) 티켓 가격")
-                            .fontStyle(.label2)
-                            .foregroundStyle(.neutral300)
-                        
-                        DGTextField(
-                            text: Binding(
-                                get: { String(viewModel.formData.price) },
-                                set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
-                            ),
-                            placeholder: "ex) 100,000",
-                            type: .createTicketOptional
-                        )
-                        .focused($isFocused)
-                        .keyboardType(.numberPad)
-                    }
-                }
-            }
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    @ViewBuilder
-    private func formFieldView(label: String, value: String, isRequired: Bool) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if !label.isEmpty {
-                HStack(spacing: 4) {
-                    Text(label)
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("(선택) 좌석 번호")
                         .fontStyle(.label2)
                         .foregroundStyle(.neutral300)
                     
-                    if isRequired {
-                        Text("*")
-                            .fontStyle(.label2)
-                            .foregroundStyle(.error)
-                    }
+                    DGTextField(
+                        text: Binding(
+                            get: { viewModel.formData.seatNumber },
+                            set: { viewModel.updateSeatLocation($0) }
+                        ),
+                        placeholder: "ex) a열 j 32번",
+                        type: .createTicketOptional
+                    )
+                    .focused($isFocused)
+                }
+                
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("(선택) 티켓 가격")
+                        .fontStyle(.label2)
+                        .foregroundStyle(.neutral300)
+                    
+                    DGTextField(
+                        text: Binding(
+                            get: { String(viewModel.formData.price) },
+                            set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
+                        ),
+                        placeholder: "ex) 100,000",
+                        type: .createTicketOptional
+                    )
+                    .focused($isFocused)
+                    .keyboardType(.numberPad)
                 }
             }
             
-            Text(value)
-                .fontStyle(.headline1)
-                .foregroundStyle(.neutral100)
-                .padding(.horizontal, 16)
-                .frame(height: 57)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(.neutral900.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 14)
-                                .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
-                        )
-                )
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var minusButton: some View {

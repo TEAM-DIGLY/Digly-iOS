@@ -5,8 +5,6 @@ enum TicketFlowRoute: BaseRoute {
     case ticketAutoInput
     case createTicketForm
     case endCreateTicket(ticketData: CreateTicketFormData)
-    case addFeelingView
-    case editTicketView
     
     var id: String {
         switch self {

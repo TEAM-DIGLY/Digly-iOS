@@ -21,29 +21,30 @@ class DiggingNoteViewModel: ObservableObject {
     
     func setExpandedState(for ticketId: Int, isExpanded: Bool) {
         if isExpanded {
-            expandedTicketId = ticketId
-            fetchNotesForTicket(ticketId)
+            Task {
+                await fetchNotesForTicket(ticketId)
+                expandedTicketId = ticketId
+            }
         } else if expandedTicketId == ticketId {
             expandedTicketId = nil
             notesForTicket = []
         }
     }
     
-    func fetchNotesForTicket(_ ticketId: Int) {
-        Task {
-            do {
-                isLoading = true
-                notesForTicket = []
-                let response = try await noteUseCase.getNotesByTicketId(ticketId: ticketId)
-                
-                notesForTicket = response.notes
-                isLoading = false
-            } catch {
-                isLoading = false
-                ToastManager.shared.show(.errorStringWithTask("노트 조회"))
-            }
+    func fetchNotesForTicket(_ ticketId: Int) async {
+        do {
+            isLoading = true
+            notesForTicket = []
+            let response = try await noteUseCase.getNotesByTicketId(ticketId: ticketId)
+            
+            notesForTicket = response.notes
+            isLoading = false
+        } catch {
+            isLoading = false
+            ToastManager.shared.show(.errorStringWithTask("노트 조회"))
         }
     }
+    
     
     func fetchDiggingNoteTickets() {
         Task {

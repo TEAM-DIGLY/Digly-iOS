@@ -43,6 +43,15 @@ struct HomeNavigationStack: View {
             TicketFlowNavigationStack(onFlowCompleted: {
                 router.pop() // Return to previous screen when ticket flow completes
             })
+            
+        case .ticketDetail(let ticketId):
+            TicketDetailView(
+                ticketId: ticketId,
+                onNavigateToEdit: { ticket in router.push(to: .editTicket(ticket))},
+                onNavigateReset: { router.reset() }
+            )
+        case .editTicket(let ticket):
+            EditTicketView(ticket: ticket)
         }
     }
     
@@ -70,19 +79,15 @@ struct HomeNavigationStack: View {
             EndAddTicketManualView(
                 ticketData: ticketData,
                 onAddFeelingTapped: {
-                    router.path.append(TicketFlowRoute.addFeelingView)
+                    // TODO: 연결 동작 정의
                 },
                 onEditTicketTapped: {
-                    router.path.append(TicketFlowRoute.editTicketView)
+                    // TODO: 연결 동작 정의
                 },
                 onCompleteTapped: {
-                    router.pop() // Go back to HomeView
+                    router.pop()
                 }
             )
-        case .addFeelingView:
-            PlaceholderView(title: "AddFeelingView", subtitle: "감정 입력 화면 (미구현)")
-        case .editTicketView:
-            PlaceholderView(title: "EditTicketView", subtitle: "티켓 정보 수정 화면 (미구현)")
         }
     }
 } 

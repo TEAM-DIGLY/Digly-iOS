@@ -37,12 +37,18 @@ struct TicketBookNavigationStack: View {
         switch route {
         case .ticketBook: 
             TicketBookView()
-        case .ticketDetail(let ticketId): 
-            TicketDetailView(ticketId: ticketId)
+        case .ticketDetail(let ticketId):
+            TicketDetailView(
+                ticketId: ticketId,
+                onNavigateToEdit: { ticket in router.push(to: .editTicket(ticket))},
+                onNavigateReset: { router.reset() }
+            )
         case .ticketFlow:
             TicketFlowNavigationStack(onFlowCompleted: {
                 router.pop() // Return to previous screen when ticket flow completes
             })
+        case .editTicket(let ticket):
+            EditTicketView(ticket: ticket)
         }
     }
     

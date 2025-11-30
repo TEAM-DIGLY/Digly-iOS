@@ -15,6 +15,7 @@ struct PopupViewModifier: ViewModifier {
                 if manager.isPresented, let popupType = manager.currentPopupType {
                     if case .custom(let view) = popupType {
                         AnyView(view)
+                            .animation(.fastSpring, value: manager.isAnimating)
                     } else {
                         ZStack {
                             Color.black

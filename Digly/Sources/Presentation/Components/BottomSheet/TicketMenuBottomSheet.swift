@@ -23,8 +23,6 @@ struct TicketMenuDropdown: View {
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
-            .background(Color(hex: "222222"))
-            .cornerRadius(14)
             .frame(width: 319)
             .padding(.top, 123)
             .padding(.trailing, 28)
