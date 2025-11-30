@@ -174,7 +174,6 @@ struct PutTicketResponse: Codable {
         let price: Int?
         let color: [String]
         let feeling: [String]
-        let isDeleted: Bool
     }
 
     func toDomain() -> Ticket {

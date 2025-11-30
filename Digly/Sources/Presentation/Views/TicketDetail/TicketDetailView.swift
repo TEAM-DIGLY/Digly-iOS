@@ -26,12 +26,12 @@ struct TicketDetailView: View {
                     ticketCard(ticket: ticket)
                         .padding(.bottom, 40)
                     basicInfoSection(ticket: ticket)
-
+                    
                     if let notes = ticket.notes, !notes.isEmpty {
                         notesSection(notes: notes)
                             .padding(.top, 40)
                     }
-
+                    
                     Spacer().frame(height: 120)
                 }
             }
@@ -46,6 +46,7 @@ struct TicketDetailView: View {
                     currentEmotions: ticket.emotions,
                     onEmotionsUpdated: { emotions in
                         viewModel.updateTicketEmotions(emotions)
+                        viewModel.isEmotionSheetPresent = false
                     }
                 )
                 .presentationDetents([.height(600)])
@@ -146,7 +147,7 @@ struct TicketDetailView: View {
                     .fontStyle(.body2)
                     .foregroundStyle(.opacityWhite300)
                     .padding(.top, 24)
-
+                
                 Spacer()
                 
                 if ticket.emotions.isEmpty {
@@ -192,7 +193,7 @@ struct TicketDetailView: View {
         .frame(width: 279, height: 376)
         .padding(.horizontal, 48)
     }
-
+    
     
     private func basicInfoSection(ticket: Ticket) -> some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -200,50 +201,56 @@ struct TicketDetailView: View {
                 .fontStyle(.body1)
                 .foregroundStyle(.opacityWhite800)
                 .padding(.leading, 12)
-
+            
             VStack(spacing: 16) {
                 infoRow(title: "관람일", content: ticket.time.toKoreanDateString(), subtitle: "#\(ticket.count)번째 관람")
-
+                
                 infoRow(title: "장소", content: ticket.place)
-
+                
                 if let seatNumber = ticket.seatNumber {
                     infoRow(title: "좌석", content: seatNumber)
                 }
-
+                
                 if let price = ticket.price {
                     infoRow(title: "가격", content: "\(price.formatted())원")
                 }
             }
             .padding(.horizontal, 18)
             .padding(.vertical, 16)
-            .background(
+            .background(.common0, in: UnevenRoundedRectangle(
+                topLeadingRadius: 10,
+                bottomLeadingRadius: 10,
+                bottomTrailingRadius: 24,
+                topTrailingRadius: 24
+            ))
+            .overlay {
                 UnevenRoundedRectangle(
                     topLeadingRadius: 10,
                     bottomLeadingRadius: 10,
                     bottomTrailingRadius: 24,
                     topTrailingRadius: 24
                 )
-                .stroke(.opacityWhite100, lineWidth: 1)
-            )
+                .stroke(.opacityWhite50, lineWidth: 1)
+            }
         }
         .padding(.horizontal, 24)
     }
-
+    
     private func notesSection(notes: [Note]) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(spacing: 0) {
                 Text("작성한 노트")
                     .fontStyle(.body1)
                     .foregroundStyle(.opacityWhite800)
-
+                
                 Text(" \(notes.count)")
                     .fontStyle(.body1)
                     .foregroundStyle(.opacityWhite800)
-
+                
                 Spacer()
             }
             .padding(.leading, 18)
-
+            
             VStack(spacing: 16) {
                 ForEach(notes) { note in
                     DGNoteCard(note: note)
@@ -252,7 +259,7 @@ struct TicketDetailView: View {
         }
         .padding(.horizontal, 24)
     }
-
+    
     
     
     private func infoRow(title: String, content: String, subtitle: String? = nil) -> some View {
@@ -261,19 +268,19 @@ struct TicketDetailView: View {
                 .fontStyle(.body2)
                 .foregroundStyle(.opacityWhite500)
                 .frame(width: 66, alignment: .leading)
-
+            
             VStack(alignment: .leading, spacing: 6) {
                 Text(content)
                     .fontStyle(.body2)
                     .foregroundStyle(.common100)
-
+                
                 if let subtitle = subtitle {
                     Text(subtitle)
                         .fontStyle(.body2)
                         .foregroundStyle(.common100)
                 }
             }
-
+            
             Spacer()
         }
     }
@@ -281,7 +288,7 @@ struct TicketDetailView: View {
     @MainActor
     func takeScreenshot(of ticket: Ticket?) {
         guard let ticket else { return }
-
+        
         Task {
             do {
                 let image = try await generateTicketImage(ticket: ticket)
@@ -292,43 +299,47 @@ struct TicketDetailView: View {
             }
         }
     }
-
+    
     @MainActor
     private func generateTicketImage(ticket: Ticket) async throws -> UIImage {
-        let ticketView = ticketCard(ticket: ticket)
+        let ticketView = AnyView(
+            VStack(spacing: 40){
+                ticketCard(ticket: ticket)
+                basicInfoSection(ticket: ticket)
+            }.frame(height: 750, alignment: .center).background(.bgDark)
+        )
+        
         let controller = UIHostingController(rootView: ticketView)
-
+        
         // Set fixed size for consistent rendering
-        let targetSize = CGSize(width: 279, height: 376)
+        let targetSize = CGSize(width: 327, height: 750)
         controller.view.frame = CGRect(origin: .zero, size: targetSize)
         controller.view.backgroundColor = .clear
-
+        
         // Get the current window scene
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first else {
             throw ScreenshotError.noWindow
         }
-
+        
         // Add to window temporarily for proper rendering
         window.addSubview(controller.view)
         controller.view.layoutIfNeeded()
-
+        
         // Create image renderer
         let renderer = UIGraphicsImageRenderer(size: targetSize)
         let image = renderer.image { context in
             controller.view.layer.render(in: context.cgContext)
         }
-
-        // Clean up
+        
         controller.view.removeFromSuperview()
-
+        
         return image
     }
-
+    
     private func saveImageToPhotos(_ image: UIImage) async {
-        // Check photo library authorization
         let status = PHPhotoLibrary.authorizationStatus(for: .addOnly)
-
+        
         switch status {
         case .authorized, .limited:
             await performSave(image)
@@ -348,15 +359,15 @@ struct TicketDetailView: View {
         @unknown default:
             await MainActor.run {
                 ToastManager.shared.show(.errorStringWithTask("스크린샷 저장"))
+            }
         }
     }
-}
     private func performSave(_ image: UIImage) async {
         do {
             try await PHPhotoLibrary.shared().performChanges {
                 PHAssetCreationRequest.creationRequestForAsset(from: image)
             }
-
+            
             await MainActor.run {
                 viewModel.isScreenshotTaken = true
             }
@@ -366,7 +377,7 @@ struct TicketDetailView: View {
             }
         }
     }
-
+    
     enum ScreenshotError: Error {
         case noWindow
         case permissionDenied
@@ -375,5 +386,5 @@ struct TicketDetailView: View {
 }
 
 #Preview {
-    TicketDetailView(ticketId: 23, onNavigateToEdit: {}, onNavigateReset: {})
+    TicketDetailView(ticketId: 23, onNavigateToEdit: {_ in }, onNavigateReset: {})
 }

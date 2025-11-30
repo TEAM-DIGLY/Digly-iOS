@@ -77,6 +77,7 @@ final class TicketUseCase {
             price: price,
             emotions: emotionEnums
         )
+        
         return try await ticketRepository.updateTicket(ticketId: ticketId, ticket: ticket)
     }
 

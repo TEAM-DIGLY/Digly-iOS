@@ -19,7 +19,7 @@ struct EditTicketView: View {
             VStack(spacing: 0) {
                 TitleBackNavBar(title: "티켓 수정하기", isDarkMode: true) {
                     Button(action: {
-                        viewModel.updateTicket()
+                        viewModel.updateTicket(onSuccess: {router.pop()})
                     }) {
                         Text("완료")
                             .fontStyle(.headline2)

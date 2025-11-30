@@ -32,6 +32,9 @@ struct TicketBookView: View {
             .background(.bottomSheetBackground)
             .presentationBackground(.bottomSheetBackground)
         }
+        .onAppear {
+            viewModel.refreshTickets()
+        }
     }
     
     // MARK: - Header View
@@ -101,8 +104,6 @@ struct TicketBookView: View {
                 .onTapGesture {
                     showFilterBottomSheet = true
                 }
-            
-            Image("search")
         }
         .padding(.horizontal, 16)
         .padding(.bottom, 8)

@@ -26,7 +26,14 @@ struct TicketBookNavigationStack: View {
                     }
             }
             .navigationDestination(for: TicketFlowRoute.self) { route in
-                ticketFlowDestinationView(for: route)
+                TicketFlowNavigationStack.destinationView(
+                    for: route,
+                    handlers: .init(
+                        push: { router.path.append($0) },
+                        pop: { router.pop() },
+                        completeFlow: { router.pop() }
+                    )
+                )
                     .swipeBackDisabled(route.disableSwipeBack)
             }
         }
@@ -49,46 +56,6 @@ struct TicketBookNavigationStack: View {
             })
         case .editTicket(let ticket):
             EditTicketView(ticket: ticket)
-        }
-    }
-    
-    @ViewBuilder
-    private func ticketFlowDestinationView(for route: TicketFlowRoute) -> some View {
-        switch route {
-        case .addTicket:
-            StartAddTicketManualView(
-                onNavigateToAutoInput: {
-                    router.path.append(TicketFlowRoute.ticketAutoInput)
-                },
-                onNavigateToCreateTicket: {
-                    router.path.append(TicketFlowRoute.createTicketForm)
-                }
-            )
-        case .ticketAutoInput:
-            AddTicketAutoView()
-        case .createTicketForm:
-            AddTicketManualView(
-                onNavigateToEndTicket: { ticketData in
-                    router.path.append(TicketFlowRoute.endCreateTicket(ticketData: ticketData))
-                }
-            )
-        case .endCreateTicket(let ticketData):
-            EndAddTicketManualView(
-                ticketData: ticketData,
-                onAddFeelingTapped: {
-                    router.path.append(TicketFlowRoute.addFeelingView)
-                },
-                onEditTicketTapped: {
-                    router.path.append(TicketFlowRoute.editTicketView)
-                },
-                onCompleteTapped: {
-                    router.pop() // Go back to TicketBookView
-                }
-            )
-        case .addFeelingView:
-            PlaceholderView(title: "AddFeelingView", subtitle: "감정 입력 화면 (미구현)")
-        case .editTicketView:
-            PlaceholderView(title: "EditTicketView", subtitle: "티켓 정보 수정 화면 (미구현)")
         }
     }
 } 

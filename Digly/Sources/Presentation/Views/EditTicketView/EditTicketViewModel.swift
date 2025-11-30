@@ -34,7 +34,7 @@ final class EditTicketViewModel: ObservableObject {
         return formData.isBasicInfoComplete
     }
 
-    func updateTicket() {
+    func updateTicket(onSuccess: () -> Void) {
         Task {
             do {
                 isLoading = true

@@ -19,12 +19,17 @@ struct HomeNavigationStack: View {
             .navigationDestination(for: HomeRoute.self) { route in
                 destinationView(for: route)
                     .swipeBackDisabled(route.disableSwipeBack)
-                    .onAppear {
-                    }
             }
             .navigationDestination(for: TicketFlowRoute.self) { route in
-                ticketFlowDestinationView(for: route)
-                    .swipeBackDisabled(route.disableSwipeBack)
+                TicketFlowNavigationStack.destinationView(
+                    for: route,
+                    handlers: .init(
+                        push: { router.path.append($0) },
+                        pop: { router.pop() },
+                        completeFlow: { router.pop() }
+                    )
+                )
+                .swipeBackDisabled(route.disableSwipeBack)
             }
         }
     }
@@ -52,42 +57,6 @@ struct HomeNavigationStack: View {
             )
         case .editTicket(let ticket):
             EditTicketView(ticket: ticket)
-        }
-    }
-    
-    @ViewBuilder
-    private func ticketFlowDestinationView(for route: TicketFlowRoute) -> some View {
-        switch route {
-        case .addTicket:
-            StartAddTicketManualView(
-                onNavigateToAutoInput: {
-                    router.path.append(TicketFlowRoute.ticketAutoInput)
-                },
-                onNavigateToCreateTicket: {
-                    router.path.append(TicketFlowRoute.createTicketForm)
-                }
-            )
-        case .ticketAutoInput:
-            AddTicketAutoView()
-        case .createTicketForm:
-            AddTicketManualView(
-                onNavigateToEndTicket: { ticketData in
-                    router.path.append(TicketFlowRoute.endCreateTicket(ticketData: ticketData))
-                }
-            )
-        case .endCreateTicket(let ticketData):
-            EndAddTicketManualView(
-                ticketData: ticketData,
-                onAddFeelingTapped: {
-                    // TODO: 연결 동작 정의
-                },
-                onEditTicketTapped: {
-                    // TODO: 연결 동작 정의
-                },
-                onCompleteTapped: {
-                    router.pop()
-                }
-            )
         }
     }
 } 

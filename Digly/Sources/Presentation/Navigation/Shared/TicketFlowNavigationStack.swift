@@ -10,38 +10,68 @@ struct TicketFlowNavigationStack: View {
     }
     
     var body: some View {
-        StartAddTicketManualView()
+        NavigationStack(path: $router.path) {
+            StartAddTicketManualView(
+                onNavigateToAutoInput: { router.push(to: .ticketAutoInput) },
+                onNavigateToCreateTicket: { router.push(to: .createTicketForm) }
+            )
             .environmentObject(router)
+            .navigationDestination(for: TicketFlowRoute.self) { route in
+                TicketFlowNavigationStack.destinationView(
+                    for: route,
+                    handlers: .init(
+                        push: { router.path.append($0) },
+                        pop: { router.pop() },
+                        completeFlow: { router.completeFlow() }
+                    )
+                )
+                .environmentObject(router)
+            }
+        }
     }
     
     @ViewBuilder
-    private func destinationView(for route: TicketFlowRoute) -> some View {
+    static func destinationView(
+        for route: TicketFlowRoute,
+        handlers: TicketFlowNavigationHandlers
+    ) -> some View {
         switch route {
         case .addTicket: 
-            StartAddTicketManualView()
+            StartAddTicketManualView(
+                onNavigateToAutoInput: {
+                    handlers.push(.ticketAutoInput)
+                },
+                onNavigateToCreateTicket: {
+                    handlers.push(.createTicketForm)
+                }
+            )
         case .ticketAutoInput:
             AddTicketAutoView()
         case .createTicketForm: 
-            AddTicketManualView()
+            AddTicketManualView(
+                onNavigateToEndTicket: { ticketData in
+                    handlers.push(.endCreateTicket(ticketData: ticketData))
+                }
+            )
         case .endCreateTicket(let ticketData): 
             EndAddTicketManualView(
                 ticketData: ticketData,
                 onAddFeelingTapped: {
-                    router.push(to: .addFeelingView)
                 },
                 onEditTicketTapped: {
-                    router.push(to: .editTicketView)
                 },
                 onCompleteTapped: {
-                    router.completeFlow()
+                    handlers.completeFlow()
                 }
             )
-        case .addFeelingView: 
-            PlaceholderView(title: "AddFeelingView", subtitle: "감정 입력 화면 (미구현)")
-        case .editTicketView: 
-            PlaceholderView(title: "EditTicketView", subtitle: "티켓 정보 수정 화면 (미구현)")
         }
     }
+}
+
+struct TicketFlowNavigationHandlers {
+    let push: (TicketFlowRoute) -> Void
+    let pop: () -> Void
+    let completeFlow: () -> Void
 }
 
 #Preview {

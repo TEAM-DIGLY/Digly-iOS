@@ -63,6 +63,7 @@ class TicketBookViewModel: ObservableObject {
     func refreshTickets() {
         guard !isLoading else { return }
         initializeFetch()
+        fetchBigTickets()
     }
     
     func loadNextPage() {

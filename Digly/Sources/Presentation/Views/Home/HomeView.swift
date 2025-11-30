@@ -15,9 +15,9 @@ struct HomeView: View {
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
             headerSection
-            mainSection
+            ticketThumbnailContent
             Spacer()
-            notesSection
+            notesContent
         }
         .sheet(isPresented: $viewModel.showEmotionBottomSheet) {
             if let ddayTicket = viewModel.ddayTicket {
@@ -37,7 +37,7 @@ struct HomeView: View {
         }
     }
 
-    private var notesSection: some View {
+    private var notesContent: some View {
         HStack(alignment: .bottom, spacing: 0) {
             VStack(spacing: 0) {
                 Image(authManager.avatarImageName)
@@ -73,7 +73,7 @@ struct HomeView: View {
                 )
             }
             
-            stackSection
+            ticketStackSection
                 .frame(maxWidth: .infinity)
         }
         .padding(.bottom, 120)
@@ -93,65 +93,87 @@ struct HomeView: View {
             
             Spacer()
             
-            Button(action:{
-                router.push(to: .alarmList)
-            }) {
-                Image("alert")
-            }
+            Button(action:{ router.push(to: .alarmList)}) { Image("alert")}
             
-            Button(action:{
-                router.push(to: .myPage)
-            }) {
-                Image(authManager.profileImageName)
-            }
+            Button(action:{ router.push(to: .myPage)}) { Image(authManager.profileImageName)}
         }
         .frame(height:80)
         .padding(.horizontal, 36)
     }
     
     @ViewBuilder
-    private var mainSection: some View {
+    private var ticketThumbnailContent: some View {
         VStack(alignment: .center) {
             if viewModel.tickets.isEmpty {
-                ZStack(alignment: .bottom) {
-                    Image(authManager.baseImageName)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 300, height: 300)
-                    
-                    Button(action: {
-                        router.path.append(TicketFlowRoute.addTicket)
-                    }) {
-                        Text("관람 예정 티켓 추가하기")
-                            .fontStyle(.headline1)
-                            .foregroundStyle(.neutral800)
-                            .padding(.vertical, 16)
-                            .frame(maxWidth: .infinity)
-                            .background(.common100, in: RoundedRectangle(cornerRadius: 16)
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.neutral200, lineWidth: 1.5)
-                            )
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)
-                }
-                .frame(width: 300, height: 300)
+                ticketThumbnailPlaceholder
             } else {
-                TicketScrollView(
-                    focusedIndex: $viewModel.focusedTicketIndex,
-                    onIndexChanged: { index in
-                        viewModel.updateFocusedTicket(index: index)
-                    },
-                    tickets:viewModel.tickets
-                )
+                ticketList
             }
         }
         .padding(.bottom, 16)
     }
     
+    private var ticketThumbnailPlaceholder: some View {
+        ZStack(alignment: .bottom) {
+            Image(authManager.baseImageName)
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 300, height: 300)
+            
+            Button(action: {
+                router.path.append(TicketFlowRoute.addTicket)
+            }) {
+                Text("관람 예정 티켓 추가하기")
+                    .fontStyle(.headline1)
+                    .foregroundStyle(.neutral800)
+                    .padding(.vertical, 16)
+                    .frame(maxWidth: .infinity)
+                    .background(.common100, in: RoundedRectangle(cornerRadius: 16)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.neutral200, lineWidth: 1.5)
+                    )
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 24)
+        }
+        .frame(width: 300, height: 300)
+    }
+    
+    private var ticketList: some View {
+        GeometryReader { geometry in
+            let itemWidth: CGFloat = 264
+            
+            ScrollViewReader { _ in
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(Array(viewModel.tickets.enumerated()), id: \.element.id) { index, ticket in
+                            ticketView(for: ticket, at: index, width: itemWidth)
+                                .scrollTransition { content, phase in
+                                    content.opacity(phase.isIdentity ? 1.0 : 0.8)
+                                }
+                                .id(index)
+                        }
+                    }
+                    .scrollTargetLayout()
+                    .padding(.horizontal, (geometry.size.width - itemWidth) / 2)
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .frame(height: 300)
+                .scrollPosition(id: .init(get: {
+                    viewModel.focusedTicketIndex
+                }, set: { newPosition in
+                    if let newIndex = newPosition, newIndex >= 0, newIndex < Digly.data.count {
+                        viewModel.updateFocusedTicket(index: newIndex)
+                    }
+                }))
+            }
+        }
+        .frame(height: 300)
+    }
+    
     @ViewBuilder
-    private var stackSection: some View {
+    private var ticketStackSection: some View {
         if viewModel.tickets.isEmpty {
             Text("아직 등록한\n티켓이 없어요")
                 .fontStyle(.body1)
@@ -218,6 +240,114 @@ struct HomeView: View {
             }
             .frame(width: 146, height: 197)
         }
+    }
+    
+    private func ticketView(for ticket: Ticket, at index: Int, width: CGFloat) -> some View {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let performanceDay = calendar.startOfDay(for: ticket.time)
+        
+        let components = calendar.dateComponents([.day], from: today, to: performanceDay)
+        
+        let daysUntil = components.day ?? 0
+        let isFocused = index == viewModel.focusedTicketIndex
+        
+        return ZStack {
+            switch (daysUntil) {
+            case 0:
+                Image("DDayBox")
+                    .aspectRatio(contentMode: .fit)
+                
+            case 1...3:
+                Image(authManager.liveBaseImageName)
+                    .aspectRatio(contentMode: .fit)
+                
+            default:
+                RoundedRectangle(cornerRadius: 28)
+                    .fill(.neutral50)
+                    .stroke(.neutral200, lineWidth: 1.5)
+                    .padding(1)
+            }
+            
+            VStack(alignment: 0 <= daysUntil && daysUntil < 4 ? .center : .leading, spacing: 0) {
+                Spacer()
+                
+                var ddayForegroundColor: Color {
+                    switch daysUntil {
+                    case 0:
+                        return .neutral900
+                    case 1...3:
+                        return .common100
+                    default:
+                        return authManager.digly.color
+                    }
+                }
+                
+                var foregroundColor: Color {
+                    switch daysUntil {
+                    case 0...3:
+                        return .common100
+                    default:
+                        return .neutral900
+                    }
+                }
+                
+                var backgroundColor: Color {
+                    switch daysUntil {
+                    case 0...3:
+                        return .opacityCool700
+                    default:
+                        return authManager.digly.lightColor
+                    }
+                }
+                
+                var ticketNameColor: Color {
+                    switch daysUntil {
+                    case 0:
+                        return .text0
+                    case 1...3:
+                        return authManager.digly.lightColor
+                    default:
+                        return .neutral400
+                    }
+                }
+                
+                Text(daysUntil == 0 ? "D-DAY" : "D\(daysUntil < 0 ? "+" : "")\(daysUntil * -1)")
+                    .fontStyle(.title1)
+                    .foregroundStyle(ddayForegroundColor)
+                    .padding(.bottom, 24)
+                    .padding(.horizontal, 8)
+                
+                Text(ticket.name)
+                    .fontStyle(.body2)
+                    .foregroundStyle(ticketNameColor)
+                    .padding(.bottom, 8)
+                    .padding(.horizontal, 8)
+                
+                Text(ticket.place)
+                    .fontStyle(.body2)
+                    .foregroundStyle(ticketNameColor)
+                    .padding(.horizontal, 8)
+                
+                Spacer()
+                
+                Button(action: {
+                    router.push(to: .ticketDetail(ticket.id))
+                }) {
+                    Text(ticket.name)
+                        .fontStyle(.heading2)
+                        .foregroundStyle(foregroundColor)
+                }
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity)
+                .background(backgroundColor, in: RoundedRectangle(cornerRadius: 20))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 24)
+        }
+        .frame(width: width, height: 280)
+        .scaleEffect(isFocused ? 1.0 : 0.9)
+        .animation(.spring, value: isFocused)
     }
 }
 
