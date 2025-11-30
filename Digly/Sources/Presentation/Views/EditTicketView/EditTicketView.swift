@@ -2,7 +2,7 @@ import SwiftUI
 
 struct EditTicketView: View {
     @StateObject private var viewModel: EditTicketViewModel
-    @EnvironmentObject private var router: TicketBookRouter
+    @Environment(\.dismiss) private var dismiss
     
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
@@ -19,7 +19,9 @@ struct EditTicketView: View {
             VStack(spacing: 0) {
                 TitleBackNavBar(title: "티켓 수정하기", isDarkMode: true) {
                     Button(action: {
-                        viewModel.updateTicket(onSuccess: {router.pop()})
+                        Task {
+                            await viewModel.updateTicket(onSuccess: { dismiss() })
+                        }
                     }) {
                         Text("완료")
                             .fontStyle(.headline2)
@@ -41,7 +43,6 @@ struct EditTicketView: View {
                             dateTimeField(.date)
                             dateTimeField(.time)
                         }
-                        
                         
                         DGFormField(
                             value: $viewModel.formData.place,
@@ -123,11 +124,6 @@ struct EditTicketView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(.opacityWhite100, lineWidth: 1)
                 )
-            }
-        }
-        .onAppear {
-            viewModel.onTicketUpdated = { ticket in
-                router.pop()
             }
         }
     }

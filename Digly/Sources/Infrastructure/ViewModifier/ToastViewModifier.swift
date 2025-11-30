@@ -8,10 +8,10 @@ struct ToastViewModifier: ViewModifier {
     
     func body(content: Content) -> some View {
         content
-            .overlay(alignment: .bottom) {
+            .overlay(alignment: .top) {
                 if isPresented, let toastType {
                     DGToast(toastType: toastType)
-                        .padding(.bottom, 40)
+                        .padding(.top, 40)
                         .padding(.horizontal, 24)
                         .opacity(isAnimating ? 1 : 0)
                         .offset(y: isAnimating ? 0 : -80)

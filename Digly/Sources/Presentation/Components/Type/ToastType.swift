@@ -23,12 +23,8 @@ enum ToastType {
         switch self {
         case .error, .errorStringWithTask, .errorWithMessage:
             return "exclamationmark.triangle.fill"
-        case .success:
+        default:
             return "checkmark.circle.fill"
         }
-    }
-    
-    var button: ButtonConfig? {
-        nil
     }
 }

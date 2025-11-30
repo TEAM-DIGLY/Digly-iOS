@@ -10,27 +10,12 @@ struct DGToast: View {
                 .font(.system(size: 16, weight: .medium))
             
             Text(toastType.text)
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.primary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            if let button = toastType.button {
-                Button(action: button.onClick) {
-                    Text(button.text)
-                        .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(.secondary)
-                }
-                .padding(.horizontal, 6)
-                .disabled(button.disabled)
-            }
+                .font(.label1)
+                .foregroundColor(.neutral50)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color(.systemGray6))
-                .shadow(color: .black.opacity(0.1), radius: 16)
-        )
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(.grayscale700, in: RoundedRectangle(cornerRadius: 8))
     }
     
     private var iconColor: Color {

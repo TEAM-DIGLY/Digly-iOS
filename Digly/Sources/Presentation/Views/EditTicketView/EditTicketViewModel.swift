@@ -9,9 +9,9 @@ final class EditTicketViewModel: ObservableObject {
     
     private let ticketUseCase: TicketUseCase
     private let originalTicket: Ticket
-
+    
     var onTicketUpdated: ((Ticket) -> Void)?
-
+    
     init(
         ticket: Ticket,
         ticketUseCase: TicketUseCase = TicketUseCase(),
@@ -19,7 +19,7 @@ final class EditTicketViewModel: ObservableObject {
     ) {
         self.originalTicket = ticket
         self.ticketUseCase = ticketUseCase
-
+        
         // Initialize form data with existing ticket info
         formData.showName = ticket.name
         formData.place = ticket.place
@@ -29,37 +29,39 @@ final class EditTicketViewModel: ObservableObject {
         formData.seatNumber = ticket.seatNumber ?? ""
         formData.price = ticket.price ?? -1
     }
-
+    
     var isUpdateButtonEnabled: Bool {
         return formData.isBasicInfoComplete
     }
-
-    func updateTicket(onSuccess: () -> Void) {
-        Task {
-            do {
-                isLoading = true
-                guard let performanceDateTime = formData.combinedPerformanceDateTime else {
-                    isLoading = false
-                    ToastManager.shared.show(.errorWithMessage("관람 일시가 올바르지 않습니다."))
-                    return
-                }
-
-                let updatedTicket = try await ticketUseCase.updateTicket(
-                    ticketId: originalTicket.id,
-                    name: formData.showName,
-                    time: performanceDateTime,
-                    place: formData.place,
-                    count: formData.count,
-                    seatNumber: formData.seatNumber.isEmpty ? nil : formData.seatNumber,
-                    price: formData.price == -1 ? nil : formData.price,
-                    emotions: originalTicket.emotions.map { $0.rawValue }
-                )
-
+    
+    func updateTicket(onSuccess: () -> Void) async {
+        isLoading = true
+        do {
+            guard let performanceDateTime = formData.combinedPerformanceDateTime else {
                 isLoading = false
-            } catch {
-                isLoading = false
-                ToastManager.shared.show(.errorStringWithTask("티켓 수정"))
+                ToastManager.shared.show(.errorWithMessage("관람 일시가 올바르지 않습니다."))
+                return
             }
+            
+            let _ = try await ticketUseCase.updateTicket(
+                ticketId: originalTicket.id,
+                name: formData.showName,
+                time: performanceDateTime,
+                place: formData.place,
+                count: formData.count,
+                seatNumber: formData.seatNumber.isEmpty ? nil : formData.seatNumber,
+                price: formData.price == -1 ? nil : formData.price,
+                emotions: originalTicket.emotions.map { $0.rawValue }
+            )
+            
+            isLoading = false
+            
+            ToastManager.shared.show(.success("티켓이 수정되었어요"))
+            onSuccess()
+            
+        } catch {
+            isLoading = false
+            ToastManager.shared.show(.errorStringWithTask("티켓 수정"))
         }
     }
     
