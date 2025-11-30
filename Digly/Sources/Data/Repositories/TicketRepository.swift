@@ -7,6 +7,41 @@ final class TicketRepository: TicketRepositoryProtocol {
         self.networkAPI = networkAPI
     }
 
+    // MARK: - 티켓 단일 조회
+    func getTicket(ticketId: Int) async throws -> Ticket {
+        let response: GetTicketResponse = try await networkAPI.request(TicketEndpoint.getTicket(ticketId))
+        return response.toDomain()
+    }
+    
+    // MARK: - 티켓 수정
+    func updateTicket(ticketId: Int, ticket: Ticket) async throws -> Ticket {
+        let request = PutTicketRequest(
+            name: ticket.name,
+            performanceTime: ticket.time.toISO8601String(),
+            place: ticket.place,
+            count: ticket.count,
+            seatNumber: ticket.seatNumber,
+            price: ticket.price,
+            color: ticket.emotions.map { $0.rawValue },
+            feeling: ticket.emotions.map { $0.rawValue }
+        )
+
+        let response: PutTicketResponse = try await networkAPI.request(
+            TicketEndpoint.putTicket(ticketId),
+            parameters: request.toDictionary()
+        )
+        return response.toDomain()
+    }
+    
+    // MARK: - 티켓 식제
+    func deleteTicket(ticketId: Int, isOptional: Bool) async throws {
+        let _: DeleteTicketResponse = try await networkAPI.request(
+            TicketEndpoint.deleteTicket(ticketId),
+            queryParameters: ["isOptional": String(isOptional)]
+        )
+    }
+    
+    // MARK: - 티켓 조회
     func getTickets(
         startAt: Date? = nil,
         endAt: Date? = nil,
@@ -45,11 +80,7 @@ final class TicketRepository: TicketRepositoryProtocol {
         return response.toDomain()
     }
 
-    func getTicket(ticketId: Int) async throws -> Ticket {
-        let response: GetTicketResponse = try await networkAPI.request(TicketEndpoint.getTicket(ticketId))
-        return response.toDomain()
-    }
-
+    // MARK: - 티켓 생성
     func createTicket(ticket: Ticket) async throws -> Ticket {
         let request = PostTicketRequest(
             name: ticket.name,
@@ -61,40 +92,16 @@ final class TicketRepository: TicketRepositoryProtocol {
             color: ticket.emotions.map { $0.rawValue },
             feeling: ticket.emotions.map { $0.rawValue }
         )
-
+        
         let response: PostTicketResponse = try await networkAPI.request(
             TicketEndpoint.postTicket,
             parameters: request.toDictionary()
         )
         return response.toDomain()
     }
-
-    func updateTicket(ticketId: Int, ticket: Ticket) async throws -> Ticket {
-        let request = PutTicketRequest(
-            name: ticket.name,
-            performanceTime: ticket.time.toISO8601String(),
-            place: ticket.place,
-            count: ticket.count,
-            seatNumber: ticket.seatNumber,
-            price: ticket.price,
-            color: ticket.emotions.map { $0.rawValue },
-            feeling: ticket.emotions.map { $0.rawValue }
-        )
-
-        let response: PutTicketResponse = try await networkAPI.request(
-            TicketEndpoint.putTicket(ticketId),
-            parameters: request.toDictionary()
-        )
-        return response.toDomain()
-    }
-
-    func deleteTicket(ticketId: Int, isOptional: Bool) async throws {
-        let _: DeleteTicketResponse = try await networkAPI.request(
-            TicketEndpoint.deleteTicket(ticketId),
-            queryParameters: ["isOptional": String(isOptional)]
-        )
-    }
-
+    
+    // MARK: - 디깅노트 메인 화면 api
+    // TODO: 연결
     func getTicketsForDiggingNote(page: Int, size: Int) async throws -> TicketDiggingNotesResult {
         let query: [String: String] = [
             "page": "\(page)",
@@ -107,7 +114,9 @@ final class TicketRepository: TicketRepositoryProtocol {
         )
         return response.toDomain()
     }
-
+    
+    // MARK: - 오늘의 관람, 즐거우셨나요? 화면 api
+    // TODO: 연결
     func getTicketsComplete() async throws -> [TicketComplete] {
         let response: GetTicketsCompleteResponse = try await networkAPI.request(TicketEndpoint.getTicketsComplete)
         return response.toDomain()

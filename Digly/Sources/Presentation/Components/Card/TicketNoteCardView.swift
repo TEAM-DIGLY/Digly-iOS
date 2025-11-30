@@ -1,18 +1,16 @@
 import SwiftUI
 
 struct TicketNoteCardView: View {
-    let ticketWithNotes: TicketWithNotes
+    let ticket: TicketDiggingNote
+    let notes: [Note]
     
     @Binding var isExpanded: Bool
     
     private var ticketGradient: LinearGradient {
-        let colors = ticketWithNotes.ticket.emotions.map { $0.color }
-        if colors.isEmpty {
+        if !isExpanded {
             return LinearGradient(colors: [.neutral800, .neutral700], startPoint: .topLeading, endPoint: .bottomTrailing)
-        } else if colors.count == 1 {
-            return LinearGradient(colors: [colors[0].opacity(0.2), colors[0].opacity(0.1)], startPoint: .topLeading, endPoint: .bottomTrailing)
         } else {
-            return LinearGradient(colors: colors.map{ $0.opacity(0.2) }, startPoint: .topLeading, endPoint: .bottomTrailing)
+            return LinearGradient(colors: [ Emotion.excited.color50, Emotion.gloomy.color50], startPoint: .topLeading, endPoint: .bottomTrailing)
         }
     }
     
@@ -20,9 +18,9 @@ struct TicketNoteCardView: View {
         VStack(spacing: 0) {
             upperSection
             
-            if isExpanded, !ticketWithNotes.notes.isEmpty  {
+            if isExpanded, !notes.isEmpty  {
                 VStack(spacing: 16) {
-                    ForEach(ticketWithNotes.notes) { note in
+                    ForEach(notes) { note in
                         noteSection(note)
                     }
                 }
@@ -54,7 +52,7 @@ struct TicketNoteCardView: View {
     private var upperSection: some View {
         VStack(spacing: 12) {
             HStack {
-                Text(ticketWithNotes.ticket.name)
+                Text(ticket.name)
                     .fontStyle(.body2)
                     .foregroundStyle(.common100)
                     .multilineTextAlignment(.leading)
@@ -80,7 +78,7 @@ struct TicketNoteCardView: View {
                         .frame(width: 12, height: 12)
                     
                     
-                    Text("\(ticketWithNotes.noteCount)개의 노트")
+                    Text("\(ticket.noteCount)개의 노트")
                         .fontStyle(.caption1)
                         .foregroundStyle(.opacityWhite850)
                 }
@@ -91,7 +89,7 @@ struct TicketNoteCardView: View {
                         .stroke(.opacityWhite100, lineWidth: 1)
                 )
                 
-                if !ticketWithNotes.formattedLastNoteDate.isEmpty, !isExpanded {
+                if !isExpanded {
                     HStack(spacing: 4) {
                         Text("최근 작성일")
                             .fontStyle(.caption1)
@@ -101,7 +99,7 @@ struct TicketNoteCardView: View {
                             .fill(.common100.opacity(0.7))
                             .frame(width: 2, height: 2)
                         
-                        Text(ticketWithNotes.formattedLastNoteDate)
+                        Text(ticket.lastModifiedAt.toyyyyMMddString())
                             .fontStyle(.caption1)
                             .foregroundStyle(.common100.opacity(0.7))
                     }

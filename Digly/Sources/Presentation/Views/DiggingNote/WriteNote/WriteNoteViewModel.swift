@@ -22,7 +22,6 @@ class WriteNoteViewModel: ObservableObject {
 
     func toggleGuideMode() {
         isGuideMode.toggle()
-        // 모드 전환 시 내용 초기화
         if isGuideMode {
             freeText = ""
         } else {

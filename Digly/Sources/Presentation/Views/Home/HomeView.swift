@@ -8,6 +8,10 @@ struct HomeView: View {
     @StateObject private var popupManager = PopupManager.shared
     @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
 
+    var displayNickname: String {
+        nicknameUD.isEmpty ? authManager.nickname : nicknameUD
+    }
+    
     var body: some View {
         DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
             headerSection
@@ -24,7 +28,7 @@ struct HomeView: View {
                         viewModel.handleEmotionComplete(emotions: emotions)
                     }
                 )
-                .presentationDetents([.height(604)])
+                .presentationDetents([.height(600)])
                 .presentationDragIndicator(.hidden)
             }
         }
@@ -39,7 +43,9 @@ struct HomeView: View {
                 Image(authManager.avatarImageName)
                     .padding(.bottom, authManager.paddingBottom)
                 
-                Button(action: {}) {
+                Button(action: {
+                    viewModel.navigateToTicketBook()
+                }) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("내가 수집한 티켓")
                             .fontStyle(.label1)
@@ -195,13 +201,16 @@ struct HomeView: View {
                     Spacer()
                     
                     HStack(spacing: 8) {
-                        ForEach(Array(ticket.emotions.prefix(2).enumerated()), id: \.offset) { index, emotion in
-                            if index < ticket.emotions.count {
-                                tagView(text: "#\(emotion)", color: emotion.color)
-                            }
+                        ForEach(Array(ticket.emotions.prefix(2)), id: \.self) { emotion in
+                            Text("#\(emotion.rawValue)")
+                                .fontStyle(.caption2)
+                                .foregroundStyle(emotion.color)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(emotion.color50.opacity(0.2), in: RoundedRectangle(cornerRadius: 8))
                         }
-                        Spacer()
                     }
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .padding(.horizontal, 12)
                 .padding(.top, 16)
@@ -209,26 +218,6 @@ struct HomeView: View {
             }
             .frame(width: 146, height: 197)
         }
-    }
-    
-    private func tagView(text: String, color: Color) -> some View {
-        Text(text)
-            .fontStyle(.caption2)
-            .foregroundStyle(color)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(color.opacity(0.1), in: RoundedRectangle(cornerRadius: 8))
-    }
-    
-    private func getTagColor(index: Int) -> Color {
-        let colors: [Color] = [.green, .orange, .blue, .purple, .red]
-        return colors[index % colors.count]
-    }
-}
-
-private extension HomeView {
-    var displayNickname: String {
-        nicknameUD.isEmpty ? authManager.nickname : nicknameUD
     }
 }
 

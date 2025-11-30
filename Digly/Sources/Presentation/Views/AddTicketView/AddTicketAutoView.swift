@@ -39,7 +39,7 @@ struct AddTicketAutoView: View {
                         }
                         .animation(.spring(duration: 0.1), value: isAnimating)
                     
-                    TicketGuidePopupView(){
+                    TicketGuidePopupView {
                         isGuidePopupPresented = false
                         isAnimating = false
                     }

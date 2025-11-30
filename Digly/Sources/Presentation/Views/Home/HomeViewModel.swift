@@ -143,4 +143,13 @@ class HomeViewModel: ObservableObject {
         // TODO: Implement navigation to emotion record view
         print("Navigate to emotion record")
     }
+
+    // Navigate to ticket book tab
+    func navigateToTicketBook() {
+        NotificationCenter.default.post(
+            name: NotificationEvent.didTapTicketBook.name,
+            object: nil,
+            userInfo: [NotificationEvent.didTapTicketBook.userInfo: TabItem.ticketBook.rawValue]
+        )
+    }
 }

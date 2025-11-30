@@ -12,13 +12,16 @@ class TicketDetailViewModel: ObservableObject {
         count: 24,
         seatNumber: "@4",
         price: 20000,
-        emotions: [.excited, .relaxed]
+        emotions: [.excited, .relaxed],
+        notes: []
     )
     
     @Published var isLoading: Bool = false
-    @Published var hasEmotions: Bool = false
     @Published var isScreenshotTaken: Bool = false
-    @Published var isEmotionSheetPresent = true
+    @Published var isEmotionSheetPresent = false
+    @Published var isMenuSheetPresent = false
+    @Published var isEditViewPresent = false
+    @Published var ticketDeleted = false
     let ticketUseCase: TicketUseCase
     
     init(
@@ -32,10 +35,6 @@ class TicketDetailViewModel: ObservableObject {
             do {
                 isLoading = true
                 ticket = try await ticketUseCase.getTicketDetail(ticketId: id)
-                
-                if let ticket = ticket {
-                    hasEmotions = !ticket.emotions.isEmpty
-                }
                 
                 isLoading = false
             } catch {
@@ -52,12 +51,12 @@ class TicketDetailViewModel: ObservableObject {
         Task {
             do {
                 guard let currentTicket = ticket else { return }
-                
+
                 let _ = try await ticketUseCase.updateTicketEmotions(
                     ticketId: currentTicket.id,
                     emotions: emotions
                 )
-                
+
                 ticket = Ticket(
                     id: currentTicket.id,
                     name: currentTicket.name,
@@ -68,11 +67,51 @@ class TicketDetailViewModel: ObservableObject {
                     price: currentTicket.price,
                     emotions: currentTicket.emotions
                 )
-                
-                hasEmotions = !emotions.isEmpty
+
                 ToastManager.shared.show(.success("감정이 성공적으로 등록되었습니다"))
             } catch {
                 ToastManager.shared.show(.errorStringWithTask("감정 등록"))
+            }
+        }
+    }
+
+    func showDeleteConfirmation() {
+        guard let currentTicket = ticket else { return }
+
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        formatter.dateFormat = "yyyy년 M월 d일"
+        let dateString = formatter.string(from: currentTicket.time)
+
+        PopupManager.shared.show(
+            .deleteTicketWarning(
+                ticketName: currentTicket.name,
+                date: dateString,
+                onClick: {
+                    self.deleteTicket()
+                }
+            )
+        )
+    }
+
+    private func deleteTicket(withNotes: Bool = false) {
+        Task {
+            do {
+                guard let currentTicket = ticket else { return }
+
+                isLoading = true
+                try await ticketUseCase.deleteTicket(ticketId: currentTicket.id, withNotes: withNotes)
+
+                await MainActor.run {
+                    isLoading = false
+                    ticketDeleted = true
+                    ToastManager.shared.show(.success("티켓이 삭제되었습니다"))
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading = false
+                    ToastManager.shared.show(.errorStringWithTask("티켓 삭제"))
+                }
             }
         }
     }

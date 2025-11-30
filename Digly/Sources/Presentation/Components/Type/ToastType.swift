@@ -29,15 +29,6 @@ enum ToastType {
     }
     
     var button: ButtonConfig? {
-        switch self {
-        case .error, .errorStringWithTask, .errorWithMessage:
-            return ButtonConfig(
-                text: "재시도",
-                onClick: {},
-                disabled: false
-            )
-        case .success:
-            return nil
-        }
+        nil
     }
 }

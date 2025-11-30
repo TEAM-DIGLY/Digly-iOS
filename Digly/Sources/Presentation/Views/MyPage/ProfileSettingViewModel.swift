@@ -60,11 +60,7 @@ class ProfileSettingViewModel: ObservableObject {
                 // Call withdrawal API with reason
                 try await memberUseCase.withdrawMember(reason: "사용자 요청")
 
-                // Show success message
-                toastManager.show(.success("회원 탈퇴가 완료되었습니다."))
-
-                // Logout after delay
-                try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+                toastManager.show(.success("회원 탈퇴가 완료되었습니다."), isDelayNeeded: true)
                 authManager.logout()
             } catch {
                 toastManager.show(.error(error))

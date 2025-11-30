@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WriteNoteView: View {
-    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var router: DiggingNoteRouter
     @StateObject private var viewModel: WriteNoteViewModel
 
     init(ticket: Ticket) {
@@ -67,7 +67,7 @@ struct WriteNoteView: View {
                     Task {
                         let didSave = await viewModel.saveNote()
                         if didSave {
-                            dismiss()
+                            router.reset()
                         }
                     }
                 }) {

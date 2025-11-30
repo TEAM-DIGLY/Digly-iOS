@@ -4,8 +4,6 @@ struct DiggingNoteView: View {
     @EnvironmentObject private var router: DiggingNoteRouter
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var viewModel = DiggingNoteViewModel()
-    
-    @State private var selectedTicket: Ticket? = nil
 
     var body: some View {
         DGScreen(horizontalPadding: 0, backgroundColor: .bgDark) {
@@ -15,42 +13,50 @@ struct DiggingNoteView: View {
                         .padding(.horizontal, 24)
                         .padding(.top, 32)
                     
-                    if viewModel.ticketsWithNotes.isEmpty {
-                        VStack(spacing: 24) {
-                            Image("warning-digly")
-                            
-                            VStack(spacing: 12) {
-                                Text("아직 작성된 노트가 없어요.")
-                                
-                                Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
-                                    .multilineTextAlignment(.center)
-                            }
-                            .fontStyle(.body2)
-                            .foregroundStyle(.common100)
-                        }
-                        .padding(.top, 160)
+                    if viewModel.diggingNoteTickets.isEmpty {
+                        placeholder
                     } else {
                         VStack(spacing: 32) {
-                            ForEach(viewModel.ticketsWithNotes) { ticketWithNotes in
+                            ForEach(viewModel.diggingNoteTickets, id: \.id) { ticket in
                                 TicketNoteCardView(
-                                    ticketWithNotes: ticketWithNotes,
+                                    ticket: ticket,
+                                    notes: viewModel.notesForTicket,
                                     isExpanded: Binding(
-                                        get: { viewModel.expandedTicketId == ticketWithNotes.ticket.id },
+                                        get: { viewModel.expandedTicketId == ticket.id },
                                         set: { newValue in
-                                            viewModel.setExpandedState(for: ticketWithNotes.ticket.id, isExpanded: newValue)
+                                            viewModel.setExpandedState(for: ticket.id, isExpanded: newValue)
                                         }
                                     )
                                 )
                             }
                         }
-                        .animation(.fastSpring, value: viewModel.expandedTicketId)
                     }
+                    
+                    Spacer().frame(height: 120)
                 }
             }
         }
-        
+        .onAppear {
+            viewModel.fetchDiggingNoteTickets()
+        }
     }
 
+    private var placeholder: some View {
+        VStack(spacing: 24) {
+            Image("warning-digly")
+            
+            VStack(spacing: 12) {
+                Text("아직 작성된 노트가 없어요.")
+                
+                Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
+                    .multilineTextAlignment(.center)
+            }
+            .fontStyle(.body2)
+            .foregroundStyle(.common100)
+        }
+        .padding(.top, 160)
+    }
+    
     private var header: some View {
         HStack {
             Text("\(authManager.nickname)'s\ndigging note")

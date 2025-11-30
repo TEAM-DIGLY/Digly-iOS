@@ -2,45 +2,45 @@ import SwiftUI
 
 struct EmotionBackgroundGradient: View {
     let selectedEmotions: [Emotion]
-
+    let size: CGFloat
+    let opacity: CGFloat
+    
     var body: some View {
         ZStack {
-            // 1
             Circle()
                 .fill(circleColor(for: 0))
                 .blur(radius: 8)
-                .frame(width: 424, height: 424)
-                .offset(x: 64, y: 72)
-            // 2
+                .frame(width: size, height: size)
+                .offset(x: size*0.15, y: size*0.17)
             Circle()
                 .fill(circleColor(for: 1))
                 .blur(radius: 8)
-                .frame(width: 363, height: 363)
-                .offset(x: 93, y: 32)
-            // 3
+                .frame(width: size*0.85, height: size*0.85)
+                .offset(x: size*0.22, y: size*0.075)
+            
             Circle()
                 .fill(circleColor(for: 2))
                 .blur(radius: 8)
-                .frame(width: 300, height: 300)
-                .offset(x: -94, y: 0)
-            // 4
+                .frame(width: size*0.7, height: size*0.7)
+                .offset(x: -(size*0.22), y: 0)
+            
             Circle()
                 .fill(circleColor(for: 3))
                 .blur(radius: 8)
-                .frame(width: 424, height: 424)
-                .offset(x: -64, y: 72)
-            // 5
+                .frame(width: size, height: size)
+                .offset(x: -(size*0.15), y: size*0.17)
+            
             Circle()
                 .fill(circleColor(for: 4))
                 .blur(radius: 8)
-                .frame(width: 363, height: 363)
-                .offset(x: -93, y: 32)
-            // 6
+                .frame(width: size*0.85, height: size*0.85)
+                .offset(x: -(size*0.22), y: size*0.075)
+            
             Circle()
                 .fill(circleColor(for: 5))
                 .blur(radius: 8)
-                .frame(width: 300, height: 300)
-                .offset(x: 94, y: 0)
+                .frame(width: size*0.7, height: size*0.7)
+                .offset(x: size*0.22, y: 0)
         }
         .offset(y: 100)
     }
@@ -49,12 +49,12 @@ struct EmotionBackgroundGradient: View {
         if selectedEmotions.isEmpty {
             return .opacityWhite50
         } else if selectedEmotions.count == 1 {
-            return selectedEmotions[0].color50.opacity(0.18)
+            return selectedEmotions[0].color50.opacity(opacity)
         } else {
             if index < 3 {
-                return selectedEmotions[0].color50.opacity(0.18)
+                return selectedEmotions[0].color50.opacity(opacity)
             } else {
-                return selectedEmotions[1].color50.opacity(0.18)
+                return selectedEmotions[1].color50.opacity(opacity)
             }
         }
     }
@@ -65,6 +65,6 @@ struct EmotionBackgroundGradient: View {
         Color.black
             .ignoresSafeArea()
 
-        EmotionBackgroundGradient(selectedEmotions: [.excited, .relaxed])
+        EmotionBackgroundGradient(selectedEmotions: [.excited, .relaxed], size: 424, opacity: 0.18)
     }
 }

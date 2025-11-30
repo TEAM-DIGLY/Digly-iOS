@@ -25,7 +25,7 @@ struct EmotionSelectionBottomSheet: View {
 
     var body: some View {
         ZStack(alignment: .bottom) {
-            EmotionBackgroundGradient(selectedEmotions: selectedEmotions)
+            EmotionBackgroundGradient(selectedEmotions: selectedEmotions, size: 424, opacity: 0.18)
                 .animation(.spring(duration: 1.4), value: selectedEmotions)
             
             VStack(spacing: 0) {

@@ -44,7 +44,6 @@ class InquiryViewModel: ObservableObject {
             return
         }
 
-        // Submit question
         Task {
             isLoading = true
             defer { isLoading = false }
@@ -56,10 +55,7 @@ class InquiryViewModel: ObservableObject {
                     content: content
                 )
 
-                toastManager.show(.success("문의가 등록되었습니다."))
-
-                // Dismiss after showing toast
-                try await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
+                toastManager.show(.success("문의가 등록되었습니다."), isDelayNeeded: true)
                 onSuccess()
             } catch {
                 toastManager.show(.error(error))
