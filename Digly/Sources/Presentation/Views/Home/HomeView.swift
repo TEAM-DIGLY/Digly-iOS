@@ -19,18 +19,29 @@ struct HomeView: View {
             Spacer()
             notesContent
         }
-        .sheet(isPresented: $viewModel.showEmotionBottomSheet) {
-            if let ddayTicket = viewModel.ddayTicket {
-                EmotionSelectionBottomSheet(
-                    ticketId: ddayTicket.id,
-                    currentEmotions: ddayTicket.emotions,
-                    onEmotionsUpdated: { emotions in
-                        viewModel.handleEmotionComplete(emotions: emotions)
+        .sheet(isPresented: $viewModel.isEmotionSheetPresent) {
+            EmotionSelectionBottomSheet(
+                currentEmotions: viewModel.emotionsForPopupTicket,
+                updateEmotion: { emotions in
+                    viewModel.updateTicketEmotions(emotions) { updatedTicket in
+                        PopupManager.shared.show(.custom(
+                            EmotionCompletedPopup(
+                                ticket: updatedTicket,
+                                selectedEmotions: updatedTicket.emotions,
+                                onViewRecord: {
+                                    PopupManager.shared.dismissPopup()
+                                },
+                                onDismiss: {
+                                    PopupManager.shared.dismissPopup()
+                                }
+                            )
+                        ))
                     }
-                )
-                .presentationDetents([.height(600)])
-                .presentationDragIndicator(.hidden)
-            }
+                    viewModel.isEmotionSheetPresent = false
+                }
+            )
+            .presentationDetents([.height(600)])
+            .presentationDragIndicator(.hidden)
         }
         .onAppear {
             viewModel.checkForDdayTickets()

@@ -7,11 +7,12 @@ struct AddTicketManualView: View {
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
     @State private var isTimeSelected: Bool = false
+    
     @FocusState private var isFocused: Bool
 
-    var onNavigateToEndTicket: ((CreateTicketFormData) -> Void)?
+    var onNavigateToEndTicket: ((Ticket) -> Void)?
 
-    init(onNavigateToEndTicket: ((CreateTicketFormData) -> Void)? = nil) {
+    init(onNavigateToEndTicket: ((Ticket) -> Void)? = nil) {
         self._viewModel = StateObject(wrappedValue: AddTicketManualViewModel())
         self.onNavigateToEndTicket = onNavigateToEndTicket
     }
@@ -50,8 +51,8 @@ struct AddTicketManualView: View {
         .animation(.mediumSpring, value: isTimeFocused)
         .animation(.mediumSpring, value: viewModel.dateTimeStep)
         .onAppear {
-            viewModel.onTicketCreated = { ticketData in
-                onNavigateToEndTicket?(ticketData)
+            viewModel.onTicketCreated = { ticket in
+                onNavigateToEndTicket?(ticket)
             }
         }
         .onChange(of: viewModel.formData.date) { _, newDate in

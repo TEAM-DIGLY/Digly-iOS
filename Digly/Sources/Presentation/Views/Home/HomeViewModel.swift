@@ -9,11 +9,14 @@ class HomeViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var focusedTicketIndex: Int = 0
     @Published var ticketNotes: [Note] = []
+    @Published var ddayTickets: [TicketComplete] = []
+    
+    // popup에서 사용자에게 보여지는 티켓에 대한 데이터입니다.
+    @Published var popupTicket: TicketComplete? = nil
+    @Published var selectedEmotionsPerTicket: [Int: [Emotion]] = [:]
 
     // Popup states
-    @Published var showEmotionBottomSheet: Bool = false
-    @Published var selectedEmotions: [Emotion] = []
-    @Published var ddayTicket: Ticket? = Ticket.dummy
+    @Published var isEmotionSheetPresent: Bool = false
 
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
@@ -54,21 +57,6 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-//    func loadNotesForFocusedTicket() async {
-//        guard let focusedTicket = focusedTicket else {
-//            ticketNotes = []
-//            return
-//        }
-//        
-//        do {
-//            let response = try await noteUseCase.getNotesByTicketId(ticketId: focusedTicket.id)
-//            ticketNotes = response.notes
-//        } catch {
-//            print("Failed to load notes for ticket \(focusedTicket.id): \(error)")
-//            ticketNotes = []
-//        }
-//    }
-    
     func updateFocusedTicket(index: Int) {
         guard index != focusedTicketIndex && index >= 0 && index < tickets.count else { return }
         focusedTicketIndex = index
@@ -81,6 +69,11 @@ class HomeViewModel: ObservableObject {
     // Computed property to get note count for focused ticket
     var noteCount: Int {
         ticketNotes.count
+    }
+
+    var emotionsForPopupTicket: [Emotion] {
+        guard let popupTicket else { return [] }
+        return selectedEmotionsPerTicket[popupTicket.id] ?? []
     }
     
     // Calculate days remaining until performance
@@ -99,51 +92,53 @@ class HomeViewModel: ObservableObject {
         return calendar.isDate(ticket.time, inSameDayAs: Date())
     }
 
-    // Check for D-day tickets and show alert
+    // 핍압에 띄울 티켓 조회
     func checkForDdayTickets() {
-        if let ticket = tickets.first(where: { daysUntilPerformance(for: $0) == 0 }) {
-            ddayTicket = ticket
-            PopupManager.shared.show(.custom(
-                DdayAlertPopup(
-                    ticket: ticket,
-                    onEmotionButtonTap: { [weak self] in
-                        PopupManager.shared.dismissPopup()
-                        self?.showEmotionBottomSheet = true
-                    },
-                    onDismiss: {
-                        PopupManager.shared.dismissPopup()
-                    }
-                )
-            ))
+        Task {
+            do {
+                let completedTickets = try await ticketUseCase.getTicketsComplete()
+                guard !completedTickets.isEmpty else { return }
+
+                ddayTickets = completedTickets
+
+                PopupManager.shared.show(.custom(
+                    DdayAlertPopup(
+                        tickets: completedTickets,
+                        onEmotionButtonTap: { [weak self] ticket in
+                            guard let self else { return }
+                            popupTicket = ticket
+                            PopupManager.shared.dismissPopup()
+                            isEmotionSheetPresent = true
+                        },
+                        onDismiss: {
+                            PopupManager.shared.dismissPopup()
+                        }
+                    )
+                ))
+            } catch {
+                ToastManager.shared.show(.errorStringWithTask("티켓 로딩"))
+            }
         }
     }
-
-    // Handle emotion selection completion
-    func handleEmotionComplete(emotions: [Emotion]) {
-        selectedEmotions = emotions
-        if let ticket = ddayTicket {
-            PopupManager.shared.show(.custom(
-                EmotionCompletedPopup(
-                    ticket: ticket,
-                    selectedEmotions: emotions,
-                    onViewRecord: { [weak self] in
-                        PopupManager.shared.dismissPopup()
-                        self?.navigateToEmotionRecord()
-                    },
-                    onDismiss: {
-                        PopupManager.shared.dismissPopup()
-                    }
+    
+    func updateTicketEmotions(_ emotions: [Emotion], onSuccess: @escaping (Ticket) -> Void) {
+        guard let popupTicket else { return }
+        Task {
+            do {
+                let response = try await ticketUseCase.updateTicketEmotions(
+                    ticketId: popupTicket.id,
+                    emotions: emotions
                 )
-            ))
+
+                selectedEmotionsPerTicket[popupTicket.id] = emotions
+                self.popupTicket = nil
+                onSuccess(response)
+            } catch {
+                ToastManager.shared.show(.errorStringWithTask("감정 등록"))
+            }
         }
     }
-
-    // Navigate to emotion record
-    func navigateToEmotionRecord() {
-        // TODO: Implement navigation to emotion record view
-        print("Navigate to emotion record")
-    }
-
+    
     // Navigate to ticket book tab
     func navigateToTicketBook() {
         NotificationCenter.default.post(

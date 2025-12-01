@@ -1,26 +1,23 @@
 import SwiftUI
 
 struct EmotionSelectionBottomSheet: View {
-    let ticketId: Int
-    let currentEmotions: [Emotion]
-    let onEmotionsUpdated: ([Emotion]) -> Void
+    let updateEmotion: ([Emotion]) -> Void
+    
     @Environment(\.dismiss) private var dismiss
 
-    @State private var selectedEmotions: [Emotion] = []
+    @State private var selectedEmotions: [Emotion]
     @State private var isLoading: Bool = false
 
     private let ticketUseCase: TicketUseCase
 
     init(
-        ticketId: Int,
         currentEmotions: [Emotion],
-        onEmotionsUpdated: @escaping ([Emotion]) -> Void,
+        updateEmotion: @escaping ([Emotion]) -> Void,
         ticketUseCase: TicketUseCase = TicketUseCase()
     ) {
-        self.ticketId = ticketId
-        self.currentEmotions = currentEmotions
-        self.onEmotionsUpdated = onEmotionsUpdated
+        self.updateEmotion = updateEmotion
         self.ticketUseCase = ticketUseCase
+        selectedEmotions = currentEmotions
     }
 
     var body: some View {
@@ -37,9 +34,13 @@ struct EmotionSelectionBottomSheet: View {
                         .foregroundStyle(.opacityWhite850)
                         .multilineTextAlignment(.center)
                     
-                    emotionGridSection
-                        .padding(.bottom, 32)
-                        .animation(.fastSpring, value: selectedEmotions)
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                        ForEach(Emotion.allCases, id: \.self) { emotion in
+                            emotionButton(emotion: emotion)
+                        }
+                    }
+                    .padding(.bottom, 32)
+                    .animation(.fastSpring, value: selectedEmotions)
                     
                     selectedEmotionSection
                 }
@@ -48,13 +49,19 @@ struct EmotionSelectionBottomSheet: View {
                 
                 Spacer()
                 
-                bottomButton
+                DGButton(
+                    text: "감정 등록 완료",
+                    type: .primaryDark,
+                    isDisabled: selectedEmotions.isEmpty || isLoading,
+                ) {
+                    updateEmotion(selectedEmotions)
+                }
+                
+                .padding(.horizontal, 24)
+                .padding(.bottom, 34)
             }
         }
         .background(.bottomSheetBackground)
-        .onAppear {
-            selectedEmotions = currentEmotions
-        }
     }
 
     private var headerSection: some View {
@@ -62,7 +69,6 @@ struct EmotionSelectionBottomSheet: View {
             Text("감정 남기기")
                 .font(.headline2)
                 .foregroundStyle(.opacityWhite800)
-
             
             Button(action: {
                 dismiss()
@@ -74,14 +80,6 @@ struct EmotionSelectionBottomSheet: View {
         .padding(24)
     }
 
-    private var emotionGridSection: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-            ForEach(Emotion.allCases, id: \.self) { emotion in
-                emotionButton(emotion: emotion)
-            }
-        }
-    }
-    
     private var selectedEmotionSection: some View {
         VStack(spacing: 16) {
             Text("선택된 감정 키워드")
@@ -129,50 +127,11 @@ struct EmotionSelectionBottomSheet: View {
                 )
         }
     }
-
-    private var bottomButton: some View {
-        DGButton(
-            text: "감정 등록 완료",
-            type: .primaryDark,
-            isDisabled: selectedEmotions.isEmpty || isLoading,
-            onClick: {
-                updateTicketEmotions()
-            }
-        )
-        .padding(.horizontal, 24)
-        .padding(.bottom, 34)
-    }
-
-    private func updateTicketEmotions() {
-        Task {
-            do {
-                isLoading = true
-                
-                // Call API to update ticket emotions
-                let emotionsArray = Array(selectedEmotions)
-                let _ = try await ticketUseCase.updateTicketEmotions(
-                    ticketId: ticketId,
-                    emotions: emotionsArray
-                )
-                
-                await MainActor.run {
-                    onEmotionsUpdated(emotionsArray)
-                    dismiss()
-                }
-            } catch {
-                await MainActor.run {
-                    ToastManager.shared.show(.errorStringWithTask("감정 등록"))
-                    isLoading = false
-                }
-            }
-        }
-    }
 }
 
 #Preview {
     EmotionSelectionBottomSheet(
-        ticketId: 1,
         currentEmotions: [.excited, .relaxed],
-        onEmotionsUpdated: { _ in }
+        updateEmotion: { _ in }
     )
 }

@@ -33,12 +33,12 @@ final class AddTicketManualViewModel: ObservableObject {
     private var titleSearchTask: Task<Void, Never>? = nil
     private var venueSearchTask: Task<Void, Never>? = nil
     
-    var onTicketCreated: ((CreateTicketFormData) -> Void)?
+    var onTicketCreated: ((Ticket) -> Void)?
     
     init(
         crawlingUseCase: CrawlingUseCase = CrawlingUseCase(crawlingRepository: CrawlingRepository()),
         ticketUseCase: TicketUseCase = TicketUseCase(ticketRepository: TicketRepository()),
-        onTicketCreated: ((CreateTicketFormData) -> Void)? = nil
+        onTicketCreated: ((Ticket) -> Void)? = nil
     ) {
         self.crawlingUseCase = crawlingUseCase
         self.ticketUseCase = ticketUseCase
@@ -150,7 +150,8 @@ final class AddTicketManualViewModel: ObservableObject {
                     ToastManager.shared.show(.errorWithMessage("관람 일시가 올바르지 않습니다."))
                     return
                 }
-                _ = try await ticketUseCase.createTicket(
+                
+                let ticket = try await ticketUseCase.createTicket(
                     name: formData.showName,
                     time: performanceDateTime,
                     place: formData.place,
@@ -163,7 +164,7 @@ final class AddTicketManualViewModel: ObservableObject {
                 ToastManager.shared.show(.success("티켓이 생성되었습니다."))
                 
                 // Navigate to EndAddTicketManualView
-                onTicketCreated?(formData)
+                onTicketCreated?(ticket)
             } catch {
                 isLoading = false
                 ToastManager.shared.show(.error(error))

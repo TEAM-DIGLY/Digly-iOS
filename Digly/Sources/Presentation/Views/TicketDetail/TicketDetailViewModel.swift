@@ -46,28 +46,14 @@ class TicketDetailViewModel: ObservableObject {
         }
     }
     
-    func goToDiggingNote() {
-    }
-    
     func updateTicketEmotions(_ emotions: [Emotion]) {
         Task {
             do {
                 guard let currentTicket = ticket else { return }
 
-                let _ = try await ticketUseCase.updateTicketEmotions(
+                ticket = try await ticketUseCase.updateTicketEmotions(
                     ticketId: currentTicket.id,
                     emotions: emotions
-                )
-
-                ticket = Ticket(
-                    id: currentTicket.id,
-                    name: currentTicket.name,
-                    time: currentTicket.time,
-                    place: currentTicket.place,
-                    count: currentTicket.count,
-                    seatNumber: currentTicket.seatNumber,
-                    price: currentTicket.price,
-                    emotions: currentTicket.emotions
                 )
 
                 ToastManager.shared.show(.success("감정이 성공적으로 등록되었습니다"))

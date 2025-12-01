@@ -65,7 +65,7 @@ struct CreateAccountView: View {
                 ){
                     if viewModel.isSelectingDigly {
                         viewModel.performSignUp { signUpResponse in
-                            let selectedDiglyType = Digly.data[viewModel.selectedIndex].diglyType
+                            let _ = Digly.data[viewModel.selectedIndex].diglyType
                             authRouter.push(to: .onboardingConfirm(
                                 signUpResponse: signUpResponse,
                                 accessToken: accessToken,

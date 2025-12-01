@@ -49,17 +49,13 @@ struct TicketFlowNavigationStack: View {
             AddTicketAutoView()
         case .createTicketForm: 
             AddTicketManualView(
-                onNavigateToEndTicket: { ticketData in
-                    handlers.push(.endCreateTicket(ticketData: ticketData))
+                onNavigateToEndTicket: { ticket in
+                    handlers.push(.endCreateTicket(ticket: ticket))
                 }
             )
         case .endCreateTicket(let ticketData): 
             EndAddTicketManualView(
-                ticketData: ticketData,
-                onAddFeelingTapped: {
-                },
-                onEditTicketTapped: {
-                },
+                ticket: ticketData,
                 onCompleteTapped: {
                     handlers.completeFlow()
                 }
