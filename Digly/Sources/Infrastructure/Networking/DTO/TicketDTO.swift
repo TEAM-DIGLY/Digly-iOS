@@ -240,16 +240,16 @@ struct GetTicketsCompleteResponse: Codable {
     let data: TicketsCompleteData
 
     struct TicketsCompleteData: Codable {
-        let tickets: [TicketCompleteDTO]
+        let tickets: [TicketSummaryDTO]
 
-        struct TicketCompleteDTO: Codable {
+        struct TicketSummaryDTO: Codable {
             let id: Int
             let name: String
             let performanceTime: String
             let place: String
 
-            func toDomain() -> TicketComplete {
-                TicketComplete(
+            func toDomain() -> TicketSummary {
+                TicketSummary(
                     id: id,
                     name: name,
                     performanceTime: performanceTime.toDate(),
@@ -259,7 +259,7 @@ struct GetTicketsCompleteResponse: Codable {
         }
     }
 
-    func toDomain() -> [TicketComplete] {
+    func toDomain() -> [TicketSummary] {
         data.tickets.map { $0.toDomain() }
     }
 }
@@ -282,7 +282,8 @@ struct TicketDiggingNote {
     let noteCount: Int
 }
 
-struct TicketComplete {
+/// - note: HomeView 내부 팝업에 띄워질 간소화된 티켓 정보 구조체입니다.
+struct TicketSummary {
     let id: Int
     let name: String
     let performanceTime: Date

@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct TicketDetailContent: View {
-    @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
     let ticket: Ticket
     let onTapAddEmotion: () -> Void
     
@@ -12,7 +11,7 @@ struct TicketDetailContent: View {
                 .foregroundStyle(.common100)
                 .padding(.bottom, 12)
             
-            ticketCard
+            TicketItem(ticket: ticket, onTapAddEmotion: onTapAddEmotion)
                 .padding(.bottom, 40)
             basicInfoSection(ticket: ticket)
             
@@ -23,66 +22,6 @@ struct TicketDetailContent: View {
             
             Spacer().frame(height: 120)
         }
-    }
-    
-    private var ticketCard: some View {
-        ZStack(alignment: .top) {
-            Image("ticket-base-big")
-            
-            EmotionBackgroundGradient(selectedEmotions: ticket.emotions, size: 180, opacity: 0.26)
-                .offset(y: -40)
-                .animation(.spring(duration: 1.4), value: ticket.emotions)
-            
-            VStack(alignment: .center, spacing: 0) {
-                Text("@\(nicknameUD.isEmpty ? "username" : nicknameUD)")
-                    .fontStyle(.body2)
-                    .foregroundStyle(.opacityWhite300)
-                    .padding(.top, 24)
-                
-                Spacer()
-                
-                if ticket.emotions.isEmpty {
-                    Text("관람 중에 느낀\n나만의 감정을 남겨볼까요?")
-                        .fontStyle(.label2)
-                        .foregroundStyle(.opacityWhite700)
-                        .multilineTextAlignment(.center)
-                    
-                    Image("chevron_down_sm")
-                        .padding(.top, -12)
-                }
-                
-                Rectangle()
-                    .fill(.opacityWhite100)
-                    .frame(height: 2)
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, 32)
-                
-                Group {
-                    if !ticket.emotions.isEmpty {
-                        HStack(spacing: 8) {
-                            ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
-                                Text("#\(emotion.rawValue)")
-                                    .fontStyle(.body1)
-                                    .foregroundStyle(emotion.color)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                            }
-                        }
-                    } else {
-                        Text("감정 남기러 가기")
-                            .fontStyle(.headline2)
-                            .foregroundStyle(.opacityWhite850)
-                            .onTapGesture {
-                                onTapAddEmotion()
-                            }
-                    }
-                }
-                .frame(height: 76, alignment: .center)
-            }
-            .padding(24)
-        }
-        .frame(width: 279, height: 376)
-        .padding(.horizontal, 48)
     }
     
     
@@ -173,4 +112,183 @@ struct TicketDetailContent: View {
             Spacer()
         }
     }
+}
+
+enum TicketStatus {
+    case summary
+    case noEmotion
+    case hasEmotions
+}
+
+struct TicketItem: View {
+    @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
+    let ticket: Ticket
+    let ticketStatus: TicketStatus
+    let onTapAddEmotion: () -> Void
+    
+    init(
+        ticket: Ticket,
+        ticketStatus: TicketStatus = .noEmotion,
+        onTapAddEmotion: @escaping () -> Void)
+    {
+        self.ticket = ticket
+        self.ticketStatus = ticketStatus
+        self.onTapAddEmotion = onTapAddEmotion
+    }
+    
+    var body: some View {
+        ZStack(alignment: .top) {
+            Image("ticket-base-big\(ticketStatus == .summary ? "-blue" : "")")
+            
+            if ticketStatus != .summary {
+                EmotionBackgroundGradient(selectedEmotions: ticket.emotions, size: 180, opacity: 0.26)
+                    .offset(y: -40)
+                    .animation(.mediumSpring, value: ticket.emotions)
+            }
+            
+            if ticketStatus != .summary {
+                defaultOverlaySection
+            } else {
+                ddayOverlaySection
+            }
+        }
+        .frame(width: 279, height: 376)
+        .padding(.horizontal, 48)
+    }
+    
+    private var ddayOverlaySection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(ticket.name)
+                .font(.heading1)
+                .foregroundStyle(.common100)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 32)
+            
+            VStack(alignment: .leading, spacing: 16) {
+                HStack(alignment: .top) {
+                    Text("관람일시")
+                        .font(.label2)
+                        .foregroundStyle(.opacityWhite500)
+                        .frame(width: 64, alignment: .leading)
+                    
+                    Text("\(ticket.time.toTicketDateString())\n\(ticket.time.toTimeString())")
+                        .font(.label2)
+                        .foregroundStyle(.opacityWhite850)
+                        .multilineTextAlignment(.leading)
+                }
+                
+                HStack(alignment: .top) {
+                    Text("장소")
+                        .font(.label2)
+                        .foregroundStyle(.opacityWhite500)
+                        .frame(width: 64, alignment: .leading)
+                    
+                    Text(ticket.place)
+                        .font(.label2)
+                        .foregroundStyle(.opacityWhite850)
+                        .multilineTextAlignment(.leading)
+                }
+                
+                if let seatNumber = ticket.seatNumber {
+                    HStack(alignment: .top) {
+                        Text("좌석")
+                            .font(.label2)
+                            .foregroundStyle(.opacityWhite500)
+                            .frame(width: 64, alignment: .leading)
+                        
+                        Text(seatNumber)
+                            .font(.label2)
+                            .foregroundStyle(.opacityWhite850)
+                            .multilineTextAlignment(.leading)
+                    }
+                }
+            }
+            .padding(24)
+            
+            Spacer()
+            
+            Rectangle()
+                .fill(.opacityWhite100)
+                .frame(height: 2)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 32)
+            
+            Group {
+                if !ticket.emotions.isEmpty {
+                    HStack(spacing: 8) {
+                        ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
+                            Text("#\(emotion.rawValue)")
+                                .fontStyle(.body1)
+                                .foregroundStyle(emotion.color)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                } else {
+                    Text("감정 남기러 가기")
+                        .fontStyle(.headline2)
+                        .foregroundStyle(.opacityWhite850)
+                        .onTapGesture {
+                            onTapAddEmotion()
+                        }
+                }
+            }
+            .frame(height: 76, alignment: .center)
+        }
+    }
+    
+    private var defaultOverlaySection: some View {
+        VStack(alignment: .center, spacing: 0) {
+            Text("@\(nicknameUD.isEmpty ? "username" : nicknameUD)")
+                .fontStyle(.body2)
+                .foregroundStyle(.opacityWhite300)
+                .padding(.top, 24)
+            
+            Spacer()
+            
+            if ticket.emotions.isEmpty {
+                Text("관람 중에 느낀\n나만의 감정을 남겨볼까요?")
+                    .fontStyle(.label2)
+                    .foregroundStyle(.opacityWhite700)
+                    .multilineTextAlignment(.center)
+                
+                Image("chevron_down_sm")
+                    .padding(.top, -12)
+            }
+            
+            Rectangle()
+                .fill(.opacityWhite100)
+                .frame(height: 2)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 32)
+            
+            Group {
+                if !ticket.emotions.isEmpty {
+                    HStack(spacing: 8) {
+                        ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
+                            Text("#\(emotion.rawValue)")
+                                .fontStyle(.body1)
+                                .foregroundStyle(emotion.color)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                        }
+                    }
+                } else {
+                    Text("감정 남기러 가기")
+                        .fontStyle(.headline2)
+                        .foregroundStyle(.opacityWhite850)
+                        .onTapGesture {
+                            onTapAddEmotion()
+                        }
+                }
+            }
+            .frame(height: 76, alignment: .center)
+        }
+        .padding(24)
+    }
+}
+
+#Preview {
+    TicketItem(ticket: Ticket.dummy, ticketStatus: .noEmotion, onTapAddEmotion: {})
 }

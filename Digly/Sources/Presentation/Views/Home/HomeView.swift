@@ -43,8 +43,22 @@ struct HomeView: View {
             .presentationDetents([.height(600)])
             .presentationDragIndicator(.hidden)
         }
+        .overlay {
+            if !viewModel.ddayTickets.isEmpty {
+                DdayAlertPopup(
+                    tickets: viewModel.ddayTickets,
+                    onEmotionButtonTap: { ticket in
+                        viewModel.popupTicket = ticket
+                        viewModel.isEmotionSheetPresent = true
+                    },
+                    onDismiss: {
+                        PopupManager.shared.dismissPopup()
+                    }
+                )
+            }
+        }
         .onAppear {
-            viewModel.checkForDdayTickets()
+            viewModel.fetchDdayTickets()
         }
     }
 
@@ -193,18 +207,18 @@ struct HomeView: View {
                 .padding(24)
                 .background(.neutral150, in: RoundedRectangle(cornerRadius: 24))
         } else if viewModel.tickets.count == 1 {
-            ticketCard
+            smallTicketCard
         } else {
             ZStack {
                 Image("ticket-base")
                     .rotationEffect(Angle(degrees: 4))
-                ticketCard
+                smallTicketCard
             }
         }
     }
     
     @ViewBuilder
-    private var ticketCard: some View {
+    private var smallTicketCard: some View {
         if let ticket = viewModel.tickets.first {
             ZStack {
                 Image("ticket-base")

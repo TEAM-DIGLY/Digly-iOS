@@ -27,7 +27,7 @@ struct SelectNoteTicketView: View {
                         ForEach(viewModel.tickets) { ticket in
                             let isSelected = viewModel.selectedTicketId == ticket.id
                             
-                            TicketCardView(ticket: ticket, cardType: .note_small)
+                            TicketCard(ticket: ticket, cardType: .note_small)
                                 .opacity(isSelected ? 1.0 : 0.3)
                                 .onTapGesture {
                                     viewModel.selectTicket(ticket)

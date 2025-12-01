@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct TicketNoteCardView: View {
+struct DiggingNoteCard: View {
     let ticket: TicketDiggingNote
     let notes: [Note]
     

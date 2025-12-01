@@ -7,7 +7,7 @@ struct CreateTicketFormData {
     var place: String = ""
     var count: Int = 0
     var seatNumber: String = ""
-    var price: Int = 0
+    var price: String = ""
     
     func value(for field: CreateTicketStep) -> String {
         switch field {
@@ -64,10 +64,6 @@ struct CreateTicketFormData {
     
     mutating func setCount(_ number: Int) {
         count = number
-    }
-    
-    mutating func setTicketPrice(_ _price: Int) {
-        price = _price
     }
     
     var isBasicInfoComplete: Bool {

@@ -44,7 +44,7 @@ struct TicketInfoParser {
         }
         
         if let price = extractPrice(from: text) {
-            ticketData.price = price
+            ticketData.price = String(price)
         }
         
         guard !ticketData.showName.isEmpty || ticketData.date != nil || !ticketData.place.isEmpty else {

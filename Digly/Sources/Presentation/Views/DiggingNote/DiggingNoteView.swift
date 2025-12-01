@@ -18,7 +18,7 @@ struct DiggingNoteView: View {
                     } else {
                         VStack(spacing: 32) {
                             ForEach(viewModel.diggingNoteTickets, id: \.id) { ticket in
-                                TicketNoteCardView(
+                                DiggingNoteCard(
                                     ticket: ticket,
                                     notes: viewModel.notesForTicket,
                                     isExpanded: Binding(

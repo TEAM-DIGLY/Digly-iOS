@@ -117,7 +117,7 @@ final class TicketRepository: TicketRepositoryProtocol {
     
     // MARK: - 오늘의 관람, 즐거우셨나요? 화면 api
     // TODO: 연결
-    func getTicketsComplete() async throws -> [TicketComplete] {
+    func getTicketsComplete() async throws -> [TicketSummary] {
         let response: GetTicketsCompleteResponse = try await networkAPI.request(TicketEndpoint.getTicketsComplete)
         return response.toDomain()
     }

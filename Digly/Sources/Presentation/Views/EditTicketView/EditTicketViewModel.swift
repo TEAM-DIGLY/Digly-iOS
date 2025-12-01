@@ -27,7 +27,7 @@ final class EditTicketViewModel: ObservableObject {
         formData.time = ticket.time
         formData.count = ticket.count
         formData.seatNumber = ticket.seatNumber ?? ""
-        formData.price = ticket.price ?? -1
+        formData.price = String(describing: ticket.price)
     }
     
     var isUpdateButtonEnabled: Bool {
@@ -50,7 +50,7 @@ final class EditTicketViewModel: ObservableObject {
                 place: formData.place,
                 count: formData.count,
                 seatNumber: formData.seatNumber.isEmpty ? nil : formData.seatNumber,
-                price: formData.price == -1 ? nil : formData.price,
+                price: Int(formData.price) ?? nil ,
                 emotions: originalTicket.emotions.map { $0.rawValue }
             )
             
@@ -90,11 +90,4 @@ final class EditTicketViewModel: ObservableObject {
         }
     }
 
-    func updateSeatNumber(_ seat: String) {
-        formData.setSeatNumber(seat)
-    }
-
-    func updateTicketPrice(_ price: Int) {
-        formData.setTicketPrice(price)
-    }
 }

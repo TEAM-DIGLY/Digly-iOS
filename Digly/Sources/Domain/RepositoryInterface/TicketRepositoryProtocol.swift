@@ -7,5 +7,5 @@ protocol TicketRepositoryProtocol {
     func updateTicket(ticketId: Int, ticket: Ticket) async throws -> Ticket
     func deleteTicket(ticketId: Int, isOptional: Bool) async throws
     func getTicketsForDiggingNote(page: Int, size: Int) async throws -> TicketDiggingNotesResult
-    func getTicketsComplete() async throws -> [TicketComplete]
+    func getTicketsComplete() async throws -> [TicketSummary]
 }

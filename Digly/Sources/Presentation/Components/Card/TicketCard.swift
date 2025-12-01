@@ -6,7 +6,7 @@ enum TicketCardType {
     case note_small
 }
 
-struct TicketCardView: View {
+struct TicketCard: View {
     let ticket: Ticket
     let cardType: TicketCardType
     

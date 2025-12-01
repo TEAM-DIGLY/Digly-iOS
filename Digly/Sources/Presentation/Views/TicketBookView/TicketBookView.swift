@@ -78,7 +78,7 @@ struct TicketBookView: View {
                     Button(action: {
                         router.push(to: .ticketDetail(ticket.id))
                     }) {
-                        TicketCardView(
+                        TicketCard(
                             ticket: ticket,
                             cardType: .large
                         )
@@ -118,7 +118,7 @@ struct TicketBookView: View {
                 Button(action: {
                     router.push(to: .ticketDetail(ticket.id))
                 }) {
-                    TicketCardView(
+                    TicketCard(
                         ticket: ticket,
                         cardType: .small
                     )

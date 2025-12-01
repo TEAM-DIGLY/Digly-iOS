@@ -32,60 +32,11 @@ struct EditTicketView: View {
                 .padding(.bottom, 24)
                 
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing: 32) {
-                        DGFormField(
-                            value: $viewModel.formData.showName,
-                            label: "극 제목",
-                            isRequired: true
-                        )
-                        
-                        HStack(spacing: 16) {
-                            dateTimeField(.date)
-                            dateTimeField(.time)
-                        }
-                        
-                        DGFormField(
-                            value: $viewModel.formData.place,
-                            label: "관람 장소",
-                            isRequired: true
-                        )
-                        
-                        
-                        Text("(선택) 관람 횟수")
-                            .fontStyle(.label2)
-                            .foregroundStyle(.neutral300)
-                        
-                        
-                        HStack(spacing: 12) {
-                            minusButton
-                            seatCounterTextField
-                            plusButton
-                        }
-                        
-                        DGFormField(
-                            value: $viewModel.formData.seatNumber,
-                            label: "(선택) 좌석 번호",
-                            isRequired: false
-                        )
-                        
-                        
-                        Text("(선택) 티켓 가격")
-                            .fontStyle(.label2)
-                            .foregroundStyle(.neutral300)
-                        
-                        DGTextField(
-                            text: Binding(
-                                get: { viewModel.formData.price == -1 ? "" : String(viewModel.formData.price) },
-                                set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
-                            ),
-                            placeholder: "ex) 100,000",
-                            type: .createTicketOptional
-                        )
-                        .focused($isFocused)
-                        .keyboardType(.numberPad)
-                        
-                    }
-                    .padding(.horizontal, 24)
+                    EditTicketDetailContent(
+                        formData: $viewModel.formData,
+                        date:viewModel.setDateTimeFieldBinding(for: .date),
+                        time:viewModel.setDateTimeFieldBinding(for: .time)
+                    )
                 }
             }
         }

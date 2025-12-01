@@ -104,17 +104,6 @@ final class AddTicketManualViewModel: ObservableObject {
         formData.setValue(value, for: type)
     }
     
-    func updateSeatNumber(_ seat: String) {
-        formData.setSeatNumber(seat)
-    }
-    
-    func updateSeatLocation(_ location: String) {
-        formData.setSeatNumber(location)
-    }
-    
-    func updateTicketPrice(_ price: Int) {
-        formData.setTicketPrice(price)
-    }
     
     func setDateTimeFieldBinding(for step: DateTimeStep) -> Binding<Date> {
         switch step {
@@ -157,7 +146,7 @@ final class AddTicketManualViewModel: ObservableObject {
                     place: formData.place,
                     count: formData.count,
                     seatNumber: formData.seatNumber,
-                    price: formData.price,
+                    price: Int(formData.price) ?? -1,
                     emotions: [] // TODO: EmotionColor 선택 기능 추가 시 수정
                 )
                 isLoading = false

@@ -97,7 +97,13 @@ extension AddTicketManualView {
                 .padding(12)
             textFieldSection(for: .venue)
         case .ticketDetails:
-            ticketDetailsSection
+            ScrollView(.vertical, showsIndicators: false) {
+                EditTicketDetailContent(
+                    formData: $viewModel.formData,
+                    date: viewModel.setDateTimeFieldBinding(for: .date),
+                    time: viewModel.setDateTimeFieldBinding(for: .time)
+                )
+            }
         }
     }
     
@@ -204,7 +210,7 @@ extension AddTicketManualView {
         }
         .contentTransition(.numericText())
     }
-
+    
     @ViewBuilder
     private var bottomPickerSection: some View {
         if isDateFocused || isTimeFocused {
@@ -242,129 +248,6 @@ extension AddTicketManualView {
             )
         }
     }
-    
-    private var ticketDetailsSection: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: 32) {
-                DGFormField(
-                    value: $viewModel.formData.showName,
-                    label: "극 제목",
-                    isRequired: true
-                )
-                
-                HStack(alignment: .bottom, spacing: 20) {
-                    dateTimeField(.date)
-                    dateTimeField(.time)
-                }
-                
-                DGFormField(
-                    value: $viewModel.formData.place,
-                    label: "관람 장소",
-                    isRequired: true
-                )
-                
-                    
-                        Text("(선택) 관람 횟수")
-                            .fontStyle(.label2)
-                            .foregroundStyle(.neutral300)
-                    
-                    
-                    HStack(spacing: 12) {
-                        minusButton
-                        seatCounterTextField
-                        plusButton
-                    }
-                
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("(선택) 좌석 번호")
-                        .fontStyle(.label2)
-                        .foregroundStyle(.neutral300)
-                    
-                    DGTextField(
-                        text: Binding(
-                            get: { viewModel.formData.seatNumber },
-                            set: { viewModel.updateSeatLocation($0) }
-                        ),
-                        placeholder: "ex) a열 j 32번",
-                        type: .createTicketOptional
-                    )
-                    .focused($isFocused)
-                }
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("(선택) 티켓 가격")
-                        .fontStyle(.label2)
-                        .foregroundStyle(.neutral300)
-                    
-                    DGTextField(
-                        text: Binding(
-                            get: { String(viewModel.formData.price) },
-                            set: { viewModel.updateTicketPrice(Int($0) ?? -1) }
-                        ),
-                        placeholder: "ex) 100,000",
-                        type: .createTicketOptional
-                    )
-                    .focused($isFocused)
-                    .keyboardType(.numberPad)
-                }
-            }
-            
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var minusButton: some View {
-        Button(action: {
-            if let current = Int(viewModel.formData.seatNumber), current > 1 {
-                viewModel.updateSeatNumber(String(current - 1))
-            }
-        }) {
-            Image(systemName: "minus")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(.neutral200)
-                .frame(width: 57, height: 57)
-                .background(.neutral100.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-    
-    private var plusButton: some View {
-        Button(action: {
-            if let current = Int(viewModel.formData.seatNumber) {
-                viewModel.updateSeatNumber(String(current + 1))
-            }
-        }) {
-            Image(systemName: "plus")
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(.neutral200)
-                .frame(width: 57, height: 57)
-                .background(.neutral100.opacity(0.15))
-                .clipShape(RoundedRectangle(cornerRadius: 14))
-        }
-        .buttonStyle(PlainButtonStyle())
-    }
-    
-    private var seatCounterTextField: some View {
-        TextField("1", text: Binding(
-            get: { viewModel.formData.seatNumber },
-            set: { viewModel.updateSeatNumber($0) }
-        ))
-        .fontStyle(.headline1)
-        .foregroundStyle(.neutral100)
-        .multilineTextAlignment(.center)
-        .frame(height: 57)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(.neutral900.opacity(0.05))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 14)
-                        .stroke(.neutral100.opacity(0.15), lineWidth: 1.5)
-                )
-        )
-    }
-    
 }
 
 

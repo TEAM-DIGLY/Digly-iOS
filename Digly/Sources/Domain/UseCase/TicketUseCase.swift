@@ -111,7 +111,7 @@ final class TicketUseCase {
         try await ticketRepository.getTicketsForDiggingNote(page: page, size: size)
     }
 
-    func getTicketsComplete() async throws -> [TicketComplete] {
+    func getTicketsComplete() async throws -> [TicketSummary] {
         try await ticketRepository.getTicketsComplete()
     }
 }

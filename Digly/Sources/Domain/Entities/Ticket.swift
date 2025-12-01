@@ -89,10 +89,3 @@ struct PageInfo: Codable {
     let totalElements: Int
     let totalPages: Int
 }
-
-public enum TicketStatus {
-    case ongoing
-    case upcoming
-    case completed
-    case pending
-}
