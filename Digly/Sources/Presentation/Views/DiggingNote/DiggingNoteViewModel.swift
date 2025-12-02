@@ -55,6 +55,11 @@ class DiggingNoteViewModel: ObservableObject {
                 diggingNoteTickets = ticketResponse.tickets.sorted { lhs, rhs in
                     lhs.lastModifiedAt > rhs.lastModifiedAt
                 }
+                
+                if let expandedTicketId {
+                    await fetchNotesForTicket(expandedTicketId)
+                }
+                
                 isLoading = false
                 
             } catch {

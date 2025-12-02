@@ -1,10 +1,11 @@
 import SwiftUI
 
 struct DiggingNoteCard: View {
+    @Binding var isExpanded: Bool
     let ticket: TicketDiggingNote
     let notes: [Note]
+    let onTapNote: (Int) -> Void
     
-    @Binding var isExpanded: Bool
     
     private var ticketGradient: LinearGradient {
         if !isExpanded {
@@ -21,7 +22,9 @@ struct DiggingNoteCard: View {
             if isExpanded, !notes.isEmpty  {
                 VStack(spacing: 16) {
                     ForEach(notes) { note in
-                        DGNoteCard(note: note)
+                        DGNoteCard(note: note){
+                            onTapNote(note.id)
+                        }
                     }
                 }
                 .padding(.top, 20)

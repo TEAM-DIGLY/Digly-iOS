@@ -4,7 +4,7 @@ enum DiggingNoteRoute: BaseRoute {
     case diggingNote
     case ticketSelection
     case writeNote(ticket: Ticket)
-    case noteDetail(ticket: Ticket, noteId: Int)
+    case noteDetail(ticketId: Int, noteId: Int)
 
     var id: String {
         String(describing: self)

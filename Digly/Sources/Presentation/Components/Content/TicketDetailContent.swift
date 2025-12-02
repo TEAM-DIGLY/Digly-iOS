@@ -83,7 +83,7 @@ struct TicketDetailContent: View {
             
             VStack(spacing: 16) {
                 ForEach(notes) { note in
-                    DGNoteCard(note: note)
+                    DGNoteCard(note: note) {}
                 }
             }
         }

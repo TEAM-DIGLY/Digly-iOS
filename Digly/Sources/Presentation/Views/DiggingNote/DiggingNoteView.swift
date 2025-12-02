@@ -19,15 +19,17 @@ struct DiggingNoteView: View {
                         VStack(spacing: 32) {
                             ForEach(viewModel.diggingNoteTickets, id: \.id) { ticket in
                                 DiggingNoteCard(
-                                    ticket: ticket,
-                                    notes: viewModel.notesForTicket,
                                     isExpanded: Binding(
                                         get: { viewModel.expandedTicketId == ticket.id },
                                         set: { newValue in
                                             viewModel.setExpandedState(for: ticket.id, isExpanded: newValue)
                                         }
-                                    )
-                                )
+                                    ),
+                                    ticket: ticket,
+                                    notes: viewModel.notesForTicket
+                                ) { noteId in
+                                    router.push(to: .noteDetail(ticketId: ticket.id, noteId: noteId))
+                                }
                             }
                         }
                     }
