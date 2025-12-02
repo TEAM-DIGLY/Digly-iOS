@@ -7,14 +7,17 @@ class DiggingNoteDetailViewModel: ObservableObject {
     @Published var note: Note?
     @Published var isLoading: Bool = false
     @Published var isMenuPresent = false
+    @Published var isEditMode = false
     @Published var noteDeleted = false
 
     let noteUseCase: NoteUseCase
 
     init(
-        noteUseCase: NoteUseCase = NoteUseCase()
+        noteUseCase: NoteUseCase = NoteUseCase(),
+        noteId: Int
     ) {
         self.noteUseCase = noteUseCase
+        getNoteDetail(noteId: noteId)
     }
 
     func getNoteDetail(noteId: Int) {
