@@ -31,6 +31,11 @@ struct DiggingNoteNavigationStack: View {
         case .diggingNote:              DiggingNoteView()
         case .ticketSelection:          SelectNoteTicketView()
         case .writeNote(let ticket):    WriteNoteView(ticket: ticket)
+        case .noteDetail(let ticket, let noteId):
+            DiggingNoteDetailView(
+                ticket: ticket,
+                noteId: noteId
+            )
         }
     }
 }

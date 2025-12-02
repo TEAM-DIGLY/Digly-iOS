@@ -15,7 +15,9 @@ struct PopupViewModifier: ViewModifier {
                 if manager.isPresented, let popupType = manager.currentPopupType {
                     if case .custom(let view) = popupType {
                         AnyView(view)
-                            .animation(.fastSpring, value: manager.isAnimating)
+                            .opacity(manager.isAnimating ? 1 : 0)
+                            .offset(y: manager.isAnimating ? 0 : -80)
+                            .animation(.mediumSpring, value: manager.isAnimating)
                     } else {
                         ZStack {
                             Color.black
@@ -38,10 +40,6 @@ struct PopupViewModifier: ViewModifier {
                 }
             }
             .onChange(of: manager.isPresented) { _, newValue in
-                if case .custom = manager.currentPopupType {
-                    // Custom views don't use the isAnimating state
-                    return
-                }
                 manager.isAnimating = newValue
             }
     }

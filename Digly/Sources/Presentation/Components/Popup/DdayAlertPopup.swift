@@ -3,27 +3,19 @@ import SwiftUI
 struct DdayAlertPopup: View {
     let tickets: [TicketSummary]
     let onEmotionButtonTap: (TicketSummary) -> Void
-    let onDismiss: () -> Void
     
     @State private var currentIndex: Int = 0
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             Color.black.opacity(0.5)
                 .edgesIgnoringSafeArea(.all)
-                .onTapGesture {
-                    withAnimation(.fastSpring) {
-                        onDismiss()
-                    }
-                }
             
             VStack(spacing: 0) {
                 HStack {
                     Spacer()
                     Button(action: {
-                        withAnimation(.fastSpring) {
-                            onDismiss()
-                        }
+                        PopupManager.shared.dismissPopup()
                     }) {
                         Image("close")
                             .padding(16)
@@ -43,18 +35,19 @@ struct DdayAlertPopup: View {
                 
                 TabView(selection: $currentIndex) {
                     ForEach(Array(tickets.enumerated()), id: \.element.id) { index, ticketSummary in
-                        TicketItem(ticket:
-                                    Ticket(
-                                        id: ticketSummary.id,
-                                        name: ticketSummary.name,
-                                        time: ticketSummary.performanceTime,
-                                        place: ticketSummary.place,
-                                        count: 1,
-                                        seatNumber: nil,
-                                        price: nil,
-                                        emotions: []
-                                    ),
-                                   onTapAddEmotion: {}
+                        TicketItem(
+                            ticket: Ticket(
+                                id: ticketSummary.id,
+                                name: ticketSummary.name,
+                                time: ticketSummary.performanceTime,
+                                place: ticketSummary.place,
+                                count: 1,
+                                seatNumber: nil,
+                                price: nil,
+                                emotions: ticketSummary.emotions
+                            ),
+                            ticketStatus: ticketSummary.emotions.isEmpty ? .summary : .hasEmotions,
+                            onTapAddEmotion: { onEmotionButtonTap(ticketSummary) }
                         )
                         .tag(index)
                     }
@@ -72,13 +65,11 @@ struct DdayAlertPopup: View {
                                 .animation(.easeInOut, value: currentIndex)
                         }
                     }
-                    .padding(.bottom, 12)
+                    .padding(.bottom, 24)
                 }
                 
                 Button(action: {
-                    withAnimation(.easeInOut) {
-                        onDismiss()
-                    }
+                    PopupManager.shared.dismissPopup()
                 }) {
                     Text("다음에 남길게요")
                         .fontStyle(.label1)
@@ -93,6 +84,7 @@ struct DdayAlertPopup: View {
                         )
                 }
             }
+            .padding(.top, 24)
         }
     }
 }
@@ -104,16 +96,17 @@ struct DdayAlertPopup: View {
                 id: 1,
                 name: "프랑켄슈타인",
                 performanceTime: Date(),
-                place: "블루스퀘어 신한카드홀"
+                place: "블루스퀘어 신한카드홀",
+                emotions: [.excited]
             ),
             TicketSummary(
                 id: 2,
                 name: "시카고",
                 performanceTime: Date().addingTimeInterval(3600),
-                place: "디큐브 링크아트센터"
+                place: "디큐브 링크아트센터",
+                emotions: []
             )
         ],
-        onEmotionButtonTap: { _ in },
-        onDismiss: {}
+        onEmotionButtonTap: { _ in }
     )
 }

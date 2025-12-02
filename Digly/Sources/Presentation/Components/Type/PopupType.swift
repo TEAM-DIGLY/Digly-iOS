@@ -9,6 +9,7 @@ enum PopupType {
     case backWarning(value: String, onClick: () -> Void)
     case deleteAccountWarning(onClick: () -> Void)
     case deleteTicketWarning(ticketName: String, date: String, onClick: () -> Void)
+    case deleteNoteWarning(onClick: () -> Void)
     case custom(any View)
     
     var config: PopupConfig {
@@ -93,6 +94,17 @@ enum PopupType {
             PopupConfig(
                 title: "\(ticketName)\n티켓을 삭제할까요?",
                 description: "\(date)의 티켓,\n한 번 삭제하면 복구할 수 없어요.",
+                isOptional: true,
+                isDarkMode: true,
+                buttons: [
+                    ButtonConfig(text: "취소") {},
+                    ButtonConfig(text: "삭제") { onClick() }
+                ]
+            )
+        case .deleteNoteWarning(let onClick):
+            PopupConfig(
+                title: "노트를 삭제할까요?",
+                description: "한 번 삭제하면 복구할 수 없어요.",
                 isOptional: true,
                 isDarkMode: true,
                 buttons: [

@@ -214,24 +214,40 @@ struct TicketItem: View {
                 .padding(.horizontal, 32)
             
             Group {
-                if !ticket.emotions.isEmpty {
-                    HStack(spacing: 8) {
-                        ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
-                            Text("#\(emotion.rawValue)")
-                                .fontStyle(.body1)
-                                .foregroundStyle(emotion.color)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                } else {
-                    Text("감정 남기러 가기")
-                        .fontStyle(.headline2)
-                        .foregroundStyle(.opacityWhite850)
+                switch ticketStatus {
+                case .summary:
+                    Text("감정 키워드로 티켓 완성하기")
+                        .fontStyle(.body1)
+                        .foregroundStyle(.pLight)
                         .onTapGesture {
                             onTapAddEmotion()
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.vertical, 12)
+                        .background { RoundedRectangle(cornerRadius: 12)
+                                .fill(.opacityWhite100)
+                            .stroke(.opacityWhite200, lineWidth: 1) }
+                        .padding(14)
+                default:
+                    if !ticket.emotions.isEmpty {
+                        HStack(spacing: 8) {
+                            ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
+                                Text("#\(emotion.rawValue)")
+                                    .fontStyle(.body1)
+                                    .foregroundStyle(emotion.color)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                    } else {
+                        Text("감정 남기러 가기")
+                            .fontStyle(.headline2)
+                            .foregroundStyle(.opacityWhite850)
+                            .onTapGesture {
+                                onTapAddEmotion()
+                            }
+                    }
                 }
             }
             .frame(height: 76, alignment: .center)

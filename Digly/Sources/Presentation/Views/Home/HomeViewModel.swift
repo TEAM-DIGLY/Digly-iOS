@@ -7,13 +7,9 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     @Published var tickets: [Ticket] = []
     @Published var isLoading: Bool = false
-    @Published var focusedTicketIndex: Int = 0
     @Published var ticketNotes: [Note] = []
     @Published var ddayTickets: [TicketSummary] = []
-    
-    // popup에서 사용자에게 보여지는 티켓에 대한 데이터입니다.
-    @Published var popupTicket: TicketSummary? = nil
-    @Published var selectedEmotionsPerTicket: [Int: [Emotion]] = [:]
+    @Published var selectedDdayTicketId: Int = 0
 
     // Popup states
     @Published var isEmotionSheetPresent: Bool = false
@@ -21,21 +17,12 @@ class HomeViewModel: ObservableObject {
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
 
-    // Popup callbacks
-    var onShowDdayAlert: ((Ticket) -> Void)?
-    var onShowEmotionCompleted: ((Ticket, [Emotion]) -> Void)?
-
-    var focusedTicket: Ticket? {
-        tickets.isEmpty ? nil : tickets[safe: focusedTicketIndex]
-    }
-    
     init(ticketUseCase: TicketUseCase = TicketUseCase(),
          noteUseCase: NoteUseCase = NoteUseCase()) {
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
         
         fetchTickets()
-        
     }
     
     private func fetchTickets() {
@@ -44,11 +31,6 @@ class HomeViewModel: ObservableObject {
             do {
                 let response = try await ticketUseCase.getAllTickets()
                 tickets = response.tickets
-                
-                if !tickets.isEmpty {
-                    focusedTicketIndex = 0
-//                    await loadNotesForFocusedTicket()
-                }
             } catch {
                 print("Failed to load tickets: \(error)")
                 ToastManager.shared.show(.errorStringWithTask("티켓 로딩"))
@@ -57,67 +39,33 @@ class HomeViewModel: ObservableObject {
         }
     }
     
-    func updateFocusedTicket(index: Int) {
-        guard index != focusedTicketIndex && index >= 0 && index < tickets.count else { return }
-        focusedTicketIndex = index
-        
-        Task {
-//            await loadNotesForFocusedTicket()
-        }
-    }
-    
-    // Computed property to get note count for focused ticket
-    var noteCount: Int {
-        ticketNotes.count
-    }
-
-    var emotionsForPopupTicket: [Emotion] {
-        guard let popupTicket else { return [] }
-        return selectedEmotionsPerTicket[popupTicket.id] ?? []
-    }
-    
-    // Calculate days remaining until performance
-    func daysUntilPerformance(for ticket: Ticket) -> Int {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        let performanceDay = calendar.startOfDay(for: ticket.time)
-        
-        let components = calendar.dateComponents([.day], from: today, to: performanceDay)
-        return components.day ?? 0
-    }
-    
-    // Check if performance is today
-    func isPerformanceToday(for ticket: Ticket) -> Bool {
-        let calendar = Calendar.current
-        return calendar.isDate(ticket.time, inSameDayAs: Date())
-    }
-
     // 핍압에 띄울 티켓 조회
     func fetchDdayTickets() {
         Task {
             do {
-                let completedTickets = try await ticketUseCase.getTicketsComplete()
-                guard !completedTickets.isEmpty else { return }
-
-                ddayTickets = completedTickets
+                ddayTickets = try await ticketUseCase.getTicketsComplete()
             } catch {
                 ToastManager.shared.show(.errorStringWithTask("티켓 로딩"))
             }
         }
     }
     
-    func updateTicketEmotions(_ emotions: [Emotion], onSuccess: @escaping (Ticket) -> Void) {
-        guard let popupTicket else { return }
+    func updateDdayTicketEmotion(_ emotions: [Emotion]) {
         Task {
             do {
-                let response = try await ticketUseCase.updateTicketEmotions(
-                    ticketId: popupTicket.id,
+                _ = try await ticketUseCase.updateTicketEmotions(
+                    ticketId: selectedDdayTicketId,
                     emotions: emotions
                 )
-
-                selectedEmotionsPerTicket[popupTicket.id] = emotions
-                self.popupTicket = nil
-                onSuccess(response)
+                
+                // Update local ddayTickets state so UI reflects new emotions immediately
+                if let index = ddayTickets.firstIndex(where: { $0.id == selectedDdayTicketId }) {
+                    var updatedSummary = ddayTickets[index]
+                    updatedSummary.emotions = emotions
+                    ddayTickets[index] = updatedSummary
+                }
+                
+                isEmotionSheetPresent = false
             } catch {
                 ToastManager.shared.show(.errorStringWithTask("감정 등록"))
             }

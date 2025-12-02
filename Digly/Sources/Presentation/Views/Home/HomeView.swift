@@ -6,6 +6,8 @@ struct HomeView: View {
     @StateObject var viewModel = HomeViewModel()
     @StateObject private var authManager = AuthManager.shared
     @StateObject private var popupManager = PopupManager.shared
+    
+    @State private var focusedIndex: Int = 0
     @AppStorage(UserDefaultKeys.nickname) private var nicknameUD: String = ""
 
     var displayNickname: String {
@@ -21,44 +23,29 @@ struct HomeView: View {
         }
         .sheet(isPresented: $viewModel.isEmotionSheetPresent) {
             EmotionSelectionBottomSheet(
-                currentEmotions: viewModel.emotionsForPopupTicket,
+                currentEmotions: [],
                 updateEmotion: { emotions in
-                    viewModel.updateTicketEmotions(emotions) { updatedTicket in
-                        PopupManager.shared.show(.custom(
-                            EmotionCompletedPopup(
-                                ticket: updatedTicket,
-                                selectedEmotions: updatedTicket.emotions,
-                                onViewRecord: {
-                                    PopupManager.shared.dismissPopup()
-                                },
-                                onDismiss: {
-                                    PopupManager.shared.dismissPopup()
-                                }
-                            )
-                        ))
-                    }
-                    viewModel.isEmotionSheetPresent = false
+                    viewModel.updateDdayTicketEmotion(emotions)
                 }
             )
             .presentationDetents([.height(600)])
             .presentationDragIndicator(.hidden)
         }
-        .overlay {
-            if !viewModel.ddayTickets.isEmpty {
-                DdayAlertPopup(
-                    tickets: viewModel.ddayTickets,
-                    onEmotionButtonTap: { ticket in
-                        viewModel.popupTicket = ticket
-                        viewModel.isEmotionSheetPresent = true
-                    },
-                    onDismiss: {
-                        PopupManager.shared.dismissPopup()
-                    }
-                )
-            }
-        }
         .onAppear {
             viewModel.fetchDdayTickets()
+        }
+        .onChange(of: viewModel.ddayTickets) { _, tickets in
+            if !tickets.isEmpty {
+                PopupManager.shared.show(.custom(
+                    DdayAlertPopup(
+                        tickets: viewModel.ddayTickets,
+                        onEmotionButtonTap: { ticket in
+                            viewModel.selectedDdayTicketId = ticket.id
+                            viewModel.isEmotionSheetPresent = true
+                        }
+                    )
+                ))
+            }
         }
     }
 
@@ -77,7 +64,7 @@ struct HomeView: View {
                             .foregroundStyle(.neutral600)
                         
                         HStack(spacing: 0) {
-                            Text("\(viewModel.noteCount)")
+                            Text("\(viewModel.ticketNotes.count)")
                                 .fontStyle(.headline2)
                                 .foregroundStyle(.neutral800)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -186,10 +173,10 @@ struct HomeView: View {
                 .scrollTargetBehavior(.viewAligned)
                 .frame(height: 300)
                 .scrollPosition(id: .init(get: {
-                    viewModel.focusedTicketIndex
+                    focusedIndex
                 }, set: { newPosition in
-                    if let newIndex = newPosition, newIndex >= 0, newIndex < Digly.data.count {
-                        viewModel.updateFocusedTicket(index: newIndex)
+                    if let newIndex = newPosition, newIndex >= 0 {
+                        focusedIndex = newIndex
                     }
                 }))
             }
@@ -275,7 +262,7 @@ struct HomeView: View {
         let components = calendar.dateComponents([.day], from: today, to: performanceDay)
         
         let daysUntil = components.day ?? 0
-        let isFocused = index == viewModel.focusedTicketIndex
+        let isFocused = index == focusedIndex
         
         return ZStack {
             switch (daysUntil) {

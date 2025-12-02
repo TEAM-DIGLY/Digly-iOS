@@ -60,7 +60,7 @@ struct TicketCard: View {
                 topTrailingRadius: cornerSize[0]
             )
         )
-        .shadow(color: .common100.opacity(0.2), radius: 10)
+//        .shadow(color: .common100.opacity(0.2), radius: 10)
         .padding(10)
     }
 

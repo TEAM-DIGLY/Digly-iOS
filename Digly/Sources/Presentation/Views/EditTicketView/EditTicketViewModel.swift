@@ -27,7 +27,8 @@ final class EditTicketViewModel: ObservableObject {
         formData.time = ticket.time
         formData.count = ticket.count
         formData.seatNumber = ticket.seatNumber ?? ""
-        formData.price = String(describing: ticket.price)
+        // Avoid showing Optional(...) by safely unwrapping optional price
+        formData.price = ticket.price.map(String.init) ?? ""
     }
     
     var isUpdateButtonEnabled: Bool {

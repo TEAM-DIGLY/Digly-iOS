@@ -1,5 +1,12 @@
 import SwiftUI
 
+enum TicketFieldType {
+    case name
+    case place
+    case seatNumber
+    case price
+}
+
 struct EditTicketDetailContent: View {
     @Binding var formData: CreateTicketFormData
     @Binding var date: Date
@@ -7,91 +14,114 @@ struct EditTicketDetailContent: View {
     
     @State private var isDateFocused: Bool = false
     @State private var isTimeFocused: Bool = false
-    @State private var isTimeSelected: Bool = false
-    @FocusState private var isFocused: Bool
+    @FocusState private var focusedField: TicketFieldType?
     
     var body: some View {
         VStack(spacing: 32) {
-            DGFormField(
-                value: $formData.showName,
-                label: "극 제목",
-                isRequired: true
-            )
-            
-            HStack(spacing: 16) {
-                dateTimeField(.date)
-                dateTimeField(.time)
-            }
+            DGFormField(value: $formData.showName, label: "극 제목", isRequired: true)
+                .focused($focusedField, equals: .name)
             
             VStack(spacing: 0) {
-                if isDateFocused {
-                    DatePicker(
-                        "",
-                        selection: $date,
-                        displayedComponents: .date
-                    )
-                    .onTapGesture(count: 99){}
-                    .tint(.neutral300)
-                    .colorScheme(.dark)
-                    .datePickerStyle(GraphicalDatePickerStyle())
-                    .frame(width: 320)
+                HStack(spacing: 16) {
+                    dateTimeField(.date)
+                    dateTimeField(.time)
                 }
                 
-                if isTimeFocused {
-                    DatePicker(
-                        "",
-                        selection: $time,
-                        displayedComponents: .hourAndMinute
-                    )
-                    .tint(.common100)
-                    .datePickerStyle(.wheel)
-                    .tint(.neutral300)
-                    .colorScheme(.dark)
-                    .frame(width: 320)
+                VStack {
+                    if isDateFocused {
+                        DatePicker(
+                            "",
+                            selection: $date,
+                            displayedComponents: .date
+                        )
+                        .onTapGesture(count: 99){}
+                        .tint(.neutral300)
+                        .colorScheme(.dark)
+                        .datePickerStyle(GraphicalDatePickerStyle())
+                        .frame(width: 320)
+                        
+                        Button(action: {
+                            isDateFocused = false
+                        }) {
+                            Text("수정 완료")
+                                .fontStyle(.body1)
+                                .foregroundStyle(.neutral300)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                        }
+                        .background(.neutral700, in: RoundedRectangle(cornerRadius: 8))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(12)
+                    }
+                    
+                    if isTimeFocused {
+                        DatePicker(
+                            "",
+                            selection: $time,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .tint(.common100)
+                        .datePickerStyle(.wheel)
+                        .tint(.neutral300)
+                        .colorScheme(.dark)
+                        .frame(width: 320)
+                        
+                        
+                        Button(action: {
+                            isTimeFocused = false
+                        }) {
+                            Text("수정 완료")
+                                .fontStyle(.body1)
+                                .foregroundStyle(.neutral300)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 8)
+                        }
+                        .background(.neutral700, in: RoundedRectangle(cornerRadius: 8))
+                        .frame(maxWidth: .infinity, alignment: .trailing)
+                        .padding(12)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .background(.opacityWhite50, in: RoundedRectangle(cornerRadius: 16))
+                .padding(.vertical, 8)
+            }
+            
+            DGFormField(value: $formData.place, label: "관람 장소", isRequired: true)
+                .focused($focusedField, equals: .place)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                Text("(선택) 관람 횟수")
+                    .fontStyle(.label2)
+                    .foregroundStyle(.neutral300)
+                    .padding(.leading, 12)
+                
+                HStack(spacing: 12) {
+                    minusButton
+                    seatCounterTextField
+                    plusButton
                 }
             }
-            .padding(.vertical, 8)
             
+            DGFormField(value: $formData.seatNumber, label: "(선택) 좌석 번호", isRequired: false)
+                .focused($focusedField, equals: .seatNumber)
             
-            DGFormField(
-                value: $formData.place,
-                label: "관람 장소",
-                isRequired: true
-            )
-            
-            
-            Text("(선택) 관람 횟수")
-                .fontStyle(.label2)
-                .foregroundStyle(.neutral300)
-            
-            
-            HStack(spacing: 12) {
-                minusButton
-                seatCounterTextField
-                plusButton
-            }
-            
-            DGFormField(
-                value: $formData.seatNumber,
-                label: "(선택) 좌석 번호",
-                isRequired: false
-            )
-            
-            
-            Text("(선택) 티켓 가격")
-                .fontStyle(.label2)
-                .foregroundStyle(.neutral300)
-            
-            DGTextField(
-                text: $formData.price,
-                placeholder: "ex) 100,000",
-                type: .createTicketOptional
-            )
-            .focused($isFocused)
-            .keyboardType(.numberPad)
-            
+            DGFormField(value: $formData.price, label: "(선택) 티켓 가격", isRequired: false)
+                .focused($focusedField, equals: .seatNumber)
+                .keyboardType(.numberPad)
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, 16)
+        .onChange(of: focusedField) {
+            if focusedField != nil {
+                isDateFocused = false
+                isTimeFocused = false
+            }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            focusedField = nil
+        }
+        .animation(.mediumFastSpring, value: isDateFocused)
+        .animation(.mediumFastSpring, value: isTimeFocused)
     }
 }
 
@@ -105,21 +135,26 @@ extension EditTicketDetailContent {
             if step == .date {
                 formData.date?.toyyyyMMddString() ?? "관람 일자"
             } else {
-                if isTimeSelected {
-                    formData.time?.toTimeString() ?? "관람 시간"
-                } else {
-                    "관람 시간"
-                }
+                formData.time?.toTimeString() ?? "관람 시간"
             }
         }
         
         Button(action: {
             if step == .time {
-                isTimeSelected = true
+                isDateFocused = false
+                if isTimeFocused {
+                    isTimeFocused = false
+                } else {
+                    isTimeFocused = true
+                }
+            } else {
+                isTimeFocused = false
+                if isDateFocused {
+                    isDateFocused = false
+                } else {
+                    isDateFocused = true
+                }
             }
-            isDateFocused = step == .date
-            isTimeFocused = step != .date
-            
         }) {
             HStack {
                 Text(value)

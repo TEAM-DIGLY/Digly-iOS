@@ -253,7 +253,8 @@ struct GetTicketsCompleteResponse: Codable {
                     id: id,
                     name: name,
                     performanceTime: performanceTime.toDate(),
-                    place: place
+                    place: place,
+                    emotions: []
                 )
             }
         }
@@ -283,9 +284,10 @@ struct TicketDiggingNote {
 }
 
 /// - note: HomeView 내부 팝업에 띄워질 간소화된 티켓 정보 구조체입니다.
-struct TicketSummary {
+struct TicketSummary: Equatable {
     let id: Int
     let name: String
     let performanceTime: Date
     let place: String
+    var emotions: [Emotion]
 }
