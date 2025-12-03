@@ -44,11 +44,13 @@ struct HomeNavigationStack: View {
             AgreementDetailView(agreementType: type)
         case .profileSetting:
             ProfileSettingView()
+        case .withdrawal:
+            WithdrawalView()
         case .ticketFlow:
             TicketFlowNavigationStack(onFlowCompleted: {
                 router.pop() // Return to previous screen when ticket flow completes
             })
-            
+
         case .ticketDetail(let ticketId):
             TicketDetailView(
                 ticketId: ticketId,

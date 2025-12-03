@@ -66,7 +66,7 @@ struct TitleBackNavBar<Content: View>: View {
             
             Text(title)
                 .font(.headline2)
-                .foregroundStyle(.opacityWhite800)
+                .foregroundStyle(isDarkMode ? .opacityWhite800 : .neutral900)
         }
         .padding(.horizontal, 16)
         .frame(height: 48)

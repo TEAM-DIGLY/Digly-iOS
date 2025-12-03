@@ -63,36 +63,17 @@ class TicketDetailViewModel: ObservableObject {
         }
     }
 
-    func showDeleteConfirmation() {
-        guard let currentTicket = ticket else { return }
-
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ko_KR")
-        formatter.dateFormat = "yyyy년 M월 d일"
-        let dateString = formatter.string(from: currentTicket.time)
-
-        PopupManager.shared.show(
-            .deleteTicketWarning(
-                ticketName: currentTicket.name,
-                date: dateString,
-                onClick: {
-                    self.deleteTicket()
-                }
-            )
-        )
-    }
-
-    private func deleteTicket(withNotes: Bool = false) {
+    func deleteTicket(onSuccess: @escaping () -> Void) {
         Task {
             do {
                 guard let currentTicket = ticket else { return }
 
                 isLoading = true
-                try await ticketUseCase.deleteTicket(ticketId: currentTicket.id, withNotes: withNotes)
+                try await ticketUseCase.deleteTicket(ticketId: currentTicket.id, withNotes: true)
 
                 await MainActor.run {
                     isLoading = false
-                    ticketDeleted = true
+                    onSuccess()
                     ToastManager.shared.show(.success("티켓이 삭제되었습니다"))
                 }
             } catch {

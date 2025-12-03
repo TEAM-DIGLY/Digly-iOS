@@ -2,11 +2,31 @@ import SwiftUI
 
 struct ProfileSettingView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var router: HomeRouter
     @StateObject private var viewModel = ProfileSettingViewModel()
+    @FocusState var isFocused: Bool
 
     var body: some View {
-        DGScreen(horizontalPadding: 0) {
-            navigationBar
+        DGScreen(horizontalPadding: 0, onClick: {
+            isFocused = false
+        }) {
+            TitleBackNavBar(title: "프로필 설정", isDarkMode: false) {
+                Button(action: {
+                    if viewModel.isEditMode {
+                        viewModel.saveProfile {
+                            dismiss()
+                        }
+                    } else {
+                        viewModel.isEditMode = true
+                    }
+                }) {
+                    Text(viewModel.isEditMode ? "완료" : "수정")
+                        .fontStyle(.headline2)
+                        .foregroundStyle(.common0)
+                        .padding(.horizontal, 8)
+                }
+            }
+            .padding(.bottom, 24)
 
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 24) {
@@ -31,39 +51,6 @@ struct ProfileSettingView: View {
         }
     }
 
-    // MARK: - Navigation Bar
-    private var navigationBar: some View {
-        HStack {
-            Button(action: {
-                dismiss()
-            }) {
-                Image("chevron_left")
-                    .renderingMode(.template)
-                    .foregroundStyle(.neutral900)
-            }
-
-            Spacer()
-
-            Text("프로필 설정")
-                .fontStyle(.headline2)
-                .foregroundStyle(.neutral900)
-
-            Spacer()
-
-            Button(action: {
-                viewModel.saveProfile {
-                    dismiss()
-                }
-            }) {
-                Text("수정")
-                    .fontStyle(.body2)
-                    .foregroundStyle(.neutral900)
-            }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-    }
-
     // MARK: - Nickname Section
     private var nicknameSection: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -76,6 +63,16 @@ struct ProfileSettingView: View {
                 placeholder: "",
                 type: .profileSetting
             )
+            .opacity(viewModel.isEditMode ? 1.0: 0.6)
+            .focused($isFocused)
+            .disabled(!viewModel.isEditMode)
+
+            if viewModel.isEditMode {
+                nicknameStatusText
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 4)
+                    .padding(.top, 4)
+            }
         }
     }
 
@@ -83,14 +80,13 @@ struct ProfileSettingView: View {
     private var characterSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("나의 캐릭터")
-                .fontStyle(.body2)
+                .fontStyle(.label2)
                 .foregroundStyle(.neutral600)
 
-            Text("# \(viewModel.characters[viewModel.currentCharacterIndex].role)")
-                .fontStyle(.body2)
-                .foregroundStyle(.neutral800)
+            Text("# \(viewModel.characters[viewModel.currentCharacterIndex].diglyType.verb) 디글리")
+                .fontStyle(.body1)
+                .foregroundStyle(.neutral900)
 
-            // Character Selector
             characterSelector
                 .padding(.top, 24)
         }
@@ -98,54 +94,32 @@ struct ProfileSettingView: View {
 
     // MARK: - Character Selector
     private var characterSelector: some View {
-        HStack(spacing: 0) {
-            // Left Arrow
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    viewModel.selectPreviousCharacter()
+        HStack(alignment:.top, spacing: 12) {
+            ForEach(Array(Digly.data.enumerated()), id: \.offset) { index, digly in
+                Button(action: {
+                    viewModel.currentCharacterIndex = index
+                }) {
+                    let isSelected = index == viewModel.currentCharacterIndex
+                    VStack(spacing: 12) {
+                        Image("\(digly.diglyType.imageName)_avatar_box")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: .infinity)
+                            .opacity(isSelected ? 1.0 : 0.2)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 13).stroke(isSelected ? viewModel.isEditMode ? .neutral600 : .neutral300 : .clear, lineWidth: 1)
+                            }
+                        
+                        if isSelected {
+                            Image("check")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 40)
+                        }
+                    }
                 }
-            }) {
-                Image("chevron_left")
-                    .renderingMode(.template)
-                    .foregroundStyle(.neutral500)
-                    .frame(width: 24, height: 24)
+                .disabled(!viewModel.isEditMode)
             }
-            .padding(.leading, 20)
-
-            Spacer()
-
-            // Character Display
-            VStack(spacing: 8) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(.neutral100)
-                        .frame(width: 120, height: 160)
-
-                    Image(viewModel.characters[viewModel.currentCharacterIndex].diglyType.profileImageName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 120)
-                }
-
-                Image("chevron_down_sm")
-                    .renderingMode(.template)
-                    .foregroundStyle(.neutral400)
-            }
-
-            Spacer()
-
-            // Right Arrow
-            Button(action: {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    viewModel.selectNextCharacter()
-                }
-            }) {
-                Image("chevron_right")
-                    .renderingMode(.template)
-                    .foregroundStyle(.neutral500)
-                    .frame(width: 24, height: 24)
-            }
-            .padding(.trailing, 20)
         }
     }
 
@@ -157,30 +131,32 @@ struct ProfileSettingView: View {
                 .foregroundStyle(.neutral400)
 
             Button(action: {
-                viewModel.showWithdrawalConfirmation()
+                router.push(to: .withdrawal)
             }) {
-                if viewModel.isLoading {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .neutral600))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(.neutral200, lineWidth: 1)
-                        )
-                } else {
-                    Text("회원 탈퇴")
-                        .fontStyle(.body2)
-                        .foregroundStyle(.neutral600)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(.neutral200, lineWidth: 1)
-                        )
-                }
+                Text("회원 탈퇴")
+                    .fontStyle(.body2)
+                    .foregroundStyle(.neutral600)
+                    .padding(.horizontal, 40)
+                    .padding(.vertical, 16)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.neutral200, lineWidth: 1)
+                    )
             }
-            .disabled(viewModel.isLoading)
+        }
+    }
+
+    // MARK: - Nickname Status
+    @ViewBuilder
+    private var nicknameStatusText: some View {
+        if viewModel.nicknameErrorText.isEmpty {
+            Text(viewModel.isNicknameValid ? "사용 가능한 닉네임입니다." : "*2-7자의 한글/영문/숫자/특수기호 입력 가능")
+                .fontStyle(.caption2)
+                .foregroundStyle(viewModel.isNicknameValid ? .success : .neutral400)
+        } else {
+            Text(viewModel.nicknameErrorText)
+                .fontStyle(.caption2)
+                .foregroundStyle(.error)
         }
     }
 }

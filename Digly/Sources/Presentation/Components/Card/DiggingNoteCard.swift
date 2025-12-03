@@ -63,14 +63,16 @@ struct DiggingNoteCard: View {
                 
                 Spacer()
                 
-                Button(action: { isExpanded.toggle() }) {
-                    Image("chevron_down")
-                        .renderingMode(.template)
-                        .foregroundColor(.opacityWhite700)
-                        .rotationEffect(Angle(degrees: isExpanded ? 180 : 0))
-                        .frame(width: 24, height: 24)
+                if ticket.noteCount > 0 {
+                    Button(action: { isExpanded.toggle() }) {
+                        Image("chevron_down")
+                            .renderingMode(.template)
+                            .foregroundColor(.opacityWhite700)
+                            .rotationEffect(Angle(degrees: isExpanded ? 180 : 0))
+                            .frame(width: 24, height: 24)
+                    }
+                    .padding(.trailing, isExpanded ? 40 : 16)
                 }
-                .padding(.trailing, isExpanded ? 40 : 16)
             }
             
             HStack(spacing: 12) {

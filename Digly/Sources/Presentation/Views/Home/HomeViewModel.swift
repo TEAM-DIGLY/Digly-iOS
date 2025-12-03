@@ -7,7 +7,6 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     @Published var tickets: [Ticket] = []
     @Published var isLoading: Bool = false
-    @Published var ticketNotes: [Note] = []
     @Published var ddayTickets: [TicketSummary] = []
     @Published var selectedDdayTicketId: Int = 0
 

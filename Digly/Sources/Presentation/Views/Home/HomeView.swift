@@ -64,7 +64,7 @@ struct HomeView: View {
                             .foregroundStyle(.neutral600)
                         
                         HStack(spacing: 0) {
-                            Text("\(viewModel.ticketNotes.count)")
+                            Text("\(viewModel.tickets.count)")
                                 .fontStyle(.headline2)
                                 .foregroundStyle(.neutral800)
                                 .frame(maxWidth: .infinity, alignment: .leading)

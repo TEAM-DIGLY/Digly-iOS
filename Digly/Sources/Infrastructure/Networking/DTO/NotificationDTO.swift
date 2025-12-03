@@ -17,8 +17,8 @@ struct GetNotificationsResponse: Codable {
         let content: String
         let createdAt: String
 
-        func toDomain() -> DiglyNotification {
-            DiglyNotification(
+        func toDomain() -> Alarm {
+            Alarm(
                 id: id,
                 title: title,
                 content: content,

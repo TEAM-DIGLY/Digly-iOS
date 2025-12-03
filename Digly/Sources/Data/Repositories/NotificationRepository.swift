@@ -7,10 +7,10 @@ final class NotificationRepository: NotificationRepositoryProtocol {
         self.networkAPI = networkAPI
     }
 
-    func getNotifications(page: Int, size: Int) async throws -> NotificationsResult {
+    func getNotifications(page: Int) async throws -> NotificationsResult {
         let query: [String: String] = [
             "page": "\(page)",
-            "size": "\(size)"
+            "size": "20"
         ]
 
         let response: GetNotificationsResponse = try await networkAPI.request(

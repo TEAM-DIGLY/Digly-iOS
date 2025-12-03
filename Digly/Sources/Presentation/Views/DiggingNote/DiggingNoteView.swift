@@ -22,13 +22,16 @@ struct DiggingNoteView: View {
                                     isExpanded: Binding(
                                         get: { viewModel.expandedTicketId == ticket.id },
                                         set: { newValue in
-                                            viewModel.setExpandedState(for: ticket.id, isExpanded: newValue)
+                                            if ticket.noteCount > 0 {
+                                                viewModel.setExpandedState(for: ticket.id, isExpanded: newValue)
+                                            }
                                         }
                                     ),
                                     ticket: ticket,
                                     notes: viewModel.notesForTicket
                                 ) { noteId in
                                     router.push(to: .noteDetail(ticketId: ticket.id, noteId: noteId))
+                                    viewModel.expandedTicketId = nil
                                 }
                             }
                         }
@@ -38,6 +41,7 @@ struct DiggingNoteView: View {
                 }
             }
         }
+        .refreshable { viewModel.fetchDiggingNoteTickets() }
         .onAppear {
             viewModel.fetchDiggingNoteTickets()
         }

@@ -51,6 +51,7 @@ struct StartAddTicketManualView: View {
         DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
             BackNavWithTitle(title: "티켓 추가하기", backgroundColor: .common0)
                 .padding(.horizontal, 16)
+                .padding(.bottom, 24)
             
             VStack(spacing: 32) {
                 TicketOptionCard(

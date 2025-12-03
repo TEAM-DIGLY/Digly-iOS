@@ -56,11 +56,6 @@ struct TicketDetailView: View {
         .onAppear {
             viewModel.getTicketDetail(id: ticketId)
         }
-        .onChange(of: viewModel.ticketDeleted) { deleted in
-            if deleted {
-                onNavigateReset()
-            }
-        }
     }
     
     private var headerSection: some View {
@@ -97,19 +92,30 @@ struct TicketDetailView: View {
                     Text("수정하기")
                         .font(.body2)
                         .foregroundStyle(.opacityWhite850)
+                        .frame(maxWidth: .infinity)
                         .frame(height: 52)
                 }
                 
                 Divider()
-                    .background(Color.opacityWhite100)
+                    .background(.opacityWhite100)
                 
                 Button(action: {
-                    viewModel.showDeleteConfirmation()
                     viewModel.isMenuPresent = false
+                    
+                    PopupManager.shared.show(
+                        .deleteTicketWarning(
+                            ticketName: ticket.name,
+                            date: ticket.time.toyyyyMMddString(),
+                            onClick: {
+                                viewModel.deleteTicket { onNavigateReset() }
+                            }
+                        )
+                    )
                 }) {
                     Text("삭제하기")
                         .font(.body2)
                         .foregroundStyle(.opacityWhite850)
+                        .frame(maxWidth: .infinity)
                         .frame(height: 52)
                 }
             }

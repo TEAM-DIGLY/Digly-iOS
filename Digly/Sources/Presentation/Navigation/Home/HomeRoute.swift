@@ -7,8 +7,9 @@ enum HomeRoute: BaseRoute {
     case ticketFlow
     case inquiry
     case profileSetting
+    case withdrawal
     case agreementDetail(AgreementType)
-    
+
     case ticketDetail(Int)
     case editTicket(Ticket)
     

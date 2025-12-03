@@ -106,17 +106,7 @@ class DiggingNoteDetailViewModel: ObservableObject {
         }
     }
 
-    func showDeleteConfirmation() {
-        PopupManager.shared.show(
-            .deleteNoteWarning(
-                onClick: {
-                    self.deleteNote()
-                }
-            )
-        )
-    }
-
-    private func deleteNote() {
+    func deleteNote(onSuccess: @escaping () -> Void) {
         Task {
             do {
                 guard let currentNote = note else { return }
@@ -126,7 +116,7 @@ class DiggingNoteDetailViewModel: ObservableObject {
 
                 await MainActor.run {
                     isLoading = false
-                    noteDeleted = true
+                    onSuccess()
                     ToastManager.shared.show(.success("노트가 삭제되었습니다"))
                 }
             } catch {

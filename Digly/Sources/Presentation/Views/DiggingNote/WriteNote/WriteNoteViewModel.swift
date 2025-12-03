@@ -85,7 +85,7 @@ class WriteNoteViewModel: ObservableObject {
 
         do {
             _ = try await noteUseCase.createNote(ticketId: ticket.id, contents: contents)
-            ToastManager.shared.show(.success("노트가 저장되었어요."), isDelayNeeded: true)
+            ToastManager.shared.show(.success("노트가 저장되었습니다."), isDelayNeeded: true)
             isSaving = false
             return true
         } catch {

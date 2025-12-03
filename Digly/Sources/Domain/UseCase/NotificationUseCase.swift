@@ -7,8 +7,8 @@ final class NotificationUseCase {
         self.repository = repository
     }
 
-    func getNotifications(page: Int = 0, size: Int = 20) async throws -> NotificationsResult {
-        try await repository.getNotifications(page: page, size: size)
+    func getNotifications(page: Int = 0) async throws -> NotificationsResult {
+        try await repository.getNotifications(page: page)
     }
 
     func deleteNotification(id: Int) async throws {

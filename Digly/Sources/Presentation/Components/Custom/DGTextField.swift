@@ -42,7 +42,7 @@ enum TextFieldType {
         case .inquiry, .inquiryEmail:
                 .neutral50
         case .profileSetting:
-                .opacityWhite800
+                .neutral50
         }
     }
     
@@ -52,10 +52,8 @@ enum TextFieldType {
                 .opacityWhite100
         case .createTicket:
                 .opacityWhite100
-        case .inquiry, .inquiryEmail:
+        case .inquiry, .inquiryEmail, .profileSetting:
                 .clear
-        case .profileSetting:
-                .sbDefault
         }
     }
     
