@@ -19,11 +19,6 @@ struct TicketBookNavigationStack: View {
             .navigationDestination(for: TicketBookRoute.self) { route in
                 destinationView(for: route)
                     .swipeBackDisabled(route.disableSwipeBack)
-                    .onAppear {
-                        //                            print("📊 Main Analytics: \(route.analyticsName)")
-                        //                            print("🔒 SwipeBack enabled: \(route.disableSwipeBack)")
-                        //                            print("📋 TabBar hidden: \(route.hidesTabBar)")
-                    }
             }
             .navigationDestination(for: TicketFlowRoute.self) { route in
                 TicketFlowNavigationStack.destinationView(
@@ -42,13 +37,16 @@ struct TicketBookNavigationStack: View {
     @ViewBuilder
     private func destinationView(for route: TicketBookRoute) -> some View {
         switch route {
-        case .ticketBook: 
+        case .ticketBook:
             TicketBookView()
         case .ticketDetail(let ticketId):
             TicketDetailView(
                 ticketId: ticketId,
                 onNavigateToEdit: { ticket in router.push(to: .editTicket(ticket))},
-                onNavigateReset: { router.reset() }
+                onNavigateReset: { router.reset() },
+                onNavigateToNoteDetail: { noteId in
+                    router.push(to: .noteDetail(ticketId: ticketId, noteId: noteId))
+                }
             )
         case .ticketFlow:
             TicketFlowNavigationStack(onFlowCompleted: {
@@ -56,9 +54,14 @@ struct TicketBookNavigationStack: View {
             })
         case .editTicket(let ticket):
             EditTicketView(ticket: ticket)
+        case .noteDetail(let ticketId, let noteId):
+            DiggingNoteDetailView(
+                ticketId: ticketId,
+                noteId: noteId
+            )
         }
     }
-} 
+}
 
 #Preview {
     TicketBookNavigationStack(selectedTab: .constant(2))

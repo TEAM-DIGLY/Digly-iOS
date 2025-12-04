@@ -3,6 +3,7 @@ import SwiftUI
 struct TicketDetailContent: View {
     let ticket: Ticket
     let onTapAddEmotion: () -> Void
+    let onTapNoteItem: (Int) -> Void
     
     var body: some View {
         VStack(spacing: 0){
@@ -83,7 +84,9 @@ struct TicketDetailContent: View {
             
             VStack(spacing: 16) {
                 ForEach(notes) { note in
-                    DGNoteCard(note: note) {}
+                    DGNoteCard(note: note) {
+                        onTapNoteItem(note.id)
+                    }
                 }
             }
         }
@@ -213,15 +216,15 @@ struct TicketItem: View {
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 32)
             
-            Group {
+            Button(action: {
+                onTapAddEmotion()
+            }) {
                 switch ticketStatus {
                 case .summary:
                     Text("감정 키워드로 티켓 완성하기")
                         .fontStyle(.body1)
                         .foregroundStyle(.pLight)
-                        .onTapGesture {
-                            onTapAddEmotion()
-                        }
+                    
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding(.vertical, 12)
                         .background { RoundedRectangle(cornerRadius: 12)
@@ -239,18 +242,15 @@ struct TicketItem: View {
                                     .padding(.vertical, 6)
                             }
                         }
-                        .frame(maxWidth: .infinity, alignment: .center)
                     } else {
                         Text("감정 남기러 가기")
                             .fontStyle(.headline2)
                             .foregroundStyle(.opacityWhite850)
-                            .onTapGesture {
-                                onTapAddEmotion()
-                            }
                     }
                 }
             }
-            .frame(height: 76, alignment: .center)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .frame(height: 76)
         }
     }
     

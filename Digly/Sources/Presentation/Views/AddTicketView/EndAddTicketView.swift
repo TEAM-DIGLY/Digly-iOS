@@ -30,9 +30,11 @@ struct EndAddTicketManualView: View {
                         .padding(.horizontal, 24)
                         .padding(.bottom, 40)
                     
-                    TicketDetailContent(ticket: ticket, onTapAddEmotion: {
-                        isEmotionSheetPresent = true
-                    })
+                    TicketDetailContent(
+                        ticket: ticket,
+                        onTapAddEmotion: { isEmotionSheetPresent = true },
+                        onTapNoteItem: {}
+                    )
                 }
             }
         }

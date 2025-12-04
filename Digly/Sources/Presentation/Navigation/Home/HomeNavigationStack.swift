@@ -50,18 +50,26 @@ struct HomeNavigationStack: View {
             TicketFlowNavigationStack(onFlowCompleted: {
                 router.pop() // Return to previous screen when ticket flow completes
             })
-
+            
         case .ticketDetail(let ticketId):
             TicketDetailView(
                 ticketId: ticketId,
                 onNavigateToEdit: { ticket in router.push(to: .editTicket(ticket))},
-                onNavigateReset: { router.reset() }
+                onNavigateReset: { router.reset() },
+                onNavigateToNoteDetail: { noteId in
+                    router.push(to: .noteDetail(ticketId: ticketId, noteId: noteId))
+                }
             )
+        case .noteDetail(let ticketId, let noteId):
+            DiggingNoteDetailView(
+                ticketId: ticketId,
+                noteId: noteId
+            )   
         case .editTicket(let ticket):
             EditTicketView(ticket: ticket)
         }
     }
-} 
+}
 
 #Preview {
     HomeNavigationStack(selectedTab: .constant(0))

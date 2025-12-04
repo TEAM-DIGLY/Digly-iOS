@@ -8,6 +8,7 @@ struct TicketDetailView: View {
     let ticketId: Int
     let onNavigateToEdit: (Ticket) -> Void
     let onNavigateReset: () -> Void
+    let onNavigateToNoteDetail: (Int) -> Void
     
     var body: some View {
         DGScreen(
@@ -21,9 +22,15 @@ struct TicketDetailView: View {
             if let ticket = viewModel.ticket {
                 ScrollView(.vertical, showsIndicators: false) {
                     headerSection
-                    TicketDetailContent(ticket: ticket) {
-                        viewModel.isEmotionSheetPresent = true
-                    }
+                    TicketDetailContent(
+                        ticket: ticket,
+                        onTapAddEmotion: {
+                            viewModel.isEmotionSheetPresent = true
+                        },
+                        onTapNoteItem: { noteId in
+                            onNavigateToNoteDetail(noteId)
+                        }
+                    )
                     Spacer().frame(height: 120)
                 }
             }
@@ -227,5 +234,10 @@ struct TicketDetailView: View {
 }
 
 #Preview {
-    TicketDetailView(ticketId: 23, onNavigateToEdit: {_ in }, onNavigateReset: {})
+    TicketDetailView(
+        ticketId: 23,
+        onNavigateToEdit: {_ in },
+        onNavigateReset: {},
+        onNavigateToNoteDetail: {_ in}
+    )
 }

@@ -40,6 +40,7 @@ struct EmotionSelectionBottomSheet: View {
                         }
                     }
                     .padding(.bottom, 32)
+                    .padding(.horizontal, 24)
                     .animation(.fastSpring, value: selectedEmotions)
                     
                     selectedEmotionSection

@@ -6,7 +6,6 @@ struct DiggingNoteCard: View {
     let notes: [Note]
     let onTapNote: (Int) -> Void
     
-    
     private var ticketGradient: LinearGradient {
         if !isExpanded {
             return LinearGradient(colors: [.neutral800, .neutral700], startPoint: .topLeading, endPoint: .bottomTrailing)

@@ -12,6 +12,7 @@ enum HomeRoute: BaseRoute {
 
     case ticketDetail(Int)
     case editTicket(Ticket)
+    case noteDetail(ticketId: Int, noteId: Int)
     
     var id: String {
         String(describing: self)

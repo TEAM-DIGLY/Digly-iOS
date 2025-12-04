@@ -21,7 +21,6 @@ class TicketBookViewModel: ObservableObject {
             }
         }
     }
-    
     @Published var totalCnt: Int = 0
     
     @Published var currentPage: Int = 0
@@ -36,7 +35,7 @@ class TicketBookViewModel: ObservableObject {
     init(
         ticketUseCase: TicketUseCase = TicketUseCase(),
         noteUseCase: NoteUseCase = NoteUseCase()
-    ) {
+    ){
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
         initializeFetch()
@@ -85,14 +84,13 @@ class TicketBookViewModel: ObservableObject {
     }
 }
 
-extension TicketBookViewModel {
-    private func fetchBigTickets() {
+private extension TicketBookViewModel {
+    func fetchBigTickets() {
         Task {
             do {
                 isLoading = true
                 bigTickets = try await ticketUseCase.getBigTickets()
                 isLoading = false
-                
             } catch {
                 isLoading = false
                 ToastManager.shared.show(.errorStringWithTask("티켓 로딩"))
@@ -100,7 +98,7 @@ extension TicketBookViewModel {
         }
     }
     
-    private func fetchTickets() async throws -> [Ticket] {
+    func fetchTickets() async throws -> [Ticket] {
         let response = try await ticketUseCase.getAllTickets(
             startDate: startedDate,
             endDate: endDate,

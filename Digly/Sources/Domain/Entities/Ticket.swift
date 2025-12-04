@@ -1,7 +1,7 @@
 import SwiftUI
 import Foundation
 
-struct Ticket: Identifiable {
+struct Ticket: Identifiable, Equatable {
     let id: Int
     let name: String
     let time: Date
