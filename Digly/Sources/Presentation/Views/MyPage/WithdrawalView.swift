@@ -151,19 +151,11 @@ struct WithdrawalView: View {
 
     // MARK: - Bottom Section
     private var bottomSection: some View {
-        VStack(spacing: 16) {
-            // Digly character image would go here
-            // For now using a placeholder
-            Image(AuthManager.shared.avatarImageName)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 60)
-                .opacity(0.8)
+        VStack(alignment: .center, spacing: 0) {
+            Image("withdrawalDigly")
 
             Button(action: {
-                viewModel.performWithdrawal {
-                    dismiss()
-                }
+                viewModel.performWithdrawal()
             }) {
                 if viewModel.isLoading {
                     ProgressView()

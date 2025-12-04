@@ -53,7 +53,7 @@ class WithdrawalViewModel: ObservableObject {
         }
     }
 
-    func performWithdrawal(onSuccess: @escaping () -> Void) {
+    func performWithdrawal() {
         guard let reason = selectedReason else {
             toastManager.show(.errorWithMessage("탈퇴 사유를 선택해주세요."))
             return
@@ -74,7 +74,6 @@ class WithdrawalViewModel: ObservableObject {
                 try await memberUseCase.withdrawMember(reason: withdrawalReason)
                 toastManager.show(.success("회원 탈퇴가 완료되었습니다."), isDelayNeeded: true)
                 authManager.logout()
-                onSuccess()
             } catch {
                 toastManager.show(.error(error))
             }

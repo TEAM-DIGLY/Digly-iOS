@@ -21,8 +21,6 @@ struct TicketBookView: View {
                 }
             }
         }
-        .animation(.mediumSpring, value: viewModel.bigTickets)
-        .animation(.mediumSpring, value: viewModel.tickets)
 
         .sheet(isPresented: $showFilterBottomSheet) {
             FilterBottomSheet(

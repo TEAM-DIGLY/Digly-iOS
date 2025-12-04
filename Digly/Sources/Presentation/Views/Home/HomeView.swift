@@ -351,6 +351,7 @@ struct HomeView: View {
                         .foregroundStyle(foregroundColor)
                 }
                 .padding(16)
+                .lineLimit(1)
                 .frame(maxWidth: .infinity)
                 .background(backgroundColor, in: RoundedRectangle(cornerRadius: 20))
             }

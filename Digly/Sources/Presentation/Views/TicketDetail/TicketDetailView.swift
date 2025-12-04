@@ -154,7 +154,7 @@ struct TicketDetailView: View {
         tmpTicket.notes = nil
         
         let ticketView = AnyView(
-            TicketDetailContent(ticket: tmpTicket, onTapAddEmotion: {}).frame(height: 750, alignment: .center).background(.bgDark)
+            TicketDetailContent(ticket: tmpTicket, onTapAddEmotion: {}, onTapNoteItem: {_ in}).frame(height: 750, alignment: .center).background(.bgDark)
         )
         
         let controller = UIHostingController(rootView: ticketView)

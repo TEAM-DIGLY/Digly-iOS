@@ -33,7 +33,7 @@ struct EndAddTicketManualView: View {
                     TicketDetailContent(
                         ticket: ticket,
                         onTapAddEmotion: { isEmotionSheetPresent = true },
-                        onTapNoteItem: {}
+                        onTapNoteItem: {_ in}
                     )
                 }
             }

@@ -1,6 +1,6 @@
 import SwiftUI
 
-enum Emotion: String, CaseIterable {
+enum Emotion: String, CaseIterable, Equatable {
     case distressed = "괴로운"
     case excited = "신난"
     case glad = "즐거운"

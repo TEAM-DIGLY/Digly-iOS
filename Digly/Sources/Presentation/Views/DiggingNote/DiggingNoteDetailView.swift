@@ -18,6 +18,7 @@ struct DiggingNoteDetailView: View {
             backgroundColor: .common0,
             isLoading: viewModel.isLoading,
             onClick: {
+                isFocused = false
                 viewModel.isMenuPresent = false
             }
         ) {
@@ -29,6 +30,7 @@ struct DiggingNoteDetailView: View {
                         ticketInfoSection(ticket: ticket)
                             .padding(.bottom, 20)
                     }
+                    
                     viewModeContent
                     
                     Spacer().frame(height: 120)

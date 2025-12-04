@@ -99,7 +99,6 @@ class CreateAccountViewModel: ObservableObject {
                     return
                 }
             } else{
-                // TODO: 서버로 부터 닉네임 중복여부 확인 후, 중복없을 시, usernameValid true로 전환
                 isUsernameValid = true // 버튼 완료로 변경됨
             }
         }
