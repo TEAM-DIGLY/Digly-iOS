@@ -15,38 +15,53 @@ struct HomeView: View {
     }
     
     var body: some View {
-        DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
-            headerSection
-            ticketThumbnailContent
-            Spacer()
-            notesContent
-        }
-        .sheet(isPresented: $viewModel.isEmotionSheetPresent) {
-            EmotionSelectionBottomSheet(
-                currentEmotions: [],
-                updateEmotion: { emotions in
-                    viewModel.updateDdayTicketEmotion(emotions)
-                }
-            )
-            .presentationDetents([.height(600)])
-            .presentationDragIndicator(.hidden)
-        }
-        .onAppear {
-            viewModel.fetchDdayTickets()
-        }
-        .onChange(of: viewModel.ddayTickets) { _, tickets in
-            if !tickets.isEmpty {
-                PopupManager.shared.show(.custom(
-                    DdayAlertPopup(
-                        tickets: viewModel.ddayTickets,
-                        onEmotionButtonTap: { ticket in
-                            viewModel.selectedDdayTicketId = ticket.id
-                            viewModel.isEmotionSheetPresent = true
+            DGScreen(horizontalPadding: 0, isAlignCenter: true, isLoading: viewModel.isLoading) {
+                headerSection
+                ticketThumbnailContent
+                Spacer()
+                notesContent
+            }
+            .sheet(isPresented: $viewModel.isEmotionSheetPresent) {
+                EmotionSelectionBottomSheet(
+                    currentEmotions: [],
+                    updateEmotion: { emotions in
+                        viewModel.updateDdayTicketEmotion(emotions)
+                    }
+                )
+                .presentationDetents([.height(600)])
+                .presentationDragIndicator(.hidden)
+            }
+            .overlay {
+                if viewModel.isTutorialPresent {
+                    HomeTutorialOverlay(
+                        isPresented: $viewModel.isTutorialPresent,
+                        onDismiss: {
+                            viewModel.completeTutorial()
                         }
                     )
-                ))
+                    .transition(.opacity)
+                    .zIndex(999)
+                }
+            }
+            .onAppear {
+                viewModel.fetchDdayTickets()
+                viewModel.checkTutorialVisibility()
+            }
+            .onChange(of: viewModel.ddayTickets) { _, tickets in
+                if !tickets.isEmpty {
+                    PopupManager.shared.show(.custom(
+                        DdayAlertPopup(
+                            tickets: viewModel.ddayTickets,
+                            onEmotionButtonTap: { ticket in
+                                viewModel.selectedDdayTicketId = ticket.id
+                                viewModel.isEmotionSheetPresent = true
+                            }
+                        )
+                    ))
+                }
             }
         }
+        .animation(.easeInOut(duration: 0.3), value: viewModel.isTutorialPresent)
     }
 
     private var notesContent: some View {

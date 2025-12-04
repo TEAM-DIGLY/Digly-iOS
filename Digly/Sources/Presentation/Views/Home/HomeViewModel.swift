@@ -12,15 +12,19 @@ class HomeViewModel: ObservableObject {
 
     // Popup states
     @Published var isEmotionSheetPresent: Bool = false
+    @Published var isTutorialPresent: Bool = false
 
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
+    private let onboardingUseCase: OnboardingUseCase
 
     init(ticketUseCase: TicketUseCase = TicketUseCase(),
-         noteUseCase: NoteUseCase = NoteUseCase()) {
+         noteUseCase: NoteUseCase = NoteUseCase(),
+         onboardingUseCase: OnboardingUseCase = OnboardingUseCase()) {
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
-        
+        self.onboardingUseCase = onboardingUseCase
+
         fetchTickets()
     }
     
@@ -78,5 +82,31 @@ class HomeViewModel: ObservableObject {
             object: nil,
             userInfo: [NotificationEvent.didTapTicketBook.userInfo: TabItem.ticketBook.rawValue]
         )
+    }
+
+    // Check if tutorial should be shown
+    func checkTutorialVisibility() {
+        Task {
+            do {
+                isTutorialPresent = true
+//                let visibility = try await onboardingUseCase.getVisibility(type: .main)
+//                if visibility.isVisible {
+//                    isTutorialPresent = true
+//                }
+            } catch {
+                print("Failed to check tutorial visibility: \(error)")
+            }
+        }
+    }
+
+    // Update tutorial visibility (mark as seen)
+    func completeTutorial() {
+        Task {
+            do {
+                try await onboardingUseCase.updateVisibility(type: .main)
+            } catch {
+                print("Failed to update tutorial visibility: \(error)")
+            }
+        }
     }
 }
