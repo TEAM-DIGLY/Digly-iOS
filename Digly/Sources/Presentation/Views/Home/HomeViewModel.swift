@@ -26,6 +26,7 @@ class HomeViewModel: ObservableObject {
         self.onboardingUseCase = onboardingUseCase
 
         fetchTickets()
+        checkTutorialVisibility()
     }
     
     private func fetchTickets() {
@@ -88,11 +89,16 @@ class HomeViewModel: ObservableObject {
     func checkTutorialVisibility() {
         Task {
             do {
-                isTutorialPresent = true
-//                let visibility = try await onboardingUseCase.getVisibility(type: .main)
-//                if visibility.isVisible {
-//                    isTutorialPresent = true
-//                }
+                let visibility = try await onboardingUseCase.getVisibility(type: .main)
+                if visibility.isVisible {
+                    PopupManager.shared.show(.custom(
+                    HomeTutorialOverlay(
+                        onDismiss: { [weak self] in
+                            self?.completeTutorial()
+                        }
+                    )
+                    ))
+                }
             } catch {
                 print("Failed to check tutorial visibility: \(error)")
             }

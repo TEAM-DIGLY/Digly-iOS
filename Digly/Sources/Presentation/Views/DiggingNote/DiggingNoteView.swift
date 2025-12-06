@@ -11,7 +11,6 @@ struct DiggingNoteView: View {
                 VStack(spacing: 40){
                     header
                         .padding(.horizontal, 24)
-                        .padding(.top, 32)
                     
                     if viewModel.diggingNoteTickets.isEmpty {
                         placeholder
@@ -44,6 +43,21 @@ struct DiggingNoteView: View {
         .refreshable { viewModel.fetchDiggingNoteTickets() }
         .onAppear {
             viewModel.fetchDiggingNoteTickets()
+        }
+        .onChange(of: viewModel.isTutorialVisible){
+            if viewModel.isTutorialVisible {
+                PopupManager.shared.show(.custom(
+                    DiggingNoteTutorialOverlay(
+                    onTapBtn: {
+                        viewModel.isTutorialVisible = false
+                        router.push(to: .ticketSelection)
+                    },
+                    onDismiss: {
+                        viewModel.completeTutorial()
+                    }
+                )
+                ))
+            }
         }
     }
 

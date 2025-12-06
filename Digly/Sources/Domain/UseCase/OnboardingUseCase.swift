@@ -7,7 +7,7 @@ final class OnboardingUseCase {
         self.repository = repository
     }
 
-    func getVisibility(type: OnboardingType = .main) async throws -> OnboardingVisibility {
+    func getVisibility(type: OnboardingType) async throws -> OnboardingVisibility {
         try await repository.getOnboardingVisible(type: type)
     }
 

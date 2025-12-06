@@ -6,17 +6,22 @@ class DiggingNoteViewModel: ObservableObject {
     @Published var notesForTicket: [Note] = []
     @Published var expandedTicketId: Int? = nil
     @Published var isLoading: Bool = false
+    @Published var isTutorialVisible: Bool = false
     
     private let ticketUseCase: TicketUseCase
     private let noteUseCase: NoteUseCase
+    private let onboardingUseCase: OnboardingUseCase
     
     init(
         ticketUseCase: TicketUseCase = TicketUseCase(),
-        noteUseCase: NoteUseCase = NoteUseCase()
+        noteUseCase: NoteUseCase = NoteUseCase(),
+        onboardingUseCase: OnboardingUseCase = OnboardingUseCase()
     ) {
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
+        self.onboardingUseCase = onboardingUseCase
         fetchDiggingNoteTickets()
+        checkTutorialVisibility()
     }
     
     func setExpandedState(for ticketId: Int, isExpanded: Bool) {
@@ -65,6 +70,29 @@ class DiggingNoteViewModel: ObservableObject {
             } catch {
                 isLoading = false
                 ToastManager.shared.show(.errorStringWithTask("노트 조회"))
+            }
+        }
+    }
+    
+    func checkTutorialVisibility() {
+        Task {
+            do {
+                let visibility = try await onboardingUseCase.getVisibility(type: .note)
+                isTutorialVisible = visibility.isVisible
+            } catch {
+                print("Failed to check tutorial visibility: \(error)")
+            }
+        }
+    }
+
+    // Update tutorial visibility (mark as seen)
+    func completeTutorial() {
+        Task {
+            do {
+                try await onboardingUseCase.updateVisibility(type: .note)
+                isTutorialVisible = false
+            } catch {
+                print("Failed to update tutorial visibility: \(error)")
             }
         }
     }
