@@ -279,27 +279,31 @@ struct TicketItem: View {
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 32)
             
-            Group {
-                if !ticket.emotions.isEmpty {
-                    HStack(spacing: 8) {
-                        ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
-                            Text("#\(emotion.rawValue)")
-                                .fontStyle(.body1)
-                                .foregroundStyle(emotion.color)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 6)
+            Button(action: {
+                onTapAddEmotion()
+            }) {
+                Group {
+                    if !ticket.emotions.isEmpty {
+                        HStack(spacing: 8) {
+                            ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
+                                Text("#\(emotion.rawValue)")
+                                    .fontStyle(.body1)
+                                    .foregroundStyle(emotion.color)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                            }
                         }
+                    } else {
+                        Text("감정 남기러 가기")
+                            .fontStyle(.headline2)
+                            .foregroundStyle(.opacityWhite850)
+                            .onTapGesture {
+                                onTapAddEmotion()
+                            }
                     }
-                } else {
-                    Text("감정 남기러 가기")
-                        .fontStyle(.headline2)
-                        .foregroundStyle(.opacityWhite850)
-                        .onTapGesture {
-                            onTapAddEmotion()
-                        }
                 }
+                .frame(height: 76, alignment: .center)
             }
-            .frame(height: 76, alignment: .center)
         }
         .padding(24)
     }

@@ -26,10 +26,10 @@ struct TicketBookNavigationStack: View {
                     handlers: .init(
                         push: { router.path.append($0) },
                         pop: { router.pop() },
-                        completeFlow: { router.pop() }
+                        completeFlow: { router.reset() }
                     )
                 )
-                    .swipeBackDisabled(route.disableSwipeBack)
+                .swipeBackDisabled(route.disableSwipeBack)
             }
         }
     }

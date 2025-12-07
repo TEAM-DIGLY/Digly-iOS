@@ -252,6 +252,7 @@ struct DGFormField: View {
                         .foregroundStyle(.error)
                 }
             }
+            .padding(.leading, 12)
             
             DGTextField(
                 text: $value,

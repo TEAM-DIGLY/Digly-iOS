@@ -11,7 +11,9 @@ struct EndAddTicketManualView: View {
         onCompleteTapped: @escaping () -> Void,
         ticketUseCase: TicketUseCase = TicketUseCase()
     ) {
-        self.ticket = ticket
+        var temp = ticket
+        temp.name = "티켓을 등록했어요!"
+        self.ticket = temp
         self.onCompleteTapped = onCompleteTapped
         self.ticketUseCase = ticketUseCase
     }
@@ -22,13 +24,6 @@ struct EndAddTicketManualView: View {
                 VStack(spacing: 0) {
                     headerSection
                         .padding(.bottom, 24)
-                    
-                    Text("티켓을 등록했어요 !")
-                        .fontStyle(.heading1)
-                        .foregroundStyle(.common100)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.horizontal, 24)
-                        .padding(.bottom, 40)
                     
                     TicketDetailContent(
                         ticket: ticket,
@@ -58,18 +53,25 @@ struct EndAddTicketManualView: View {
 // MARK: - Components
 extension EndAddTicketManualView {
     private var headerSection: some View {
-        BackNavWithTitle(
-            title: "티켓 추가하기",
-            backgroundColor: .common0
-        ) {
-            Button("완료") {
-                onCompleteTapped()
+        ZStack {
+            HStack(alignment: .center, spacing: 0) {
+                Spacer()
+                Button("완료") {
+                    onCompleteTapped()
+                }
+                .fontStyle(.headline2)
+                .foregroundStyle(.common100)
             }
-            .fontStyle(.headline2)
-            .foregroundStyle(.common100)
+            .padding(.horizontal, 24)
+            
+            Text("티켓 추가하기")
+                .font(.headline2)
+                .foregroundStyle(.common100)
+            
         }
-        .padding(.horizontal, 24)
         .padding(.top, 16)
+        .frame(height: 48)
+        .background(.common0)
     }
 }
 

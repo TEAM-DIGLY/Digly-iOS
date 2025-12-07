@@ -2,8 +2,7 @@ import SwiftUI
 
 struct TicketGuidePopupView: View {
     @State private var currentStep: Int = 0
-    let hidePopup: () -> Void
-    
+
     private let guideSteps: [TicketGuideStep] = [
         TicketGuideStep(
             title: "티켓 정보 붙여넣기 안내",
@@ -12,22 +11,32 @@ struct TicketGuidePopupView: View {
         ),
         TicketGuideStep(
             title: "정보 추출 완료",
-            description: "복사한 정보를 붙여넣고 ‘티켓 정보 인식하기'를 클릭합니다.",
+            description: "복사한 정보를 붙여넣고 '티켓 정보 인식하기'를 클릭합니다.",
             subDescription: ""
         )
     ]
-    
+
     var body: some View {
-        VStack(spacing: 0) {
-            contentSection
-            bottomActionSection
+        ZStack(alignment: .center) {
+            Color.black.opacity(0.5)
+                .edgesIgnoringSafeArea(.all)
+                .onTapGesture {
+                    PopupManager.shared.dismissPopup()
+                }
+
+            VStack(spacing: 0) {
+                contentSection
+                Spacer()
+                
+                Rectangle()
+                    .fill(.opacityWhite200)
+                    .frame(height: 0.5)
+                    .frame(maxWidth: .infinity)
+                bottomActionSection
+            }
+            .frame(width: 300, height: 465)
+            .background(.bottomSheetBackground, in: RoundedRectangle(cornerRadius: 16))
         }
-        .frame(width: 300, height: 465)
-        .background(.neutral900, in: RoundedRectangle(cornerRadius: 16))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(.neutral100.opacity(0.15), lineWidth: 1)
-        )
     }
 }
 
@@ -56,8 +65,10 @@ extension TicketGuidePopupView {
                 .foregroundStyle(.error)
                 .multilineTextAlignment(.center)
             
-            Image("step_\(currentStep + 1)")
+            Image("step\(currentStep + 1)")
         }
+        .padding(.vertical, 20)
+        .padding(.horizontal, 16)
     }
     
     private var bottomActionSection: some View {
@@ -68,44 +79,37 @@ extension TicketGuidePopupView {
                         currentStep -= 1
                     }
                 } else {
-                    hidePopup()
+                    PopupManager.shared.dismissPopup()
                 }
             }) {
-                Text(currentStep == 0 ? "닫기" : "이전")
-                    .fontStyle(.body1)
-                    .foregroundStyle(.neutral300)
+                Text(currentStep == 0 ? "취소" : "이전")
+                    .fontStyle(.mid)
+                    .foregroundStyle(.opacityWhite850)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
             }
-            
+
             Rectangle()
-                .fill(.neutral700)
+                .fill(.opacityWhite200)
                 .frame(width: 0.5, height: 44)
-            
+
             Button(action: {
                 if currentStep < guideSteps.count - 1 {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         currentStep += 1
                     }
                 } else {
-                    hidePopup()
+                    PopupManager.shared.dismissPopup()
                 }
             }) {
-                Text(currentStep == guideSteps.count - 1 ? "완료" : "다음")
-                    .fontStyle(.body1)
-                    .foregroundStyle(.neutral200)
+                Text(currentStep == guideSteps.count - 1 ? "확인" : "다음")
+                    .fontStyle(.mid)
+                    .foregroundStyle(.opacityWhite850)
                     .frame(maxWidth: .infinity)
                     .frame(height: 44)
             }
         }
         .frame(height: 44)
-        .background(.neutral900)
-        .overlay(
-            Rectangle()
-                .fill(.neutral700)
-                .frame(height: 0.5),
-            alignment: .top
-        )
     }
 }
 
@@ -117,5 +121,5 @@ struct TicketGuideStep {
 }
 
 #Preview {
-    TicketGuidePopupView(hidePopup: {})
+    TicketGuidePopupView()
 }

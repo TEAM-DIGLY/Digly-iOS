@@ -19,6 +19,7 @@ struct DiggingNoteTutorialOverlay: View {
                     
                     Button(action: {
                         onTapBtn()
+                        onDismiss()
                         PopupManager.shared.dismissPopup()
                     }) {
                         VStack(spacing: 4) {
@@ -64,7 +65,7 @@ struct DiggingNoteTutorialOverlay: View {
 
 #Preview {
     DiggingNoteTutorialOverlay(
-        onDismiss: {},
-        onTapBtn: {}
+        onTapBtn: {},
+        onDismiss: {}
     )
 }

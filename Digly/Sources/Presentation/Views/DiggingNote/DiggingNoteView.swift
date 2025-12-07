@@ -11,6 +11,7 @@ struct DiggingNoteView: View {
                 VStack(spacing: 40){
                     header
                         .padding(.horizontal, 24)
+                        .padding(.top, 32)
                     
                     if viewModel.diggingNoteTickets.isEmpty {
                         placeholder
@@ -108,7 +109,8 @@ struct DiggingNoteView: View {
         }
     }
 }
-
+ 
 #Preview {
     DiggingNoteView()
 }
+

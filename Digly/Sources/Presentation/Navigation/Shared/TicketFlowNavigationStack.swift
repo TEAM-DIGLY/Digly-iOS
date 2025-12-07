@@ -22,7 +22,7 @@ struct TicketFlowNavigationStack: View {
                     handlers: .init(
                         push: { router.path.append($0) },
                         pop: { router.pop() },
-                        completeFlow: { router.completeFlow() }
+                        completeFlow: { router.reset() }
                     )
                 )
                 .environmentObject(router)

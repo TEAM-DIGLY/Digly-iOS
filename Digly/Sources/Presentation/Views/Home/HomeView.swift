@@ -31,11 +31,6 @@ struct HomeView: View {
             .presentationDetents([.height(600)])
             .presentationDragIndicator(.hidden)
         }
-        .overlay {
-            if viewModel.isTutorialPresent {
-                
-            }
-        }
         .onAppear {
             viewModel.fetchDdayTickets()
         }
@@ -159,35 +154,56 @@ struct HomeView: View {
     }
     
     private var ticketList: some View {
-        GeometryReader { geometry in
-            let itemWidth: CGFloat = 264
-            
-            ScrollViewReader { _ in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 16) {
-                        ForEach(Array(viewModel.tickets.enumerated()), id: \.element.id) { index, ticket in
-                            ticketView(for: ticket, at: index, width: itemWidth)
-                                .scrollTransition { content, phase in
-                                    content.opacity(phase.isIdentity ? 1.0 : 0.8)
-                                }
-                                .id(index)
-                        }
-                    }
-                    .scrollTargetLayout()
-                    .padding(.horizontal, (geometry.size.width - itemWidth) / 2)
+        VStack(spacing: 0) {
+            Button(action: {
+                router.path.append(TicketFlowRoute.addTicket)
+            }){
+                HStack(spacing: 8) {
+                    Image("plus_sm")
+                    Text("관람 예정 티켓 추가하기")
+                        .foregroundStyle(.neutral800)
+                        .font(.body2)
                 }
-                .scrollTargetBehavior(.viewAligned)
-                .frame(height: 300)
-                .scrollPosition(id: .init(get: {
-                    focusedIndex
-                }, set: { newPosition in
-                    if let newIndex = newPosition, newIndex >= 0 {
-                        focusedIndex = newIndex
-                    }
-                }))
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .background(.common100, in: RoundedRectangle(cornerRadius: 18)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(.neutral200, lineWidth: 1.5)
+                )
             }
+            
+            GeometryReader { geometry in
+                let itemWidth: CGFloat = 264
+                
+                ScrollViewReader { _ in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 16) {
+                            ForEach(Array(viewModel.tickets.enumerated()), id: \.element.id) { index, ticket in
+                                ticketView(for: ticket, at: index, width: itemWidth)
+                                    .scrollTransition { content, phase in
+                                        content.opacity(phase.isIdentity ? 1.0 : 0.8)
+                                    }
+                                    .id(index)
+                            }
+                        }
+                        .scrollTargetLayout()
+                        .padding(.horizontal, (geometry.size.width - itemWidth) / 2)
+                    }
+                    .scrollTargetBehavior(.viewAligned)
+                    .frame(height: 300)
+                    .scrollPosition(id: .init(get: {
+                        focusedIndex
+                    }, set: { newPosition in
+                        if let newIndex = newPosition, newIndex >= 0 {
+                            focusedIndex = newIndex
+                        }
+                    }))
+                }
+            }
+            .frame(height: 300)
         }
-        .frame(height: 300)
     }
     
     @ViewBuilder
@@ -213,48 +229,52 @@ struct HomeView: View {
     @ViewBuilder
     private var smallTicketCard: some View {
         if let ticket = viewModel.tickets.first {
-            ZStack {
-                Image("ticket-base")
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    Text(ticket.name)
-                        .fontStyle(.body2)
-                        .foregroundStyle(.text0)
-                        .lineLimit(1)
-                        .padding(.bottom, 12)
+            Button(action: {
+                router.push(to:.ticketDetail(ticket.id))
+            }) {
+                ZStack {
+                    Image("ticket-base")
                     
-                    Text(ticket.time.toTicketDateString())
-                        .fontStyle(.smallLine)
-                        .foregroundStyle(.opacityCool600)
-                        .padding(.bottom, 2)
-                    
-                    Text(ticket.time.toTimeString())
-                        .fontStyle(.smallLine)
-                        .foregroundStyle(.opacityCool600)
-                        .padding(.bottom, 8)
-                    
-                    Text(ticket.place)
-                        .fontStyle(.smallLine)
-                        .foregroundStyle(.opacityCool600)
-                        .lineLimit(1)
-                    
-                    Spacer()
-                    
-                    HStack(spacing: 8) {
-                        ForEach(Array(ticket.emotions.prefix(2)), id: \.self) { emotion in
-                            Text("#\(emotion.rawValue)")
-                                .fontStyle(.caption2)
-                                .foregroundStyle(emotion.color)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 4)
-                                .background(emotion.color50.opacity(0.2), in: RoundedRectangle(cornerRadius: 8))
+                    VStack(alignment: .leading, spacing: 0) {
+                        Text(ticket.name)
+                            .fontStyle(.body2)
+                            .foregroundStyle(.text0)
+                            .lineLimit(1)
+                            .padding(.bottom, 12)
+                        
+                        Text(ticket.time.toTicketDateString())
+                            .fontStyle(.smallLine)
+                            .foregroundStyle(.opacityCool600)
+                            .padding(.bottom, 2)
+                        
+                        Text(ticket.time.toTimeString())
+                            .fontStyle(.smallLine)
+                            .foregroundStyle(.opacityCool600)
+                            .padding(.bottom, 8)
+                        
+                        Text(ticket.place)
+                            .fontStyle(.smallLine)
+                            .foregroundStyle(.opacityCool600)
+                            .lineLimit(1)
+                        
+                        Spacer()
+                        
+                        HStack(spacing: 8) {
+                            ForEach(Array(ticket.emotions.prefix(2)), id: \.self) { emotion in
+                                Text("#\(emotion.rawValue)")
+                                    .fontStyle(.caption2)
+                                    .foregroundStyle(emotion.color)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(emotion.color50.opacity(0.2), in: RoundedRectangle(cornerRadius: 8))
+                            }
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
                     }
-                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.horizontal, 12)
+                    .padding(.top, 16)
+                    .padding(.bottom, 12)
                 }
-                .padding(.horizontal, 12)
-                .padding(.top, 16)
-                .padding(.bottom, 12)
             }
             .frame(width: 146, height: 197)
         }
@@ -274,10 +294,14 @@ struct HomeView: View {
             switch (daysUntil) {
             case 0:
                 Image("DDayBox")
+                    .resizable()
+                    .frame(maxHeight: .infinity)
                     .aspectRatio(contentMode: .fit)
                 
             case 1...3:
                 Image(authManager.liveBaseImageName)
+                    .resizable()
+                    .frame(maxHeight: .infinity)
                     .aspectRatio(contentMode: .fit)
                 
             default:
@@ -336,8 +360,9 @@ struct HomeView: View {
                     .padding(.bottom, 24)
                     .padding(.horizontal, 8)
                 
-                Text(ticket.name)
+                Text("나의 \(ticket.count)번째 문화생활")
                     .fontStyle(.body2)
+                    .multilineTextAlignment(.center)
                     .foregroundStyle(ticketNameColor)
                     .padding(.bottom, 8)
                     .padding(.horizontal, 8)
@@ -353,7 +378,7 @@ struct HomeView: View {
                     router.push(to: .ticketDetail(ticket.id))
                 }) {
                     Text(ticket.name)
-                        .fontStyle(.heading2)
+                        .fontStyle(.headline1)
                         .foregroundStyle(foregroundColor)
                 }
                 .padding(16)

@@ -2,55 +2,25 @@ import SwiftUI
 
 struct AddTicketAutoView: View {
     @StateObject private var viewModel = AddTicketAutoViewModel()
-    
-    @State private var isGuidePopupPresented: Bool = false
-    @State private var isAnimating: Bool = false
-    
+    @StateObject private var popupManager = PopupManager.shared
+
     @FocusState private var isTextEditorFocused: Bool
     
     var body: some View {
-        DGScreen(backgroundColor: .common0, onClick: { isTextEditorFocused = false }) {
+        DGScreen(backgroundColor: .common0, isAlignCenter: true, onClick: { isTextEditorFocused = false }) {
             BackNavWithTitle(title: "티켓 추가하기",backgroundColor: .common0)
-                .padding(.horizontal, 16)
-            
             guidanceSection
-                .padding(.horizontal, 48)
                 .padding(.top, 32)
             
             textEditorSection
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 8)
                 .padding(.top, 20)
             
             Spacer()
             
             actionButton
-                .padding(.horizontal, 24)
+                .padding(.horizontal, 8)
                 .padding(.bottom, 34)
-        }
-        .overlay {
-            if isGuidePopupPresented {
-                ZStack {
-                    Color.black
-                        .edgesIgnoringSafeArea(.all)
-                        .opacity(isAnimating ? 0.3 : 0.0)
-                        .onTapGesture {
-                            isGuidePopupPresented = false
-                            isAnimating = false
-                        }
-                        .animation(.spring(duration: 0.1), value: isAnimating)
-                    
-                    TicketGuidePopupView {
-                        isGuidePopupPresented = false
-                        isAnimating = false
-                    }
-                    .opacity(isAnimating ? 1 : 0)
-                    .offset(y: isAnimating ? 0 : -80)
-                    .animation(.spring(duration: 0.3), value: isAnimating)
-                }
-            }
-        }
-        .onChange(of: isGuidePopupPresented) { _, newValue in
-            isAnimating = newValue
         }
         .onAppear {
             isTextEditorFocused = true
@@ -61,27 +31,30 @@ struct AddTicketAutoView: View {
 // MARK: - Components
 extension AddTicketAutoView {
     private var guidanceSection: some View {
-        VStack(spacing: 14) {
-            Text("[안내] 한 번에 1개의 티켓 정보만 등록할 수 있어요.")
-                .fontStyle(.body2)
-                .foregroundStyle(.neutral300)
-                .multilineTextAlignment(.center)
-            
-            Button(action: {
-                isGuidePopupPresented = true
-            }) {
-                HStack(spacing: 5) {
+        Button(action: {
+            PopupManager.shared.show(.custom(TicketGuidePopupView()))
+        }) {
+            VStack(spacing: 8) {
+                Text("[안내] 한 번에 1개의 티켓 정보만 등록할 수 있어요.")
+                    .fontStyle(.caption1)
+                    .foregroundStyle(.neutral100)
+                    .multilineTextAlignment(.center)
+
+                HStack(spacing: 4) {
                     Text("가이드 보기")
-                        .fontStyle(.body2)
-                        .foregroundStyle(.neutral300)
-                        .underline()
-                    
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 8, weight: .medium))
+                        .fontStyle(.caption2)
+                        .foregroundStyle(.opacityWhite300)
+
+                    Image("chevron_right")
+                        .resizable()
+                        .frame(width: 10, height: 10)
                         .foregroundStyle(.neutral300)
                 }
             }
         }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 20)
+        .background(.opacityWhite50, in: RoundedRectangle(cornerRadius: 24))
     }
     
     private var textEditorSection: some View {

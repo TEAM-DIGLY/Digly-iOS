@@ -41,7 +41,6 @@ struct AddTicketManualView: View {
             
             contentSection
                 .frame(maxWidth: .infinity,alignment: .leading)
-                .padding(.horizontal, 24)
             
             Spacer()
         }
@@ -85,17 +84,29 @@ extension AddTicketManualView {
     private var contentSection: some View {
         switch viewModel.currentStep {
         case .title:
-            labelSection
-                .padding(12)
-            textFieldSection(for: .title)
+            VStack(alignment: .leading) {
+                labelSection
+                    .padding(12)
+                textFieldSection(for: .title)
+            }
+            .padding(.horizontal, 16)
+            
         case .dateTime:
-            labelSection
-                .padding(12)
-            dateTimeSection
+            VStack(alignment: .leading) {
+                labelSection
+                    .padding(12)
+                dateTimeSection
+            }
+            .padding(.horizontal, 16)
+            
         case .venue:
-            labelSection
-                .padding(12)
-            textFieldSection(for: .venue)
+            VStack(alignment: .leading) {
+                labelSection
+                    .padding(12)
+                textFieldSection(for: .venue)
+            }
+            .padding(.horizontal, 16)
+            
         case .ticketDetails:
             ScrollView(.vertical, showsIndicators: false) {
                 EditTicketDetailContent(

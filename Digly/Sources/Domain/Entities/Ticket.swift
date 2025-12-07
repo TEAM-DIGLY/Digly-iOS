@@ -3,7 +3,7 @@ import Foundation
 
 struct Ticket: Identifiable {
     let id: Int
-    let name: String
+    var name: String
     let time: Date
     let place: String
     let count: Int

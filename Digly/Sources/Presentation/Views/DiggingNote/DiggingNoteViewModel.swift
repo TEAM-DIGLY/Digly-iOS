@@ -20,6 +20,7 @@ class DiggingNoteViewModel: ObservableObject {
         self.ticketUseCase = ticketUseCase
         self.noteUseCase = noteUseCase
         self.onboardingUseCase = onboardingUseCase
+        
         fetchDiggingNoteTickets()
         checkTutorialVisibility()
     }
@@ -84,7 +85,7 @@ class DiggingNoteViewModel: ObservableObject {
             }
         }
     }
-
+    
     // Update tutorial visibility (mark as seen)
     func completeTutorial() {
         Task {

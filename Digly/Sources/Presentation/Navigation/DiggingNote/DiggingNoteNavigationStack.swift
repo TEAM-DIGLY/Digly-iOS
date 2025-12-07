@@ -19,8 +19,6 @@ struct DiggingNoteNavigationStack: View {
             .navigationDestination(for: DiggingNoteRoute.self) { route in
                 destinationView(for: route)
                     .swipeBackDisabled(route.disableSwipeBack)
-                    .onAppear {
-                    }
             }
         }
     }
