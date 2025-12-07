@@ -1,7 +1,6 @@
 import Foundation
 
 struct TicketInfoParser {
-    
     enum ParsingError: LocalizedError {
         case noDataFound
         case invalidFormat
@@ -45,10 +44,6 @@ struct TicketInfoParser {
         
         if let price = extractPrice(from: text) {
             ticketData.price = String(price)
-        }
-        
-        guard !ticketData.showName.isEmpty || ticketData.date != nil || !ticketData.place.isEmpty else {
-            return .failure(.missingRequiredFields)
         }
         
         return .success(ticketData)

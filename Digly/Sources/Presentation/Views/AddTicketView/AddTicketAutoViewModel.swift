@@ -4,7 +4,7 @@ import Combine
 @MainActor
 class AddTicketAutoViewModel: ObservableObject {
     @Published var ticketText: String = ""
-    @Published var isProcessing: Bool = false
+    @Published var isLoading: Bool = false
     @Published var extractedData: CreateTicketFormData?
     @Published var errorMessage: String?
     
@@ -33,29 +33,21 @@ class AddTicketAutoViewModel: ObservableObject {
         }
     }
     
-    func extractTicketInfo() {
-        guard !ticketText.isEmpty else { return }
-        
-        isProcessing = true
-        
-        // 시뮬레이션: 실제로는 API 호출 또는 텍스트 파싱 로직
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.processTicketText()
-        }
-    }
-    
-    private func processTicketText() {
-        let parser = TicketInfoParser()
-        let result = parser.parseTicketInfo(from: ticketText)
-        
-        switch result {
-        case .success(let data):
-            extractedData = data
-            isProcessing = false
-            // 추출 완료 후 다음 화면으로 이동하는 로직 추가 예정
-        case .failure(let error):
-            errorMessage = error.localizedDescription
-            isProcessing = false
+    func processTicketText(onSuccess: @escaping (CreateTicketFormData) -> Void) {
+        Task {
+            isLoading = true
+            let parser = TicketInfoParser()
+            let result = parser.parseTicketInfo(from: ticketText)
+            try await Task.sleep(nanoseconds: 1_200_000_000)
+            switch result {
+            case .success(let data):
+                extractedData = data
+                isLoading = false
+                onSuccess(data)
+            case .failure(let error):
+                errorMessage = error.localizedDescription
+                isLoading = false
+            }
         }
     }
 }

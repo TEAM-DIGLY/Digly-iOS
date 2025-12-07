@@ -51,6 +51,7 @@ struct DGPopup: View {
             VStack(alignment: .center, spacing: 8) {
                 Text(config.title)
                     .fontStyle(.body2)
+                    .multilineTextAlignment(.center)
                     .foregroundColor(titleColor)
                 
                 Text(config.description)

@@ -46,8 +46,17 @@ struct TicketFlowNavigationStack: View {
                 }
             )
         case .ticketAutoInput:
-            AddTicketAutoView()
-        case .createTicketForm: 
+            AddTicketAutoView(onNavigateToConfirm: { ticket in
+                handlers.push(.ticketAutoConfirm(ticketForm: ticket))
+            })
+            
+        case .ticketAutoConfirm(let ticketForm):
+            AddTicketAutoConfirmView(
+                ticketFormData: ticketForm,
+                onNavigatedToEnd: { ticket in
+                handlers.push(.endCreateTicket(ticket: ticket))
+            })
+        case .createTicketForm:
             AddTicketManualView(
                 onNavigateToEndTicket: { ticket in
                     handlers.push(.endCreateTicket(ticket: ticket))

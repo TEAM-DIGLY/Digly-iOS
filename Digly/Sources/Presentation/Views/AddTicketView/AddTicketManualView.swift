@@ -142,6 +142,7 @@ extension AddTicketManualView {
                                 Text(searchResult)
                                     .fontStyle(.body2)
                                     .foregroundStyle(.opacityWhite850)
+                                    .lineLimit(1)
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .frame(height: 44)
                             }

@@ -3,8 +3,9 @@ import SwiftUI
 struct AddTicketAutoView: View {
     @StateObject private var viewModel = AddTicketAutoViewModel()
     @StateObject private var popupManager = PopupManager.shared
-
     @FocusState private var isTextEditorFocused: Bool
+    
+    let onNavigateToConfirm: (CreateTicketFormData) -> Void
     
     var body: some View {
         DGScreen(backgroundColor: .common0, isAlignCenter: true, onClick: { isTextEditorFocused = false }) {
@@ -24,6 +25,15 @@ struct AddTicketAutoView: View {
         }
         .onAppear {
             isTextEditorFocused = true
+        }
+        .overlay{
+            if viewModel.isLoading {
+                ZStack {
+                    Color.black.opacity(0.3).ignoresSafeArea()
+                    Image("processing")
+                }
+                
+            }
         }
     }
 }
@@ -92,17 +102,19 @@ extension AddTicketAutoView {
     
     private var actionButton: some View {
         DGButton(
-            text: viewModel.isProcessing ? "티켓 정보 추출하기" : (viewModel.ticketText.isEmpty ? "다음으로" : "티켓 정보 추출하기"),
+            text :"티켓 정보 추출하기",
             type: .primaryDark,
             isDisabled: viewModel.ticketText.isEmpty
         ) {
             if !viewModel.ticketText.isEmpty {
-                viewModel.extractTicketInfo()
+                viewModel.processTicketText(onSuccess: { ticketFormData in
+                    onNavigateToConfirm(ticketFormData)
+                })
             }
         }
     }
 }
 
 #Preview {
-    AddTicketAutoView()
+    AddTicketAutoView(onNavigateToConfirm: {_ in })
 }

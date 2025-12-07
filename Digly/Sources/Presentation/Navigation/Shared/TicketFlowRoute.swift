@@ -4,6 +4,7 @@ enum TicketFlowRoute: BaseRoute {
     case addTicket
     case ticketAutoInput
     case createTicketForm
+    case ticketAutoConfirm(ticketForm: CreateTicketFormData)
     case endCreateTicket(ticket: Ticket)
     
     var id: String {

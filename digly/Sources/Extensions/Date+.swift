@@ -18,6 +18,11 @@ extension Date {
         return formatter.string(from: self)
     }
     
+    var isPast: Bool {
+        let now = Date()
+        let timeInterval = now.timeIntervalSince(self)
+        return timeInterval > 0
+    }
     /// 현재 시간과의 차이를 한국어로 표현
     /// - Returns: "방금", "14분 전", "2시간 전", "3일 전", "2024.12.25" 등의 문자열
     func timeAgoString() -> String {

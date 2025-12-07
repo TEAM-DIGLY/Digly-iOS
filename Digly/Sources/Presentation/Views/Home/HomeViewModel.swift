@@ -29,7 +29,7 @@ class HomeViewModel: ObservableObject {
         checkTutorialVisibility()
     }
     
-    private func fetchTickets() {
+    func fetchTickets() {
         Task {
             isLoading = true
             do {

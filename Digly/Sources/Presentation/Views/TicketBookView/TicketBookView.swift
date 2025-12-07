@@ -13,10 +13,14 @@ struct TicketBookView: View {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
                     headerView
-                    upperTicketList
-                    Spacer().frame(height: 24)
-                    subHeader
-                    ticketGridView
+                    if viewModel.tickets.isEmpty {
+                        placeholder
+                    } else {
+                        upperTicketList
+                        Spacer().frame(height: 24)
+                        subHeader
+                        ticketGridView
+                    }
                     Spacer().frame(height: 120)
                 }
             }
@@ -38,6 +42,21 @@ struct TicketBookView: View {
         }
     }
     
+    private var placeholder: some View {
+        VStack(spacing: 24) {
+            Image("warning-digly")
+            
+            VStack(spacing: 12) {
+                Text("아직 추가된 티켓이 없어요.")
+                
+                Text("관람한 기억을 안고\n특별한 기록을 시작해볼까요?")
+                    .multilineTextAlignment(.center)
+            }
+            .fontStyle(.body2)
+            .foregroundStyle(.common100)
+        }
+        .padding(.vertical, 160)
+    }
     // MARK: - Header View
     private var headerView: some View {
         HStack(alignment: .bottom) {

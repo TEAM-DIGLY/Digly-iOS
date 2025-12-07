@@ -256,6 +256,12 @@ struct TicketItem: View {
     
     private var defaultOverlaySection: some View {
         VStack(alignment: .center, spacing: 0) {
+            let calendar = Calendar.current
+            let today = calendar.startOfDay(for: Date())
+            let performanceDay = calendar.startOfDay(for: ticket.time)
+            let components = calendar.dateComponents([.day], from: today, to: performanceDay)
+            let daysUntil = components.day ?? 0
+            
             Text("@\(nicknameUD.isEmpty ? "username" : nicknameUD)")
                 .fontStyle(.body2)
                 .foregroundStyle(.opacityWhite300)
@@ -263,7 +269,7 @@ struct TicketItem: View {
             
             Spacer()
             
-            if ticket.emotions.isEmpty {
+            if daysUntil <= 0, ticket.emotions.isEmpty {
                 Text("관람 중에 느낀\n나만의 감정을 남겨볼까요?")
                     .fontStyle(.label2)
                     .foregroundStyle(.opacityWhite700)
@@ -279,11 +285,16 @@ struct TicketItem: View {
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 32)
             
-            Button(action: {
-                onTapAddEmotion()
-            }) {
-                Group {
-                    if !ticket.emotions.isEmpty {
+            
+            Group {
+                if daysUntil > 0 {
+                    Text("관람까지 D\(daysUntil * -1)")
+                        .fontStyle(.headline2)
+                        .foregroundStyle(.opacityWhite850)
+                } else if !ticket.emotions.isEmpty {
+                    Button(action: {
+                        onTapAddEmotion()
+                    }) {
                         HStack(spacing: 8) {
                             ForEach(ticket.emotions.prefix(2), id: \.self) { emotion in
                                 Text("#\(emotion.rawValue)")
@@ -293,17 +304,18 @@ struct TicketItem: View {
                                     .padding(.vertical, 6)
                             }
                         }
-                    } else {
+                    }
+                } else {
+                    Button(action: {
+                        onTapAddEmotion()
+                    }) {
                         Text("감정 남기러 가기")
                             .fontStyle(.headline2)
                             .foregroundStyle(.opacityWhite850)
-                            .onTapGesture {
-                                onTapAddEmotion()
-                            }
                     }
                 }
-                .frame(height: 76, alignment: .center)
             }
+            .frame(height: 76, alignment: .center)
         }
         .padding(24)
     }
