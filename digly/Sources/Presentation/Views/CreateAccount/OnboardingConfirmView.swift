@@ -81,6 +81,7 @@ struct OnboardingConfirmView: View {
         }
         .animation(.mediumSpring, value: currentStep)
         .animation(.mediumSpring, value: isButtonPresent)
+        .navigationBarBackButtonHidden()
     }
 }
 

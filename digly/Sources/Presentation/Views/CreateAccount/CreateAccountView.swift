@@ -28,27 +28,30 @@ struct CreateAccountView: View {
     
     var body: some View {
         DGScreen(isAlignCenter: true, isLoading: viewModel.isLoading) {
-            Button(action:{
-                if viewModel.isSelectingDigly {
-                    viewModel.isSelectingDigly = false
-                } else {
-                    authRouter.pop()
+            /// - note: 이름을 전달받았을 경우, 바로 디글리 타입 선택 화면으로 넘어가고 username 설정 화면으로 돌아갈 수 없어야 하기 때문에 뒤로가기 버튼이 제거되어야 합니다.
+            if name != nil {
+                Button(action:{
+                    if viewModel.isSelectingDigly {
+                        viewModel.isSelectingDigly = false
+                    } else {
+                        authRouter.pop()
+                    }
+                }){
+                    Image("chevron_left")
+                        .resizable()
+                        .renderingMode(.template)
+                        .foregroundStyle(.common0)
+                        .frame(width: 56, height: 56)
                 }
-            }){
-                Image("chevron_left")
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundStyle(.common0)
-                    .frame(width: 56, height: 56)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.bottom, 16)
             
             LiveDigly(
                 isSurprised: isFocused,
                 readingValue: viewModel.username,
                 onStareUp: viewModel.isSelectingDigly
             )
+            .padding(.top, 16)
             
             Group {
                 if !viewModel.isSelectingDigly {

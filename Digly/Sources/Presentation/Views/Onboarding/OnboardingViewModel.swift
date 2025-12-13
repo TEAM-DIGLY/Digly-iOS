@@ -33,19 +33,23 @@ class OnboardingViewModel: ObservableObject {
     }
     
     func handleLoginSuccess(_ response: SignInResult, _ platform: PlatformType) {
-        if let name = response.name {
-            tempName = name
-            /// 기존에 로그인한 이력이 남아있을 경우, memberType이 존재하기 때문에 이를 바탕으로 바로 로그인 진행
-            if let diglyType = response.memberType {
-                AuthManager.shared.login(response.accessToken, response.refreshToken, name, diglyType)
-            } else {
-                /// 회원가입을 시도하는 경우이나, 해당 플랫폼으로부터 이름을 수집할 수 있어 이름을 전달받는 경우
-                tempAccessToken = response.accessToken
-                tempRefreshToken = response.refreshToken
-                isPopupPresented = true
+        /// 기존에 로그인한 이력이 남아있을 경우, memberType이 존재하기 때문에 이를 바탕으로 바로 로그인 진행
+        if let diglyType = response.memberType {
+            AuthManager.shared.login(response.accessToken, response.refreshToken, response.name ?? "회원" , diglyType)
+        } else {
+            if let name = response.name { /// 회원가입을 시도하는 경우이나, 해당 플랫폼으로부터 이름을 수집할 수 있어 이름을 전달받는 경우
+                tempName = name
             }
+            
+            /// 회원가입을 시도하는 경우이나, 아무런 정보를 얻을 수 없는 경우
+            tempAccessToken = response.accessToken
+            tempRefreshToken = response.refreshToken
+            isLoading = false
+            
+            isPopupPresented = true
         }
     }
+    
     
     // MARK: - 소셜로그인 메서드들
     func performKakaoLogin() async {
@@ -53,8 +57,6 @@ class OnboardingViewModel: ObservableObject {
             isLoading = true
             let token = try await KakaoLoginManager.shared.login()
             let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
-            isLoading = false
-            
             handleLoginSuccess(response, .kakao)
         } catch {
             isLoading = false
@@ -67,8 +69,6 @@ class OnboardingViewModel: ObservableObject {
             isLoading = true
             let token = try await NaverLoginManager.shared.login()
             let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
-            isLoading = false
-            
             handleLoginSuccess(response, .naver)
         } catch {
             isLoading = false
@@ -79,10 +79,11 @@ class OnboardingViewModel: ObservableObject {
     func performAppleLogin() async {
         do {
             isLoading = true
-            let token = try await AppleLoginManager.shared.login()
-            let response = try await authUseCase.signIn(platform: .apple, socialToken: token)
-            isLoading = false
-            
+            let result = try await AppleLoginManager.shared.login()
+            if let fullName = result.fullName { /// 최초 승인 시에만 제공되는 이름을 회원가입으로 넘긴다
+                tempName = fullName
+            }
+            let response = try await authUseCase.signIn(platform: .apple, socialToken: result.token)
             handleLoginSuccess(response, .apple)
         } catch {
             isLoading = false

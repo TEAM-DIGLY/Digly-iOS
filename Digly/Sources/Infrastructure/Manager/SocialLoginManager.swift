@@ -113,12 +113,17 @@ extension NaverLoginManager: NaverThirdPartyLoginConnectionDelegate {
 }
 
 // MARK: - 애플 로그인 매니저
+struct AppleLoginResult {
+    let token: String
+    let fullName: String?
+}
+
 final class AppleLoginManager: NSObject, ObservableObject {
     static let shared = AppleLoginManager()
     
-    private var continuation: CheckedContinuation<String, Error>?
+    private var continuation: CheckedContinuation<AppleLoginResult, Error>?
     
-    func login() async throws -> String {
+    func login() async throws -> AppleLoginResult {
         return try await withCheckedThrowingContinuation { continuation in
             self.continuation = continuation
             
@@ -144,7 +149,10 @@ extension AppleLoginManager: ASAuthorizationControllerDelegate {
             return
         }
         
-        continuation?.resume(returning: identityToken)
+        let fullName = formatFullName(appleIDCredential.fullName)
+        let loginResult = AppleLoginResult(token: identityToken, fullName: fullName)
+        
+        continuation?.resume(returning: loginResult)
         continuation = nil
     }
     
@@ -179,6 +187,15 @@ extension AppleLoginManager: ASAuthorizationControllerPresentationContextProvidi
             fatalError("No window found")
         }
         return window
+    }
+}
+
+private extension AppleLoginManager {
+    func formatFullName(_ components: PersonNameComponents?) -> String? {
+        guard let components else { return nil }
+        let formatter = PersonNameComponentsFormatter()
+        let fullName = formatter.string(from: components).trimmingCharacters(in: .whitespacesAndNewlines)
+        return fullName.isEmpty ? nil : fullName
     }
 }
 

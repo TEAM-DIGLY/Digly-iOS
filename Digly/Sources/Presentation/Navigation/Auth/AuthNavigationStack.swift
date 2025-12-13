@@ -15,10 +15,6 @@ struct AuthNavigationStack: View {
                 .navigationDestination(for: AuthRoute.self) { route in
                     destinationView(for: route)
                         .swipeBackDisabled(route.disableSwipeBack)
-                        .onAppear {
-                            // print("📊 Auth Analytics: \(route.analyticsName)")
-                            // print("🔒 SwipeBack disabled: \(route.disableSwipeBack)")
-                        }
                 }
         }
     }
