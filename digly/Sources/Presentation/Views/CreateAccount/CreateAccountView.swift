@@ -27,9 +27,9 @@ struct CreateAccountView: View {
     }
     
     var body: some View {
-        DGScreen(isAlignCenter: true, isLoading: viewModel.isLoading) {
+        DGScreen(isAlignCenter: true, isLoading: viewModel.isLoading, onClick: { isFocused = false }) {
             /// - note: 이름을 전달받았을 경우, 바로 디글리 타입 선택 화면으로 넘어가고 username 설정 화면으로 돌아갈 수 없어야 하기 때문에 뒤로가기 버튼이 제거되어야 합니다.
-            if name != nil {
+            if name == nil {
                 Button(action:{
                     if viewModel.isSelectingDigly {
                         viewModel.isSelectingDigly = false
@@ -65,11 +65,6 @@ struct CreateAccountView: View {
             
             Spacer()
         }
-        .background(.common100)
-        .navigationBarBackButtonHidden()
-        .toolbar(.hidden)
-        .onTapGesture { isFocused = false }
-        
         .overlay(alignment: .bottom) {
             if !viewModel.username.isEmpty {
                 DGButton(
