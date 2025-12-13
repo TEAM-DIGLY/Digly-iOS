@@ -61,7 +61,7 @@ struct OnboardingView: View {
                                 
                                 if let accessToken = viewModel.tempAccessToken,
                                    let refreshToken = viewModel.tempRefreshToken {
-                                    authRouter.push(to: .createAccount(accessToken: accessToken, refreshToken: refreshToken))
+                                    authRouter.push(to: .createAccount(accessToken: accessToken, refreshToken: refreshToken, name: viewModel.tempName))
                                 }
                             },
                             onCancel: {

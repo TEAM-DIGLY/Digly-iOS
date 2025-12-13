@@ -26,8 +26,8 @@ struct AuthNavigationStack: View {
     @ViewBuilder
     private func destinationView(for route: AuthRoute) -> some View {
         switch route {
-        case .createAccount(let accessToken, let refreshToken):
-            CreateAccountView(accessToken: accessToken, refreshToken: refreshToken)
+        case .createAccount(let accessToken, let refreshToken, let name):
+            CreateAccountView(accessToken: accessToken, refreshToken: refreshToken, name: name)
         case .onboarding:
             OnboardingView()
         case .onboardingConfirm(let signUpResponse, let accessToken, let refreshToken):

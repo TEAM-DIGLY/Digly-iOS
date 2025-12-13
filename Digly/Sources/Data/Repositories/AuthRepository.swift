@@ -13,6 +13,7 @@ final class AuthRepository: AuthRepositoryProtocol {
             AuthEndpoint.postLogin(socialToken),
             parameters: request.toDictionary()
         )
+        
         return response.toDomain()
     }
 

@@ -11,6 +11,7 @@ class OnboardingViewModel: ObservableObject {
     private let authUseCase: AuthUseCase
     var tempAccessToken: String?
     var tempRefreshToken: String?
+    var tempName: String? // 회원가입 화면으로 전환 될 때, 해당 값 유무를 통해 이름 입력 섹션 스킵여부 판단
     
     init(authUseCase: AuthUseCase = AuthUseCase()) {
         self.authUseCase = authUseCase
@@ -31,13 +32,18 @@ class OnboardingViewModel: ObservableObject {
         }
     }
     
-    func handleLoginSuccess(_ response: SignInResult) {
-        if let name = response.name, let diglyType = response.memberType {
-            AuthManager.shared.login(response.accessToken, response.refreshToken, name, diglyType)
-        } else {
-            tempAccessToken = response.accessToken
-            tempRefreshToken = response.refreshToken
-            isPopupPresented = true
+    func handleLoginSuccess(_ response: SignInResult, _ platform: PlatformType) {
+        if let name = response.name {
+            tempName = name
+            /// 기존에 로그인한 이력이 남아있을 경우, memberType이 존재하기 때문에 이를 바탕으로 바로 로그인 진행
+            if let diglyType = response.memberType {
+                AuthManager.shared.login(response.accessToken, response.refreshToken, name, diglyType)
+            } else {
+                /// 회원가입을 시도하는 경우이나, 해당 플랫폼으로부터 이름을 수집할 수 있어 이름을 전달받는 경우
+                tempAccessToken = response.accessToken
+                tempRefreshToken = response.refreshToken
+                isPopupPresented = true
+            }
         }
     }
     
@@ -49,7 +55,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .kakao, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response)
+            handleLoginSuccess(response, .kakao)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "카카오")
@@ -63,7 +69,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .naver, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response)
+            handleLoginSuccess(response, .naver)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "네이버")
@@ -77,7 +83,7 @@ class OnboardingViewModel: ObservableObject {
             let response = try await authUseCase.signIn(platform: .apple, socialToken: token)
             isLoading = false
             
-            handleLoginSuccess(response)
+            handleLoginSuccess(response, .apple)
         } catch {
             isLoading = false
             handleSocialLoginError(error, platform: "애플")

@@ -3,15 +3,27 @@ import SwiftUI
 struct CreateAccountView: View {
     let accessToken: String
     let refreshToken: String
+    let name: String?
     
     @StateObject private var viewModel: CreateAccountViewModel
     @FocusState private var isFocused : Bool
     @EnvironmentObject private var authRouter: AuthRouter
     
-    init(accessToken: String, refreshToken: String) {
+    init(
+        accessToken: String,
+        refreshToken: String,
+        name: String?
+    ) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
-        self._viewModel = StateObject(wrappedValue: CreateAccountViewModel(accessToken: accessToken, refreshToken: refreshToken))
+        self.name = name
+        self._viewModel = StateObject(
+            wrappedValue: CreateAccountViewModel(
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+                name: name
+            )
+        )
     }
     
     var body: some View {
@@ -241,6 +253,6 @@ struct CreateAccountView: View {
 
 #Preview {
     NavigationStack {
-        CreateAccountView(accessToken: "sample_token", refreshToken: "sample_refresh_token")
+        CreateAccountView(accessToken: "sample_token", refreshToken: "sample_refresh_token", name: nil)
     }
 }

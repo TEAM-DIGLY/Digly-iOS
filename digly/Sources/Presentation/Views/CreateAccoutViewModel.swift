@@ -35,13 +35,20 @@ class CreateAccountViewModel: ObservableObject {
     init(
         accessToken: String,
         refreshToken: String,
+        name: String?,
         authUseCase: AuthUseCase = AuthUseCase(),
         memberUseCase: MemberUseCase = MemberUseCase()
     ) {
         self.accessToken = accessToken
         self.refreshToken = refreshToken
+        
         self.authUseCase = authUseCase
         self.memberUseCase = memberUseCase
+        
+        if let name {
+            self.username = name
+            self.isSelectingDigly = true
+        }
     }
     
     func performSignUp(onSuccess: @escaping (SignUpResult) -> Void) {
