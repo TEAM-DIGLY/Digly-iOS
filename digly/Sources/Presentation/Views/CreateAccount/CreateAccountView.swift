@@ -237,7 +237,7 @@ struct CreateAccountView: View {
     @ViewBuilder
     private var statusText: some View {
         if viewModel.errorText.isEmpty {
-            Text(viewModel.isUsernameValid ? "사용 가능한 아이디입니다." : "*2-7자의 한글, 영문, 특수기호, 이모티콘 사용 가능")
+            Text(viewModel.isUsernameValid ? "사용 가능한 아이디입니다." : "*2-7자의 한글, 영문, 특수기호 사용 가능")
                 .fontStyle(.label2)
                 .foregroundStyle(viewModel.isUsernameValid ? .success :
                                     viewModel.username.isEmpty ? .neutral300 : .neutral700)

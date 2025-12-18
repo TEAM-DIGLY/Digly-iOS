@@ -25,7 +25,7 @@ class CreateAccountViewModel: ObservableObject {
     @Published var isAppleLoading: Bool = false
     @Published var selectedIndex :Int = 0
     
-    private let usernameAllowedRegex = "^[\\p{L}\\p{N}\\p{P}\\p{S}]+$"
+    private let usernameAllowedRegex = "^[\\p{L}\\p{N}\\p{P}]+$"
     private let authUseCase: AuthUseCase
     private let memberUseCase: MemberUseCase
     private let accessToken: String
@@ -165,7 +165,7 @@ class CreateAccountViewModel: ObservableObject {
 
         if !isAllowed {
             isUsernameValid = false
-            errorText = "*한글, 영문, 숫자, 특수기호, 이모티콘만 사용할 수 있어요."
+            errorText = "*한글, 영문, 숫자, 특수기호만 사용할 수 있어요."
             return
         }
 
