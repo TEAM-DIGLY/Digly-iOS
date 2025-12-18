@@ -5,14 +5,15 @@ import SwiftUI
 
 @MainActor
 class CreateAccountViewModel: ObservableObject {
-    @Published var username: String = ""{  didSet {
-        if username != oldValue {
-            withAnimation (.mediumEaseInOut){
-                isUsernameValid = false
-                errorText = ""
+    @Published var username: String = ""{
+        didSet {
+            if username != oldValue {
+                withAnimation(.mediumEaseInOut) {
+                    updateUsernameValidation()
+                }
             }
         }
-    } }
+    }
     
     @Published var errorText: String = ""
     @Published var isExistingUser: Bool = false
@@ -24,7 +25,7 @@ class CreateAccountViewModel: ObservableObject {
     @Published var isAppleLoading: Bool = false
     @Published var selectedIndex :Int = 0
     
-    private let usernamePredicate = NSPredicate(format: "SELF MATCHES %@", "^[a-zA-Z0-9_]{3,20}$")
+    private let usernameAllowedRegex = "^[\\p{L}\\p{N}\\p{P}\\p{S}]+$"
     private let authUseCase: AuthUseCase
     private let memberUseCase: MemberUseCase
     private let accessToken: String
@@ -91,23 +92,10 @@ class CreateAccountViewModel: ObservableObject {
     }
     
     func handleSubmit(){
+        updateUsernameValidation()
         if isUsernameValid {
             UserDefaults.standard.set(username, forKey: "lastLoggedInUsername")
             withAnimation(.mediumEaseInOut){ isSelectingDigly = true }
-        } else {
-            if username.count<2 {
-                withAnimation(.mediumEaseInOut){
-                    errorText = "*최소 2자 이상 입력해주세요."
-                    return
-                }
-            } else if username.count>7  {
-                withAnimation(.mediumEaseInOut){
-                    errorText="*최대 7자까지 입력 가능합니다."
-                    return
-                }
-            } else{
-                isUsernameValid = true // 버튼 완료로 변경됨
-            }
         }
     }
     
@@ -149,6 +137,40 @@ class CreateAccountViewModel: ObservableObject {
     
     func signUp() {
         isLoading = true
+    }
+
+    private func updateUsernameValidation() {
+        if username.isEmpty {
+            isUsernameValid = false
+            errorText = ""
+            return
+        }
+
+        if username.count < 2 {
+            isUsernameValid = false
+            errorText = "*최소 2자 이상 입력해주세요."
+            return
+        }
+
+        if username.count > 7 {
+            isUsernameValid = false
+            errorText = "*최대 7자까지 입력 가능합니다."
+            return
+        }
+
+        let isAllowed = username.range(
+            of: usernameAllowedRegex,
+            options: .regularExpression
+        ) != nil
+
+        if !isAllowed {
+            isUsernameValid = false
+            errorText = "*한글, 영문, 숫자, 특수기호, 이모티콘만 사용할 수 있어요."
+            return
+        }
+
+        isUsernameValid = true
+        errorText = ""
     }
     
 }
