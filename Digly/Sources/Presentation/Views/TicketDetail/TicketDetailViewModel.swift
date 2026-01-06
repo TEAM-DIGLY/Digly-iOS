@@ -4,18 +4,7 @@ import SwiftUI
 
 @MainActor
 class TicketDetailViewModel: ObservableObject {
-    @Published var ticket: Ticket? = Ticket(
-        id: 1,
-        name: "프랑켄슈타인",
-        time: Date(),
-        place: "블루스퀘어 신한카드홀",
-        count: 24,
-        seatNumber: "@4",
-        price: 20000,
-        emotions: [.excited, .relaxed],
-        notes: []
-    )
-    
+    @Published var ticket: Ticket? = nil
     @Published var isLoading: Bool = false
     @Published var isScreenshotTaken: Bool = false
     @Published var isEmotionSheetPresent = false

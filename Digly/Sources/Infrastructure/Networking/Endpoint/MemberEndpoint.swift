@@ -5,6 +5,7 @@ enum MemberEndpoint: APIEndpoint {
     case putMember
     case patchMember
     case validateName
+    case validateApple
     
     var path: String {
         switch self {
@@ -12,6 +13,8 @@ enum MemberEndpoint: APIEndpoint {
             return "/api/v1/member"
         case .validateName:
             return "/api/v1/member/name"
+        case .validateApple:
+            return "/api/v1/member/apple/notification"
         }
     }
     
@@ -25,12 +28,14 @@ enum MemberEndpoint: APIEndpoint {
             return .PATCH
         case .validateName:
             return .GET
+        case .validateApple:
+            return .GET
         }
     }
     
     var tokenType: TokenType {
         switch self {
-        case .getMember, .putMember, .patchMember, .validateName:
+        case .getMember, .putMember, .patchMember, .validateName, .validateApple:
             return .accessToken
         }
     }

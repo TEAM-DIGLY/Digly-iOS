@@ -33,6 +33,8 @@ struct TicketDetailView: View {
                     )
                     Spacer().frame(height: 120)
                 }
+            } else {
+                DGLoadingIndicator()
             }
         }
         .alert(isPresented: $viewModel.isScreenshotTaken) {

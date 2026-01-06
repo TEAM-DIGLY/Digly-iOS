@@ -9,7 +9,7 @@ struct TicketBookView: View {
     @State private var showFilterBottomSheet = false
     
     var body: some View {
-        DGScreen(horizontalPadding: 0, backgroundColor: .common0) {
+        DGScreen(horizontalPadding: 0, backgroundColor: .bgDark) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: 16) {
                     headerView

@@ -262,7 +262,3 @@ struct DGFormField: View {
         }
     }
 }
-
-#Preview {
-    EditTicketView(ticket: Ticket.dummy)
-}

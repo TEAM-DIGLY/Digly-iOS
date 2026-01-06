@@ -10,7 +10,7 @@ struct ProfileSettingView: View {
         DGScreen(horizontalPadding: 0, onClick: {
             isFocused = false
         }) {
-            TitleBackNavBar(title: "프로필 설정", isDarkMode: false) {
+            TitleBackNavBar(title: viewModel.isEditMode ? "수정하기" : "프로필 설정", isDarkMode: false) {
                 Button(action: {
                     if viewModel.isEditMode {
                         viewModel.saveProfile {
@@ -95,30 +95,38 @@ struct ProfileSettingView: View {
     // MARK: - Character Selector
     private var characterSelector: some View {
         HStack(alignment:.top, spacing: 12) {
-            ForEach(Array(Digly.data.enumerated()), id: \.offset) { index, digly in
-                Button(action: {
-                    viewModel.currentCharacterIndex = index
-                }) {
-                    let isSelected = index == viewModel.currentCharacterIndex
-                    VStack(spacing: 12) {
-                        Image("\(digly.diglyType.imageName)_avatar_box")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: .infinity)
-                            .opacity(isSelected ? 1.0 : 0.2)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 13).stroke(isSelected ? viewModel.isEditMode ? .neutral600 : .neutral300 : .clear, lineWidth: 1)
-                            }
-                        
-                        if isSelected {
-                            Image("check")
+            if viewModel.isEditMode {
+                ForEach(Array(Digly.data.enumerated()), id: \.offset) { index, digly in
+                    Button(action: {
+                        viewModel.currentCharacterIndex = index
+                    }) {
+                        let isSelected = index == viewModel.currentCharacterIndex
+                        VStack(spacing: 12) {
+                            Image("\(digly.diglyType.imageName)_avatar_box")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(width: 40)
+                                .frame(maxWidth: .infinity)
+                                .opacity(isSelected ? 1.0 : 0.2)
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 13).stroke(isSelected ? viewModel.isEditMode ? .neutral600 : .neutral300 : .clear, lineWidth: 1)
+                                }
+                            
+                            if isSelected {
+                                Image("check")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 40)
+                            }
                         }
                     }
+                    .disabled(!viewModel.isEditMode)
                 }
-                .disabled(!viewModel.isEditMode)
+            } else {
+                Image("\(AuthManager.shared.diglyType.imageName)_avatar_box")
+                    .aspectRatio(contentMode: .fit)
+                    .frame(maxWidth: .infinity)
+                    .cornerRadius(13)
+                    .clipped()
             }
         }
     }

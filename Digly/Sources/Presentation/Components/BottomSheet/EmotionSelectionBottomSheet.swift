@@ -44,11 +44,18 @@ struct EmotionSelectionBottomSheet: View {
                     .animation(.fastSpring, value: selectedEmotions)
                     
                     selectedEmotionSection
+                    
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 32)
                 
                 Spacer()
+                
+                Text("감정은 최대 2개까지 선택이 가능해요.")
+                    .fontStyle(.body2)
+                    .foregroundStyle(.neutral300)
+                    .multilineTextAlignment(.center)
+                    .padding(.bottom, 24)
                 
                 DGButton(
                     text: "감정 등록 완료",
@@ -114,6 +121,8 @@ struct EmotionSelectionBottomSheet: View {
                 selectedEmotions = selectedEmotions.filter {$0 != emotion}
             } else if selectedEmotions.count < 2 {
                 selectedEmotions.append(emotion)
+            } else {
+                
             }
         }) {
             Text(emotion.rawValue)

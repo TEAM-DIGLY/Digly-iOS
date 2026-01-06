@@ -85,7 +85,6 @@ class HomeViewModel: ObservableObject {
         )
     }
 
-    // Check if tutorial should be shown
     func checkTutorialVisibility() {
         Task {
             do {
@@ -105,7 +104,6 @@ class HomeViewModel: ObservableObject {
         }
     }
 
-    // Update tutorial visibility (mark as seen)
     func completeTutorial() {
         Task {
             do {

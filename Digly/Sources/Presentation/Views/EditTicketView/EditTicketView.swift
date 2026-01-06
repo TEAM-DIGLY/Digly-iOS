@@ -182,7 +182,3 @@ extension EditTicketView {
         .keyboardType(.numberPad)
     }
 }
-
-#Preview {
-    EditTicketView(ticket: Ticket.dummy)
-}

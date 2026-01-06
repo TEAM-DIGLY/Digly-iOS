@@ -91,10 +91,3 @@ extension EndAddTicketManualView {
         }
     }
 }
-
-#Preview {
-    EndAddTicketManualView(
-        ticket: Ticket.dummy,
-        onCompleteTapped: {}
-    )
-}

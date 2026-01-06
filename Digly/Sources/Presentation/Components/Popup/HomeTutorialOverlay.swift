@@ -57,12 +57,13 @@ struct HomeTutorialOverlay: View {
                     .frame(width: 8)
                 
                 DGBottomTab(selectedTab: .constant(stepContents[currentStep].index))
+                    .disabled(true)
             }
             .transition(.opacity)
             .id("step_\(currentStep)")
         }
         .overlay {
-            HStack {
+            HStack(spacing: 200) {
                 Button(action: {
                     if currentStep > 0 {
                         currentStep -= 1
@@ -71,10 +72,10 @@ struct HomeTutorialOverlay: View {
                     Image("arrow_left")
                         .renderingMode(.template)
                         .foregroundStyle(.common100)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
                 .opacity(currentStep==0 ? 0 : 1)
                 
-                Spacer()
                 Button(action: {
                     if currentStep < stepContents.count - 1 {
                         currentStep += 1
@@ -83,11 +84,10 @@ struct HomeTutorialOverlay: View {
                     Image("arrow_right")
                         .renderingMode(.template)
                         .foregroundStyle(.common100)
-                    
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
                 .opacity(currentStep==stepContents.count-1 ? 0 : 1)
             }
-            .padding(24)
         }
         .animation(.mediumSpring, value: currentStep)
     }

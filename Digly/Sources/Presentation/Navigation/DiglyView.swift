@@ -40,8 +40,6 @@ struct DiglyView: View {
             isPresented: $toastManager.toastPresented,
             data: toastManager.currentToastType
         )
-        .animation(.mediumSpring, value: viewModel.selectedTab)
-        
         .onChange(of: authManager.isLoggedIn) { _, isLoggedIn in
             if !isLoggedIn {
                 homeRouter.reset()

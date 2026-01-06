@@ -320,7 +320,3 @@ struct TicketItem: View {
         .padding(24)
     }
 }
-
-#Preview {
-    TicketItem(ticket: Ticket.dummy, ticketStatus: .noEmotion, onTapAddEmotion: {})
-}

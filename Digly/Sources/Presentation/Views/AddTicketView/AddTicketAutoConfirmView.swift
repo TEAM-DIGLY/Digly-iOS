@@ -187,7 +187,3 @@ extension AddTicketAutoConfirmView {
         .keyboardType(.numberPad)
     }
 }
-
-#Preview {
-    EditTicketView(ticket: Ticket.dummy)
-}
